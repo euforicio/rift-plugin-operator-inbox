@@ -59,6 +59,36 @@ describe("Operator Inbox panel", () => {
     expect(rendered.inspection.navigateCalls).toContainEqual({ method: "toThread", threadId: "thread-sender" });
   });
 
+  it("presents long sequential one-line request sections as readable paragraphs", async () => {
+    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+    const app = await loadApp();
+    const text = [
+      "Decision needed before the release train closes at 16:00 UTC:",
+      "(1) Confirm whether the manager should keep the candidate frozen at build_2026_08_30 while the remaining browser evidence is collected. The current checks cover package integrity, exact project scoping, and reply acceptance, but they do not prove that the provider consumed the reply. Approving this option keeps the current evidence boundary and delays the operator-visible cutover until the browser check is attached.",
+      "(2) Choose whether to reopen the candidate for the narrow presentation repair described in [the run record](https://example.test/runs/build_2026_08_30?view=operator). This option changes only future agent guidance and the Inbox rendering fallback; it does not rewrite stored messages, widen project access, change sender identity, alter reply delivery, add polling, or load remote images. If selected, the manager will rerun the existing verify and package checks before returning the new local commit.",
+    ].join(" ");
+    const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
+      sidebarThreads: { status: "ready", projects: [project], threads: [] },
+      rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }) }) as never,
+    });
+
+    const body = (await rendered.findByRole("heading", { name: "Message" })).closest("section")!;
+    expect(Array.from(body.querySelectorAll("p"), (paragraph) => paragraph.textContent)).toEqual([
+      "Decision needed before the release train closes at 16:00 UTC:",
+      expect.stringMatching(/^\(1\) Confirm whether/),
+      expect.stringMatching(/^\(2\) Choose whether/),
+    ]);
+    expect(body.querySelector("a")?.getAttribute("href")).toBe("https://example.test/runs/build_2026_08_30?view=operator");
+    rendered.lifecycle.unmount();
+
+    const short = renderSlot(app.navPanels[0]!, { subPath: "" }, {
+      sidebarThreads: { status: "ready", projects: [project], threads: [] },
+      rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text: "Choose option (1) Tuesday or (2) Wednesday." }] }) }) as never,
+    });
+    const shortBody = (await short.findByRole("heading", { name: "Message" })).closest("section")!;
+    expect(Array.from(shortBody.querySelectorAll("p"), (paragraph) => paragraph.textContent)).toEqual(["Choose option (1) Tuesday or (2) Wednesday."]);
+  });
+
   it("keeps sender navigation when the stored title is unavailable", async () => {
     const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
     const app = await loadApp();

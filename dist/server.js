@@ -13820,9 +13820,10 @@ var rpcContract = defineRpcContract({
 });
 
 // server.ts
+var messageBodyGuidance = "Text must be concise, decision-first Markdown. Separate multi-part requests with blank lines and bullets or numbered items.";
 var messageToolInput = external_exports.object({
   severity: external_exports.enum(["routine", "needs-decision", "urgent"]),
-  text: external_exports.string().trim().min(1).max(16e3)
+  text: external_exports.string().trim().min(1).max(16e3).describe(messageBodyGuidance)
 }).strict();
 function toMessage(row) {
   return {
@@ -13876,7 +13877,7 @@ function plugin(bb) {
   bb.agents.registerTool({
     name: "send_operator_inbox_message",
     description: "Store a message for the human operator in this thread's project-scoped Operator Inbox.",
-    instructions: "Use this only when the human operator should see a durable message. Choose routine, urgent, or needs-decision severity.",
+    instructions: `Use this only when the human operator should see a durable message. Choose routine, urgent, or needs-decision severity. ${messageBodyGuidance}`,
     presentation: { label: { pending: "Sending Operator Inbox message", completed: "Sent Operator Inbox message" } },
     parameters: messageToolInput,
     async execute({ severity, text: text2 }, { projectId, threadId }) {

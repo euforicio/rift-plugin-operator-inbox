@@ -26,8 +26,22 @@ const markdownComponents: Components = {
   a: ({ href, children }) => <a href={href} className="text-primary underline underline-offset-2">{children}</a>,
 };
 
+function readableMessageBody(text: string): string {
+  // ponytail: only substantive sequential (1)..(9) sections; add another
+  // marker form only when concrete stored messages prove it is safe.
+  if (text.length < 400 || /[\r\n]/.test(text)) return text;
+  const markers = Array.from(text.matchAll(/(^| )\(([1-9])\) /g), (match) => ({
+    number: Number(match[2]),
+    start: match.index + match[1].length,
+    contentStart: match.index + match[0].length,
+  }));
+  if (markers.length < 2 || markers.some((marker, index) => marker.number !== index + 1)) return text;
+  if (markers.some((marker, index) => text.slice(marker.contentStart, markers[index + 1]?.start ?? text.length).trim().length < 80)) return text;
+  return markers.reduceRight((body, marker) => marker.start === 0 ? body : `${body.slice(0, marker.start).trimEnd()}\n\n${body.slice(marker.start)}`, text);
+}
+
 function MessageBody({ text }: { text: string }) {
-  return <div className={messageBodyClass}><ReactMarkdown remarkPlugins={[remarkBreaks]} components={markdownComponents}>{text}</ReactMarkdown></div>;
+  return <div className={messageBodyClass}><ReactMarkdown remarkPlugins={[remarkBreaks]} components={markdownComponents}>{readableMessageBody(text)}</ReactMarkdown></div>;
 }
 
 type OperatorMessagesResult = PluginRpcResult<typeof rpcContract["operatorMessages"]>;
