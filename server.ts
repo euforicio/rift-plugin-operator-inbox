@@ -25,9 +25,10 @@ type MessageRow = {
   reply_delivery: Message["replyDelivery"];
 };
 
+const messageBodyGuidance = "Text must be concise, decision-first Markdown. Separate multi-part requests with blank lines and bullets or numbered items.";
 const messageToolInput = z.object({
   severity: z.enum(["routine", "needs-decision", "urgent"]),
-  text: z.string().trim().min(1).max(16_000),
+  text: z.string().trim().min(1).max(16_000).describe(messageBodyGuidance),
 }).strict();
 
 function toMessage(row: MessageRow): Message {
@@ -86,7 +87,7 @@ export default function plugin(bb: BbPluginApi) {
   bb.agents.registerTool({
     name: "send_operator_inbox_message",
     description: "Store a message for the human operator in this thread's project-scoped Operator Inbox.",
-    instructions: "Use this only when the human operator should see a durable message. Choose routine, urgent, or needs-decision severity.",
+    instructions: `Use this only when the human operator should see a durable message. Choose routine, urgent, or needs-decision severity. ${messageBodyGuidance}`,
     presentation: { label: { pending: "Sending Operator Inbox message", completed: "Sent Operator Inbox message" } },
     parameters: messageToolInput,
     async execute({ severity, text }, { projectId, threadId }) {

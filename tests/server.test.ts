@@ -24,6 +24,17 @@ async function storeMessage(fixture: ReturnType<typeof host>, overrides: Record<
 describe("Operator Inbox backend", () => {
   afterEach(() => vi.restoreAllMocks());
 
+  it("requires concise structured Markdown in the agent tool contract", async () => {
+    const fixture = host();
+    const tool = fixture.harness.inspection.registrations.agentTools[0]!;
+    const guidance = "Text must be concise, decision-first Markdown. Separate multi-part requests with blank lines and bullets or numbered items.";
+    expect(tool.instructions).toContain(guidance);
+    expect(tool.inputSchema).toEqual(expect.objectContaining({
+      properties: expect.objectContaining({ text: expect.objectContaining({ description: guidance }) }),
+    }));
+    await fixture.harness.lifecycle.dispose();
+  });
+
   it("stores a durable project-scoped message from native tool context", async () => {
     const fixture = host();
     await expect(storeMessage(fixture)).resolves.toBe("Stored Operator Inbox message #1 for project project-a.");
