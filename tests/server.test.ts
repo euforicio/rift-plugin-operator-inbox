@@ -1,163 +1,100 @@
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { createFakePluginHost } from "@get-bb/plugin-sdk/testing";
+import { createFakePluginHost, makeThreadResponse } from "@get-bb/plugin-sdk/testing";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import plugin from "../server.js";
 
-const message = {
-  messageId: 1,
-  projectId: "project-1",
-  recipient: "operator",
-  senderThreadId: "thread-1",
-  senderLaneId: "lane-1",
-  severity: "routine",
-  text: "Need an answer",
-  createdAtMs: 1,
-  readAtMs: null,
-  archivedAtMs: null,
-  senderTitle: "Sender",
-  repliedAtMs: null,
-  replyText: null,
-  replyDeliveryError: null,
-  replyInProgress: false,
-  notificationStatus: "not-requested",
-  notificationError: null,
-} as const;
-
-function host(implementation: (request: { method: string; input?: unknown }) => unknown = ({ method }) => (
-  method === "v1-inbox-read" ? { outcome: "OK", messages: [message] } : message
-)) {
-  const callRpc = vi.fn(async (request: { method: string; input?: unknown }) => implementation(request));
+function host(delivery: "sent" | "queued" | "deferred" = "queued") {
+  const get = vi.fn(async ({ threadId }: { threadId: string }) => makeThreadResponse({ id: threadId, title: "Build worker" }));
+  const send = vi.fn(async () => ({ ok: true as const, delivery }));
   const fixture = createFakePluginHost({
     pluginId: "operator-inbox",
-    sdk: { plugins: { callRpc } },
+    sdk: { threads: { get, send } },
   });
   plugin(fixture.bb);
-  return { ...fixture, callRpc };
+  return { ...fixture, get, send };
+}
+
+async function storeMessage(fixture: ReturnType<typeof host>, overrides: Record<string, unknown> = {}) {
+  return fixture.harness.behavior.callAgentTool(
+    "send_operator_inbox_message",
+    { severity: "needs-decision", text: "Choose the release window", ...overrides },
+    { projectId: "project-a", threadId: "thread-sender" },
+  );
 }
 
 describe("Operator Inbox backend", () => {
-  afterEach(() => {
-    vi.useRealTimers();
-    vi.restoreAllMocks();
-  });
+  afterEach(() => vi.restoreAllMocks());
 
-  it("is independently packaged, listed, and built", () => {
-    const root = resolve(import.meta.dirname, "../../..");
-    const collection = JSON.parse(readFileSync(resolve(root, ".bb/plugins.json"), "utf8"));
-    const marketplace = JSON.parse(readFileSync(resolve(root, "marketplace.json"), "utf8"));
-    const packageJson = JSON.parse(readFileSync(resolve(import.meta.dirname, "../package.json"), "utf8"));
-    expect(collection.plugins).toContainEqual({ name: "operator-inbox", source: "./plugins/bb-plugin-operator-inbox" });
-    expect(marketplace.plugins).toContainEqual(expect.objectContaining({ id: "operator-inbox" }));
-    expect(packageJson.bb.branding.icon).toBe("./assets/envelope-simple-duotone.svg");
-    expect(existsSync(resolve(import.meta.dirname, "../assets/envelope-simple-duotone.svg"))).toBe(true);
-    for (const file of ["app.css", "app.js", "app.meta.json", "server.js", "server.meta.json"]) {
-      expect(existsSync(resolve(import.meta.dirname, "../dist", file)), file).toBe(true);
-    }
-  });
-
-  it("proxies strict versioned read, mark, archive, and reply methods", async () => {
+  it("stores a durable project-scoped message from native tool context", async () => {
     const fixture = host();
+    await expect(storeMessage(fixture)).resolves.toBe("Stored Operator Inbox message #1 for project project-a.");
 
-    await expect(fixture.harness.callRpc("operatorMessages", { projectId: "project-1", recipient: "operator" })).resolves.toEqual({ outcome: "OK", messages: [message] });
-    await expect(fixture.harness.callRpc("markOperatorMessageRead", { projectId: "project-1", messageId: 1 })).resolves.toEqual(message);
-    await expect(fixture.harness.callRpc("archiveOperatorMessage", { projectId: "project-1", messageId: 1 })).resolves.toEqual(message);
-    await expect(fixture.harness.callRpc("replyToOperatorMessage", { projectId: "project-1", messageId: 1, text: "answer" })).resolves.toEqual(message);
-
-    expect(fixture.callRpc.mock.calls.map(([request]) => request)).toEqual([
-      expect.objectContaining({ pluginId: "bb-collab", method: "v1-inbox-read", input: { projectId: "project-1", recipient: "operator" } }),
-      expect.objectContaining({ pluginId: "bb-collab", method: "v1-inbox-mark-read", input: { projectId: "project-1", messageId: 1 } }),
-      expect.objectContaining({ pluginId: "bb-collab", method: "v1-inbox-archive", input: { projectId: "project-1", messageId: 1 } }),
-      expect.objectContaining({ pluginId: "bb-collab", method: "v1-inbox-reply", input: { projectId: "project-1", messageId: 1, text: "answer" } }),
-    ]);
+    await expect(fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-a"] })).resolves.toEqual({
+      messages: [expect.objectContaining({
+        messageId: 1,
+        projectId: "project-a",
+        senderThreadId: "thread-sender",
+        senderTitle: "Build worker",
+        severity: "needs-decision",
+        text: "Choose the release window",
+        readAtMs: null,
+        archivedAtMs: null,
+      })],
+    });
+    await expect(fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-b"] })).resolves.toEqual({ messages: [] });
+    expect(fixture.get).toHaveBeenCalledWith({ threadId: "thread-sender" });
+    expect(fixture.harness.inspection.realtimeSignals).toContainEqual({ channel: "messages-changed", payload: { projectId: "project-a" } });
+    await fixture.harness.lifecycle.dispose();
   });
 
-  it("rejects hostile input before core and hostile output at the boundary", async () => {
-    const fixture = host(() => ({ ...message, unexpected: true }));
-
-    await expect(fixture.harness.callRpc("archiveOperatorMessage", { projectId: "", messageId: 1 })).rejects.toThrow();
-    expect(fixture.callRpc).not.toHaveBeenCalled();
-    await expect(fixture.harness.callRpc("archiveOperatorMessage", { projectId: "project-1", messageId: 1 })).rejects.toThrow();
-    expect(fixture.callRpc).toHaveBeenCalledTimes(1);
+  it("validates severity and text before storing", async () => {
+    const fixture = host();
+    await expect(storeMessage(fixture, { severity: "critical" })).rejects.toThrow();
+    await expect(storeMessage(fixture, { text: " " })).rejects.toThrow();
+    await expect(fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-a"] })).resolves.toEqual({ messages: [] });
+    await fixture.harness.lifecycle.dispose();
   });
 
-  it("bounds a hung read and keeps one underlying call until its late settlement", async () => {
-    vi.useFakeTimers();
-    let resolveCore!: (value: unknown) => void;
-    const core = new Promise((resolve) => { resolveCore = resolve; });
-    const fixture = host(() => core);
-    const first = fixture.harness.callRpc("operatorMessages", { projectId: "project-1" }).then(() => null, String);
-    const second = fixture.harness.callRpc("operatorMessages", { projectId: "project-1" }).then(() => null, String);
-    await vi.advanceTimersByTimeAsync(0);
-    expect(fixture.callRpc).toHaveBeenCalledTimes(1);
+  it("marks read and archives only the exact project message", async () => {
+    const fixture = host();
+    await storeMessage(fixture);
 
-    await vi.advanceTimersByTimeAsync(4_000);
-    expect(await first).toContain("timed out after 4000ms");
-    expect(await second).toContain("timed out after 4000ms");
-    const retry = fixture.harness.callRpc("operatorMessages", { projectId: "project-1" }).then(() => null, String);
-    const otherProject = fixture.harness.callRpc("operatorMessages", { projectId: "project-2" }).then(() => null, String);
-    await vi.advanceTimersByTimeAsync(4_000);
-    expect(await retry).toContain("timed out after 4000ms");
-    expect(await otherProject).toContain("timed out after 4000ms");
-    expect(fixture.callRpc).toHaveBeenCalledTimes(2);
-
-    resolveCore({ outcome: "OK", messages: [message] });
-    await vi.advanceTimersByTimeAsync(0);
+    await expect(fixture.harness.behavior.callRpc("markOperatorMessageRead", { projectId: "project-b", messageId: 1 })).rejects.toThrow("not found in this project");
+    const read = await fixture.harness.behavior.callRpc("markOperatorMessageRead", { projectId: "project-a", messageId: 1 }) as { readAtMs: number | null };
+    expect(read.readAtMs).toEqual(expect.any(Number));
+    const archived = await fixture.harness.behavior.callRpc("archiveOperatorMessage", { projectId: "project-a", messageId: 1 }) as { archivedAtMs: number | null };
+    expect(archived.archivedAtMs).toEqual(expect.any(Number));
+    await expect(fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-a"] })).resolves.toEqual({ messages: [] });
+    await expect(fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-a"], includeArchived: true })).resolves.toEqual({ messages: [expect.objectContaining({ messageId: 1 })] });
+    await fixture.harness.lifecycle.dispose();
   });
 
-  it("bounds idempotent mark/archive calls without multiplying late mutations", async () => {
-    vi.useFakeTimers();
-    let rejectCore!: (reason: Error) => void;
-    const core = new Promise((_, reject) => { rejectCore = reject; });
-    const fixture = host(() => core);
-    const first = fixture.harness.callRpc("archiveOperatorMessage", { projectId: "project-1", messageId: 1 }).then(() => null, String);
-    const second = fixture.harness.callRpc("archiveOperatorMessage", { projectId: "project-1", messageId: 1 }).then(() => null, String);
-    await vi.advanceTimersByTimeAsync(4_000);
-    expect(await first).toContain("timed out after 4000ms");
-    expect(await second).toContain("timed out after 4000ms");
-    expect(fixture.callRpc).toHaveBeenCalledTimes(1);
+  it("uses only threads.send and records BB acceptance without provider-consumption claims", async () => {
+    const fixture = host("deferred");
+    await storeMessage(fixture);
 
-    rejectCore(new Error("late core rejection"));
-    await vi.advanceTimersByTimeAsync(0);
+    const input = { projectId: "project-a", messageId: 1, text: "Use Tuesday" };
+    const replied = await fixture.harness.behavior.callRpc("replyToOperatorMessage", input);
+    const duplicate = await fixture.harness.behavior.callRpc("replyToOperatorMessage", { ...input, text: "Use Wednesday" });
+
+    expect(fixture.send).toHaveBeenCalledTimes(1);
+    expect(fixture.send).toHaveBeenCalledWith({
+      threadId: "thread-sender",
+      mode: "auto",
+      input: [{ type: "text", text: "Use Tuesday", mentions: [] }],
+    });
+    expect(replied).toEqual(expect.objectContaining({ replyText: "Use Tuesday", replyDelivery: "deferred", replyAcceptedAtMs: expect.any(Number) }));
+    expect(duplicate).toEqual(replied);
+    expect(fixture.harness.inspection.sdk.callsTo("plugins.callRpc")).toEqual([]);
+    await fixture.harness.lifecycle.dispose();
   });
 
-  it("keeps one reply call alive past the core delivery window without creating a duplicate", async () => {
-    vi.useFakeTimers();
-    let resolveCore!: (value: unknown) => void;
-    const core = new Promise((resolve) => { resolveCore = resolve; });
-    const fixture = host(() => core);
-    let settled = false;
-    const first = fixture.harness.callRpc("replyToOperatorMessage", { projectId: "project-1", messageId: 1, text: "answer" }).finally(() => { settled = true; });
-    const duplicate = fixture.harness.callRpc("replyToOperatorMessage", { projectId: "project-1", messageId: 1, text: "different retry" });
-    await vi.advanceTimersByTimeAsync(41_000);
-    expect(settled).toBe(false);
-    expect(fixture.callRpc).toHaveBeenCalledTimes(1);
-
-    resolveCore({ ...message, readAtMs: 2, repliedAtMs: 3, replyText: "answer" });
-    await expect(first).resolves.toEqual({ ...message, readAtMs: 2, repliedAtMs: 3, replyText: "answer" });
-    await expect(duplicate).resolves.toEqual({ ...message, readAtMs: 2, repliedAtMs: 3, replyText: "answer" });
-  });
-
-  it("bounds hung reply callers while retries rejoin the same late-settling core call", async () => {
-    vi.useFakeTimers();
-    let rejectCore!: (reason: Error) => void;
-    const core = new Promise((_, reject) => { rejectCore = reject; });
-    const fixture = host(() => core);
-    const first = fixture.harness.callRpc("replyToOperatorMessage", { projectId: "project-1", messageId: 1, text: "answer" }).then(() => null, String);
-
-    await vi.advanceTimersByTimeAsync(50_000);
-    expect(await first).toContain("still pending after 50000ms; delivery outcome is not yet known and retry will rejoin the same attempt");
-    const retry = fixture.harness.callRpc("replyToOperatorMessage", { projectId: "project-1", messageId: 1, text: "retry" }).then(() => null, String);
-    await vi.advanceTimersByTimeAsync(50_000);
-    expect(await retry).toContain("still pending after 50000ms; delivery outcome is not yet known and retry will rejoin the same attempt");
-    expect(fixture.callRpc).toHaveBeenCalledTimes(1);
-
-    rejectCore(new Error("late core rejection"));
-    await vi.advanceTimersByTimeAsync(0);
-  });
-
-  it("contains missing core failure to Operator Inbox", async () => {
-    const fixture = host(() => { throw new Error("core unavailable"); });
-    await expect(fixture.harness.callRpc("operatorMessages", { projectId: "project-1" })).rejects.toThrow("core unavailable");
+  it("registers no background, schedule, HTTP, CLI, or mention surfaces", async () => {
+    const fixture = host();
+    expect(fixture.harness.inspection.registrations.services).toEqual([]);
+    expect(fixture.harness.inspection.registrations.schedules).toEqual([]);
+    expect(fixture.harness.inspection.registrations.httpRoutes).toEqual([]);
+    expect(fixture.harness.inspection.registrations.cli).toBeNull();
+    expect(fixture.harness.inspection.registrations.mentionProviders).toEqual([]);
+    await fixture.harness.lifecycle.dispose();
   });
 });

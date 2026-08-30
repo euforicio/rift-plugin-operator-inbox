@@ -3,18 +3,15 @@ import { ArchiveIcon, ArrowClockwiseIcon, EnvelopeOpenIcon, PaperPlaneTiltIcon }
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import remarkBreaks from "remark-breaks";
-import { definePluginApp, experimental_useSidebarThreads, useBbNavigate, useRpc } from "@get-bb/plugin-sdk/app";
+import { definePluginApp, experimental_useSidebarThreads, useBbNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@get-bb/plugin-sdk/app";
 import type { PluginNavPanelProps, PluginRpcResult } from "@get-bb/plugin-sdk/app";
-import { applyUnreadMutation, applyUnreadReadResult, clearUnreadObserver, isReadEpochCurrent, isUnregisteredInboxProject, operatorOnlyMessages, readOperatorMessagesWithEpoch, refreshUnread, useInboxUnreadCount } from "./src/inbox-unread";
 import type { rpcContract } from "./contract";
 
+const INBOX_CHANGED_CHANNEL = "messages-changed";
 const messageBodyClass = "break-words text-sm leading-6";
-// #714 P1/P2: bodies are fleet-authored, and the SDK Markdown surface exposes no
-// image policy (bb 0.40.0 renders ![alt](url) as <img>, a read-beacon vector) nor
-// remarkBreaks. Direct react-markdown — the same engine bb itself bundles — closes
-// both deterministically: images render as alt text only, single newlines stay hard
-// breaks. Raw HTML stays escaped by default; the default urlTransform already rejects
-// javascript:/data: schemes.
+// Agent-authored bodies are untrusted. Render image syntax as alt text so a remote
+// URL cannot become a tracking beacon. Raw HTML stays escaped and unsafe URL schemes
+// are rejected by react-markdown's default transform.
 // Host preflight zeroes <p>/list margins and strips markers, so unstyled markdown
 // elements render as one blob. ponytail: style only what bodies actually contain
 // (paragraphs, lists, links); headings/blockquotes keep defaults until a sender
@@ -39,7 +36,7 @@ type InboxFilters = { projectId: string; showArchived: boolean };
 type PendingInboxAction = { key: string; action: "mark-read" | "archive" };
 function asText(value: unknown): string | null { return typeof value === "string" && value.trim() ? value : null; }
 const MAX_VISIBLE_INBOX_MESSAGES = 256;
-const INBOX_FILTER_STORAGE_KEY = "bb-collab.inbox-filters";
+const INBOX_FILTER_STORAGE_KEY = "operator-inbox.filters";
 function readInboxFilters(): InboxFilters {
   try { const value = JSON.parse(window.localStorage.getItem(INBOX_FILTER_STORAGE_KEY) ?? "null") as Partial<InboxFilters> | null; return { projectId: typeof value?.projectId === "string" ? value.projectId : "", showArchived: value?.showArchived === true }; }
   catch { return { projectId: "", showArchived: false }; }
@@ -61,13 +58,10 @@ function formatRelativeTime(timestamp: number): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 function severityLabel(severity: OperatorMessage["severity"]): string { return severity === "needs-decision" ? "Needs decision" : severity[0]!.toUpperCase() + severity.slice(1); }
-function senderLabel(message: OperatorMessage): string { return asText(message.senderTitle) ?? "Sender unavailable"; }
+function senderLabel(message: OperatorMessage): string { return asText(message.senderTitle) ?? "Sender thread"; }
 function messageNumberLabel(message: Pick<OperatorMessage, "messageId">): string { return `#${message.messageId}`; }
 function deliveryLabel(message: OperatorMessage): string | null {
-  if (message.repliedAtMs != null) return "Delivered";
-  if (message.replyInProgress) return "Delivery pending";
-  if (message.replyDeliveryError) return "Delivery failed";
-  return null;
+  return message.replyAcceptedAtMs === null ? null : `Accepted by BB${message.replyDelivery ? ` · ${message.replyDelivery}` : ""}`;
 }
 function stateLabel(message: OperatorMessage): string {
   if (message.archivedAtMs != null) return "Archived";
@@ -97,7 +91,7 @@ function InboxPanel(_props: PluginNavPanelProps) {
   const visibleMessages = messages.slice(0, MAX_VISIBLE_INBOX_MESSAGES);
   const selectedKey = selectedMessageKey && visibleMessages.some((message) => messageKey(message) === selectedMessageKey) ? selectedMessageKey : visibleMessages[0] ? messageKey(visibleMessages[0]) : null;
   const selectedMessage = selectedKey === null ? undefined : visibleMessages.find((message) => messageKey(message) === selectedKey);
-  const unreadCount = messages.filter((message) => message.readAtMs === null).length;
+  const unreadCount = messages.filter((message) => message.readAtMs === null && message.archivedAtMs === null).length;
 
   const setFiltersAndPersist = (next: InboxFilters) => { setFilters(next); writeInboxFilters(next); };
   const refresh = useCallback(() => {
@@ -105,30 +99,30 @@ function InboxPanel(_props: PluginNavPanelProps) {
     setNotice(null);
     setLoading(true);
     if (projects.length === 0) { setMessages([]); setErrors([]); setLoading(false); return; }
-    const reads = projects.map((project) => readOperatorMessagesWithEpoch(rpc, { projectId: project.id, recipient: "operator", withSenderTitles: true, ...(showArchived ? { includeArchived: true } : {}) }));
-    void Promise.allSettled(reads.map((read) => read.promise))
-      .then((results) => {
+    const requestedProjectIds = projects.map((project) => project.id);
+    void rpc.call("operatorMessages", { projectIds: requestedProjectIds, ...(showArchived ? { includeArchived: true } : {}) })
+      .then((result) => {
         if (sequence !== refreshSequence.current) return;
-        const loaded: OperatorMessage[] = [];
-        const failed: string[] = [];
-        results.forEach((result, index) => {
-          const request = reads[index]!;
-          const label = `${projects[index]!.name} (${projects[index]!.id})`;
-          if (!isReadEpochCurrent(request.epoch)) return;
-          if (result.status === "rejected") failed.push(`${label}: ${String(result.reason)}`);
-          else if (!isUnregisteredInboxProject(result.value)) {
-            try { const projectMessages = operatorOnlyMessages(result.value, projects[index]!.id); loaded.push(...projectMessages); applyUnreadReadResult(projects[index]!.id, result.value, request.epoch); }
-            catch (reason) { failed.push(`${label}: ${String(reason)}`); }
-          }
-          else { applyUnreadReadResult(projects[index]!.id, result.value, request.epoch); if (projectId !== "") failed.push(`${label}: ${result.value.outcome}`); }
-        });
-        loaded.sort((left, right) => Number(left.readAtMs !== null) - Number(right.readAtMs !== null) || right.createdAtMs - left.createdAtMs || right.messageId - left.messageId);
-        setMessages(loaded);
-        setErrors(failed);
+        const allowed = new Set(requestedProjectIds);
+        if (result.messages.some((message) => !allowed.has(message.projectId))) throw new Error("Operator Inbox returned a message from another project");
+        setMessages(result.messages);
+        setErrors([]);
       })
+      .catch((reason: unknown) => { if (sequence === refreshSequence.current) setErrors([String(reason)]); })
       .finally(() => { if (sequence === refreshSequence.current) setLoading(false); });
-  }, [projects, projectId, rpc, showArchived]);
+  }, [projects, rpc, showArchived]);
   useEffect(refresh, [refresh]);
+  useRealtime(INBOX_CHANGED_CHANNEL, useCallback((payload: unknown) => {
+    const changedProjectId = payload && typeof payload === "object" ? (payload as { projectId?: unknown }).projectId : null;
+    if (typeof changedProjectId === "string" && projects.some((project) => project.id === changedProjectId)) refresh();
+  }, [projects, refresh]));
+  const realtimeState = useRealtimeConnectionState();
+  const wasConnected = useRef(false);
+  useEffect(() => {
+    if (realtimeState !== "connected") return;
+    if (wasConnected.current) refresh();
+    wasConnected.current = true;
+  }, [realtimeState, refresh]);
 
   const updateMessage = (next: OperatorMessage) => setMessages((current) => current.map((message) => messageKey(message) === messageKey(next) ? next : message));
   const currentProjectLabel = projectId ? projectNames.get(projectId) ?? projectId : "All projects";
@@ -146,7 +140,6 @@ function InboxPanel(_props: PluginNavPanelProps) {
     setErrors([]);
     setNotice(null);
     void rpc.call("markOperatorMessageRead", { projectId: selectedMessage.projectId, messageId: selectedMessage.messageId }).then((read) => {
-      applyUnreadMutation(read);
       updateMessage(read);
       setNotice("Marked read. This message is no longer counted as unread.");
     }).catch((reason: unknown) => setErrors([String(reason)])).finally(() => setPendingAction((current) => current === action ? null : current));
@@ -166,7 +159,6 @@ function InboxPanel(_props: PluginNavPanelProps) {
     setErrors([]);
     setNotice(null);
     const operation = rpc.call("archiveOperatorMessage", { projectId: message.projectId, messageId: message.messageId }).then((archived) => {
-      applyUnreadMutation(archived);
       if (sequence === refreshSequence.current) setMessages((current) => showArchivedRef.current ? current.map((item) => messageKey(item) === key ? archived : item) : current.filter((item) => messageKey(item) !== key));
       setNotice("Archived. Turn on Show archived to include it again.");
       return archived;
@@ -186,7 +178,7 @@ function InboxPanel(_props: PluginNavPanelProps) {
     <section aria-label="Inbox toolbar" className="grid gap-3 rounded-lg border border-border bg-muted/10 p-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-end"><label className="grid min-w-0 gap-1 text-sm"><span className="text-xs font-medium text-muted-foreground">Project</span><select className="w-full min-w-0 rounded-md border border-border bg-background px-3 py-2" value={projectId} onChange={(event) => setFiltersAndPersist({ projectId: event.target.value, showArchived })}><option value="">All projects</option>{sidebar.projects.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}</select></label><label className="flex min-h-10 items-center gap-2 px-1 text-sm"><input type="checkbox" checked={showArchived} onChange={(event) => setFiltersAndPersist({ projectId, showArchived: event.target.checked })} />Show archived</label><button type="button" aria-label="Refresh inbox" title="Refresh inbox" className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={refresh} disabled={loading}><ArrowClockwiseIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button></section>
     {errors.map((loadError) => <p role="alert" key={loadError} className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">Refresh failed: {loadError}</p>)}
     {notice ? <p role="status" className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-primary">{notice}</p> : null}
-    {sidebar.projects.length === 0 ? <section className="rounded-lg border border-dashed border-border p-6 text-center"><h2 className="font-medium">No projects available</h2><p className="mt-1 text-sm text-muted-foreground">A registered project is required before operator messages can appear here.</p></section> : <section aria-labelledby="inbox-list-heading" className="grid min-w-0 gap-3 md:grid-cols-[minmax(16rem,0.42fr)_minmax(0,1fr)]">
+    {sidebar.projects.length === 0 ? <section className="rounded-lg border border-dashed border-border p-6 text-center"><h2 className="font-medium">No projects available</h2><p className="mt-1 text-sm text-muted-foreground">A project is required before operator messages can appear here.</p></section> : <section aria-labelledby="inbox-list-heading" className="grid min-w-0 gap-3 md:grid-cols-[minmax(16rem,0.42fr)_minmax(0,1fr)]">
       <div className="min-w-0 overflow-hidden rounded-lg border border-border"><div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border bg-muted/10 px-3 py-3"><div><h2 id="inbox-list-heading" className="font-semibold">Messages</h2><p className="text-xs text-muted-foreground">{currentProjectLabel}</p></div><span className="text-xs text-muted-foreground">{messages.length} {messages.length === 1 ? "message" : "messages"}</span></div>
         {loading ? <p role="status" className="p-5 text-sm text-muted-foreground">Loading messages…</p> : null}
         {!loading && messages.length === 0 ? <div className="p-5"><p className="font-medium">No messages in this view</p><p className="mt-1 text-sm text-muted-foreground">Try another project or show archived messages.</p></div> : null}
@@ -205,10 +197,10 @@ function InboxPanel(_props: PluginNavPanelProps) {
           </article>;
         })}</div>
       </div>
-      {selectedMessage ? <article aria-labelledby="selected-message-heading" className="min-w-0 rounded-lg border border-border bg-background"><header className="grid gap-3 border-b border-border bg-muted/10 p-4"><div className="flex flex-wrap items-start justify-between gap-3"><div className="min-w-0"><p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Selected message</p><h2 id="selected-message-heading" className="mt-1 text-lg font-semibold">Message {messageNumberLabel(selectedMessage)}</h2><p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground"><span>From</span>{selectedSenderId && asText(selectedMessage.senderTitle) ? <a href="#" className="min-w-0 break-words font-medium text-foreground underline decoration-muted-foreground/50 underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={`Open sender session ${selectedMessage.senderTitle}`} onClick={(event) => { event.preventDefault(); navigate.toThread(selectedSenderId); }}>{selectedMessage.senderTitle}</a> : <span>Sender unavailable</span>}<span aria-hidden="true">·</span><span>{selectedProjectLabel}</span><span aria-hidden="true">·</span><span>{severityLabel(selectedMessage.severity)}</span><span aria-hidden="true">·</span><time dateTime={new Date(selectedMessage.createdAtMs).toISOString()} title={formatExactTime(selectedMessage.createdAtMs)} aria-label={`Received ${formatExactTime(selectedMessage.createdAtMs)}`}>{formatRelativeTime(selectedMessage.createdAtMs)}</time></p></div><div className="flex flex-wrap gap-2 text-xs"><span className={`rounded-full px-2.5 py-1 font-medium ${selectedMessage.readAtMs === null ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{selectedMessage.readAtMs === null ? "Unread" : "Read"}</span>{selectedMessage.archivedAtMs != null ? <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">Archived</span> : null}{deliveryLabel(selectedMessage) ? <span className={`rounded-full px-2.5 py-1 font-medium ${deliveryLabel(selectedMessage) === "Delivery failed" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>{deliveryLabel(selectedMessage)}</span> : null}</div></div></header>
-        <div className="grid gap-5 p-4"><section aria-labelledby="message-body-heading" className="grid gap-2"><h3 id="message-body-heading" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message</h3><MessageBody text={selectedMessage.text} />{selectedMessage.notificationError ? <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">Urgent notification could not be sent: {selectedMessage.notificationError}</p> : null}</section>
-          {selectedMessage.repliedAtMs != null ? <section aria-label="Reply delivered" className="grid gap-2 rounded-md border border-border bg-muted/10 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold">Reply delivered</h3><time className="text-xs text-muted-foreground" dateTime={new Date(selectedMessage.repliedAtMs).toISOString()} title={formatExactTime(selectedMessage.repliedAtMs)} aria-label={`Delivered ${formatExactTime(selectedMessage.repliedAtMs)}`}>{formatRelativeTime(selectedMessage.repliedAtMs)}</time></div><MessageBody text={selectedMessage.replyText ?? ""} /><p className="text-xs text-muted-foreground">BB confirmed the matching input in the sender thread.</p></section> : <section aria-labelledby="reply-heading" className="grid gap-3 border-t border-border pt-4"><div><h3 id="reply-heading" className="text-sm font-semibold">Reply to sender</h3><p className="mt-1 text-xs text-muted-foreground">Your reply is delivered only after BB confirms the matching input in the sender thread.</p></div>{selectedMessage.replyInProgress ? <p role="status" className="rounded-md border border-border bg-muted/10 px-3 py-2 text-sm text-primary">Delivery pending. Keep this message open; the outcome is not yet known.</p> : null}{selectedMessage.replyDeliveryError ? <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">Delivery failed: {selectedMessage.replyDeliveryError} You can retry without losing this message.</p> : null}<label className="grid gap-1 text-sm" htmlFor={`operator-reply-${replyKey}`}><span className="text-xs font-medium text-muted-foreground">Reply text</span><textarea id={`operator-reply-${replyKey}`} className="min-h-24 w-full rounded-md border border-border bg-background p-2.5 text-sm leading-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" value={replyText} onChange={(event) => setDrafts((current) => ({ ...current, [replyKey!]: event.target.value }))} /></label></section>}
-          <div className="flex flex-wrap gap-2 border-t border-border pt-4"><button type="button" aria-label={replyingMessageKey === replyKey ? "Delivering reply" : selectedMessage.repliedAtMs != null ? "Reply delivered" : selectedMessage.replyDeliveryError ? "Retry reply" : "Send reply"} title={replyingMessageKey === replyKey ? "Delivering reply" : selectedMessage.repliedAtMs != null ? "Reply delivered" : selectedMessage.replyDeliveryError ? "Retry reply" : "Send reply"} disabled={replyingMessageKey !== null || pendingAction !== null || selectedMessage.repliedAtMs != null || !replyText.trim()} className="min-h-10 min-w-10 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-150 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary motion-reduce:transition-none" onClick={() => { const text = replyText.trim(); if (!text || !replyKey) return; setErrors([]); setNotice(null); setReplyingMessageKey(replyKey); void rpc.call("replyToOperatorMessage", { projectId: selectedMessage.projectId, messageId: selectedMessage.messageId, text }).then((replied) => { updateMessage(replied); setNotice(replied.repliedAtMs != null ? "Reply delivered. BB confirmed the matching input." : replied.replyInProgress ? "Delivery pending. The outcome is not yet known." : replied.replyDeliveryError ? "Delivery failed. The message remains retryable." : "Reply delivery is not confirmed."); }).catch((reason: unknown) => setErrors([String(reason)])).finally(() => setReplyingMessageKey(null)); }}><PaperPlaneTiltIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button>{selectedMessage.readAtMs === null ? <button type="button" aria-busy={markReadPending} aria-label={markReadPending ? "Marking message read" : "Mark message read"} title={markReadPending ? "Marking message read" : "Mark message read"} disabled={pendingAction !== null} className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={markSelectedMessageRead}><EnvelopeOpenIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button> : null}{selectedMessage.archivedAtMs === null ? <button type="button" aria-busy={archivePending} aria-label={archivePending ? "Archiving message" : "Archive message"} title={archivePending ? "Archiving message" : "Archive message"} disabled={pendingAction !== null} className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={archiveSelectedMessage}><ArchiveIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button> : null}</div>
+      {selectedMessage ? <article aria-labelledby="selected-message-heading" className="min-w-0 rounded-lg border border-border bg-background"><header className="grid gap-3 border-b border-border bg-muted/10 p-4"><div className="flex flex-wrap items-start justify-between gap-3"><div className="min-w-0"><p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Selected message</p><h2 id="selected-message-heading" className="mt-1 text-lg font-semibold">Message {messageNumberLabel(selectedMessage)}</h2><p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground"><span>From</span>{selectedSenderId ? <a href="#" className="min-w-0 break-words font-medium text-foreground underline decoration-muted-foreground/50 underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={`Open sender thread ${senderLabel(selectedMessage)}`} onClick={(event) => { event.preventDefault(); navigate.toThread(selectedSenderId); }}>{senderLabel(selectedMessage)}</a> : <span>Sender unavailable</span>}<span aria-hidden="true">·</span><span>{selectedProjectLabel}</span><span aria-hidden="true">·</span><span>{severityLabel(selectedMessage.severity)}</span><span aria-hidden="true">·</span><time dateTime={new Date(selectedMessage.createdAtMs).toISOString()} title={formatExactTime(selectedMessage.createdAtMs)} aria-label={`Received ${formatExactTime(selectedMessage.createdAtMs)}`}>{formatRelativeTime(selectedMessage.createdAtMs)}</time></p></div><div className="flex flex-wrap gap-2 text-xs"><span className={`rounded-full px-2.5 py-1 font-medium ${selectedMessage.readAtMs === null ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{selectedMessage.readAtMs === null ? "Unread" : "Read"}</span>{selectedMessage.archivedAtMs != null ? <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">Archived</span> : null}{deliveryLabel(selectedMessage) ? <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">{deliveryLabel(selectedMessage)}</span> : null}</div></div></header>
+        <div className="grid gap-5 p-4"><section aria-labelledby="message-body-heading" className="grid gap-2"><h3 id="message-body-heading" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message</h3><MessageBody text={selectedMessage.text} /></section>
+          {selectedMessage.replyAcceptedAtMs != null ? <section aria-label="Reply accepted by BB" className="grid gap-2 rounded-md border border-border bg-muted/10 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold">Reply accepted by BB</h3><time className="text-xs text-muted-foreground" dateTime={new Date(selectedMessage.replyAcceptedAtMs).toISOString()} title={formatExactTime(selectedMessage.replyAcceptedAtMs)} aria-label={`Accepted ${formatExactTime(selectedMessage.replyAcceptedAtMs)}`}>{formatRelativeTime(selectedMessage.replyAcceptedAtMs)}</time></div><MessageBody text={selectedMessage.replyText ?? ""} /><p className="text-xs text-muted-foreground">BB reported {selectedMessage.replyDelivery ?? "accepted"}. Provider consumption is not observed.</p></section> : <section aria-labelledby="reply-heading" className="grid gap-3 border-t border-border pt-4"><div><h3 id="reply-heading" className="text-sm font-semibold">Reply to sender</h3><p className="mt-1 text-xs text-muted-foreground">The Inbox records when BB accepts the send. It does not claim the provider consumed it.</p></div><label className="grid gap-1 text-sm" htmlFor={`operator-reply-${replyKey}`}><span className="text-xs font-medium text-muted-foreground">Reply text</span><textarea id={`operator-reply-${replyKey}`} className="min-h-24 w-full rounded-md border border-border bg-background p-2.5 text-sm leading-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" value={replyText} onChange={(event) => setDrafts((current) => ({ ...current, [replyKey!]: event.target.value }))} /></label></section>}
+          <div className="flex flex-wrap gap-2 border-t border-border pt-4"><button type="button" aria-label={replyingMessageKey === replyKey ? "Sending reply" : selectedMessage.replyAcceptedAtMs != null ? "Reply accepted by BB" : "Send reply"} title={replyingMessageKey === replyKey ? "Sending reply" : selectedMessage.replyAcceptedAtMs != null ? "Reply accepted by BB" : "Send reply"} disabled={replyingMessageKey !== null || pendingAction !== null || selectedMessage.replyAcceptedAtMs != null || !replyText.trim()} className="min-h-10 min-w-10 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-150 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary motion-reduce:transition-none" onClick={() => { const text = replyText.trim(); if (!text || !replyKey) return; setErrors([]); setNotice(null); setReplyingMessageKey(replyKey); void rpc.call("replyToOperatorMessage", { projectId: selectedMessage.projectId, messageId: selectedMessage.messageId, text }).then((replied) => { updateMessage(replied); setNotice(`Reply accepted by BB (${replied.replyDelivery ?? "accepted"}). Provider consumption is not observed.`); }).catch((reason: unknown) => setErrors([String(reason)])).finally(() => setReplyingMessageKey(null)); }}><PaperPlaneTiltIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button>{selectedMessage.readAtMs === null ? <button type="button" aria-busy={markReadPending} aria-label={markReadPending ? "Marking message read" : "Mark message read"} title={markReadPending ? "Marking message read" : "Mark message read"} disabled={pendingAction !== null} className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={markSelectedMessageRead}><EnvelopeOpenIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button> : null}{selectedMessage.archivedAtMs === null ? <button type="button" aria-busy={archivePending} aria-label={archivePending ? "Archiving message" : "Archive message"} title={archivePending ? "Archiving message" : "Archive message"} disabled={pendingAction !== null} className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={archiveSelectedMessage}><ArchiveIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button> : null}</div>
         </div>
       </article> : <section className="min-w-0 rounded-lg border border-dashed border-border p-6 text-center"><h2 className="font-medium">Select a message</h2><p className="mt-1 text-sm text-muted-foreground">Choose a message from the list to read it and see available actions.</p></section>}
     </section>}
@@ -218,14 +210,25 @@ function InboxPanel(_props: PluginNavPanelProps) {
 function InboxUnreadAccessory() {
   const sidebar = experimental_useSidebarThreads();
   const rpc = useRpc<typeof rpcContract>();
-  const unread = useInboxUnreadCount();
-  const projects = useMemo(() => sidebar.projects.map(({ id }) => ({ id })), [sidebar.projects]);
+  const projectIds = useMemo(() => sidebar.projects.map(({ id }) => id), [sidebar.projects]);
+  const [unread, setUnread] = useState(0);
+  const refresh = useCallback(() => {
+    if (projectIds.length === 0) { setUnread(0); return; }
+    void rpc.call("unreadOperatorMessageCount", { projectIds }).then(({ count }) => setUnread(count), () => undefined);
+  }, [projectIds, rpc]);
 
+  useEffect(refresh, [refresh]);
+  useRealtime(INBOX_CHANGED_CHANNEL, useCallback((payload: unknown) => {
+    const changedProjectId = payload && typeof payload === "object" ? (payload as { projectId?: unknown }).projectId : null;
+    if (typeof changedProjectId === "string" && projectIds.includes(changedProjectId)) refresh();
+  }, [projectIds, refresh]));
+  const realtimeState = useRealtimeConnectionState();
+  const wasConnected = useRef(false);
   useEffect(() => {
-    refreshUnread(rpc, projects);
-    const timer = window.setInterval(() => refreshUnread(rpc, projects), 30_000);
-    return () => { window.clearInterval(timer); clearUnreadObserver(); };
-  }, [projects, rpc]);
+    if (realtimeState !== "connected") return;
+    if (wasConnected.current) refresh();
+    wasConnected.current = true;
+  }, [realtimeState, refresh]);
 
   if (unread < 1) return null;
   const label = `${unread} unread operator ${unread === 1 ? "message" : "messages"}`;

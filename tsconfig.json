@@ -1,13 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "."
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node", "vitest/globals"]
   },
-  "include": [
-    "app.tsx",
-    "contract.ts",
-    "server.ts",
-    "src",
-    "tests"
-  ]
+  "include": ["app.tsx", "contract.ts", "server.ts", "tests"]
 }
