@@ -13925,7 +13925,9 @@ function plugin(bb) {
         const accepted = await bb.sdk.threads.send({
           threadId: message.senderThreadId,
           mode: "auto",
-          input: [{ type: "text", text: input.text, mentions: [] }]
+          input: [{ type: "text", text: `Operator reply to Inbox message #${message.messageId}:
+
+${input.text}`, mentions: [] }]
         });
         const acceptedAt = Date.now();
         db.prepare(`UPDATE messages SET reply_text = ?, reply_accepted_at_ms = ?, reply_delivery = ?,
