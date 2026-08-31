@@ -91,7 +91,7 @@ describe("Operator Inbox backend", () => {
     expect(fixture.send).toHaveBeenCalledWith({
       threadId: "thread-sender",
       mode: "auto",
-      input: [{ type: "text", text: "Use Tuesday", mentions: [] }],
+      input: [{ type: "text", text: "Operator reply to Inbox message #1:\n\nUse Tuesday", mentions: [] }],
     });
     expect(replied).toEqual(expect.objectContaining({ replyText: "Use Tuesday", replyDelivery: "deferred", replyAcceptedAtMs: expect.any(Number) }));
     expect(duplicate).toEqual(replied);
