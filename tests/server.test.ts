@@ -144,3 +144,30 @@ it("derives file context only from the stored sender and rejects missing/foreign
   await expect(fixture.harness.behavior.callRpc("messageFileContext", { ...input, threadId: "forged" })).rejects.toThrow();
   await fixture.harness.lifecycle.dispose();
 });
+
+it("keeps creation order through read, reply, archive and repeat read without sending read receipts", async () => {
+  const fixture = host();
+  const now = vi.spyOn(Date, "now").mockReturnValue(1000);
+  try {
+    await storeMessage(fixture, { text: "First" });
+    await storeMessage(fixture, { text: "Second" });
+    await storeMessage(fixture, { text: "Third" });
+    const ids = async (includeArchived = true) => {
+      const result = await fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-a"], includeArchived }) as { messages: { messageId: number }[] };
+      return result.messages.map((item) => item.messageId);
+    };
+    expect(await ids()).toEqual([3, 2, 1]);
+    const read = await fixture.harness.behavior.callRpc("markOperatorMessageRead", { projectId: "project-a", messageId: 3 });
+    now.mockReturnValue(2000);
+    expect(await fixture.harness.behavior.callRpc("markOperatorMessageRead", { projectId: "project-a", messageId: 3 })).toEqual(read);
+    expect(fixture.send).not.toHaveBeenCalled();
+    expect(await ids()).toEqual([3, 2, 1]);
+    await expect(fixture.harness.behavior.callRpc("unreadOperatorMessageCount", { projectIds: ["project-a"] })).resolves.toEqual({ count: 2 });
+    await fixture.harness.behavior.callRpc("replyToOperatorMessage", { projectId: "project-a", messageId: 2, text: "Reply" });
+    expect(await ids()).toEqual([3, 2, 1]);
+    expect(fixture.send).toHaveBeenCalledTimes(1);
+    await fixture.harness.behavior.callRpc("archiveOperatorMessage", { projectId: "project-a", messageId: 3 });
+    expect(await ids()).toEqual([3, 2, 1]);
+    expect(await ids(false)).toEqual([2, 1]);
+  } finally { now.mockRestore(); await fixture.harness.lifecycle.dispose(); }
+});

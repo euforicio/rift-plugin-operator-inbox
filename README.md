@@ -28,7 +28,12 @@ context; the model cannot supply or override either value.
 
 Open **Inbox** in BB's navigation to read messages. Click a message header to
 expand or collapse its card; one message opens at a time, and reply drafts
-survive switching cards. The single-column layout keeps the message readable
+survive switching cards. Messages stay newest-first by creation time, with message
+ID breaking ties; reading, replying, and archiving never reorder the remaining
+messages. Expanding a message (including the initially open card) marks it read
+and clears its unread dot once saved. Read state is local to Inbox and does not
+send a receipt or approval to the sender; only an explicit reply sends text.
+The single-column layout keeps the message readable
 when BB's file or browser panel opens beside it. File controls open BB's native
 preview without collapsing the card.
 

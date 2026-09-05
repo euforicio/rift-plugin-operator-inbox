@@ -13938,7 +13938,7 @@ function plugin(bb) {
       const placeholders = input.projectIds.map(() => "?").join(", ");
       const rows = db.prepare(`SELECT * FROM messages
         WHERE project_id IN (${placeholders}) ${input.includeArchived ? "" : "AND archived_at_ms IS NULL"}
-        ORDER BY (read_at_ms IS NOT NULL), created_at_ms DESC, id DESC
+        ORDER BY created_at_ms DESC, id DESC
         LIMIT 256`).all(...input.projectIds);
       return { messages: rows.map(toMessage) };
     },

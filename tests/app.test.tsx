@@ -37,7 +37,7 @@ function handlers(overrides: Record<string, unknown> = {}) {
     messageFileContext: vi.fn(async () => null),
     operatorMessages: vi.fn(async () => ({ messages: [message] })),
     unreadOperatorMessageCount: vi.fn(async () => ({ count: 1 })),
-    markOperatorMessageRead: vi.fn(async () => ({ ...message, readAtMs: 2 })),
+    markOperatorMessageRead: vi.fn(async (input: { projectId: string; messageId: number }) => ({ ...message, ...input, readAtMs: 2 })),
     archiveOperatorMessage: vi.fn(async () => ({ ...message, archivedAtMs: 3 })),
     replyToOperatorMessage: vi.fn(async ({ text }: { text: string }) => ({ ...message, readAtMs: 4, replyText: text, replyAcceptedAtMs: 4, replyDelivery: "queued" as const })),
     ...overrides,
@@ -98,8 +98,8 @@ describe("Operator Inbox panel", () => {
       rpc: rpc as never,
     });
 
-    fireEvent.click(await rendered.findByRole("button", { name: "Mark message read" }));
-    expect(await rendered.findByText("Marked read. This message is no longer counted as unread.")).toBeTruthy();
+    await waitFor(() => expect(rpc.markOperatorMessageRead).toHaveBeenCalledWith({ projectId: "project-a", messageId: 1 }));
+    await waitFor(() => expect(rendered.queryByRole("button", { name: "Mark message read" })).toBeNull());
     fireEvent.click(rendered.getAllByRole("button", { name: "Archive message" }).at(-1)!);
     expect(await rendered.findByText("Archived. Turn on Show archived to include it again.")).toBeTruthy();
 
@@ -263,4 +263,57 @@ it("keeps the message expanded when opening a native file panel", async () => {
   expect(rendered.inspection.navigateCalls.at(-1)).toEqual({ method: "experimental_openFilePreview", options: {
     target: { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }, location: null,
   } });
+});
+
+it("clears unread feedback only after saving and keeps order and selection through realtime refresh", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  let rows: Array<Omit<typeof message, "readAtMs"> & { readAtMs: number | null }> = [{ ...message }, { ...message, messageId: 2, text: "Second" }];
+  let finish: () => void = () => {};
+  const pending = new Promise<void>((resolve) => { finish = resolve; });
+  const read = vi.fn(async ({ messageId }: { messageId: number }) => {
+    if (messageId === 1) await pending;
+    rows = rows.map((row) => row.messageId === messageId ? { ...row, readAtMs: 3 } : row);
+    return rows.find((row) => row.messageId === messageId)!;
+  });
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: rows }), markOperatorMessageRead: read }) as never,
+  });
+  await rendered.findByRole("button", { name: /^Collapse message #1/ });
+  expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(2);
+  expect(rendered.getByText("2 unread")).toBeTruthy();
+  expect(read).toHaveBeenCalledTimes(1);
+  await act(async () => { finish(); await pending; });
+  await waitFor(() => expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(1));
+  expect(rendered.getByText("1 unread")).toBeTruthy();
+  await rendered.behavior.emitRealtime(INBOX_CHANGED_CHANNEL, { projectId: "project-a" });
+  const toggles = () => rendered.getAllByRole("button", { name: /^(Expand|Collapse) message/ }).map((button) => button.getAttribute("aria-label")!.match(/#\d+/)![0]);
+  expect(toggles()).toEqual(["#1", "#2"]);
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ })).toBeTruthy();
+  expect(read).toHaveBeenCalledTimes(1);
+  rows = [{ ...message, messageId: 3, text: "New arrival" }, ...rows];
+  await rendered.behavior.emitRealtime(INBOX_CHANGED_CHANNEL, { projectId: "project-a" });
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ })).toBeTruthy();
+  expect(rendered.getByRole("button", { name: /^Expand message #3/ })).toBeTruthy();
+  expect(read).toHaveBeenCalledTimes(1);
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #2/ }));
+  await waitFor(() => expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(1));
+  expect(rendered.getByText("1 unread")).toBeTruthy();
+  expect(toggles()).toEqual(["#3", "#1", "#2"]);
+});
+
+it("keeps a failed read unread and allows a manual retry without an automatic retry loop", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const read = vi.fn().mockRejectedValueOnce(new Error("Offline")).mockResolvedValue({ ...message, readAtMs: 9 });
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ markOperatorMessageRead: read }) as never,
+  });
+  await rendered.findByText(/Could not mark message read:.*Offline/);
+  expect(read).toHaveBeenCalledTimes(1);
+  expect(rendered.getByLabelText("Unread", { exact: true })).toBeTruthy();
+  fireEvent.click(rendered.getByRole("button", { name: "Mark message read" }));
+  await waitFor(() => expect(rendered.queryByLabelText("Unread", { exact: true })).toBeNull());
+  expect(read).toHaveBeenCalledTimes(2);
+  expect(rendered.queryByRole("alert")).toBeNull();
 });
