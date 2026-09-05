@@ -282,7 +282,7 @@ it("clears unread feedback only after saving and keeps order and selection throu
   await rendered.findByRole("button", { name: /^Collapse message #1/ });
   expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(2);
   expect(rendered.getByText("2 unread")).toBeTruthy();
-  expect(read).toHaveBeenCalledTimes(1);
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
   await act(async () => { finish(); await pending; });
   await waitFor(() => expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(1));
   expect(rendered.getByText("1 unread")).toBeTruthy();
@@ -316,4 +316,22 @@ it("keeps a failed read unread and allows a manual retry without an automatic re
   await waitFor(() => expect(rendered.queryByLabelText("Unread", { exact: true })).toBeNull());
   expect(read).toHaveBeenCalledTimes(2);
   expect(rendered.queryByRole("alert")).toBeNull();
+});
+
+it("archives from the header without expanding or reading the collapsed card", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const second = { ...message, messageId: 2, text: "Collapsed message" };
+  const archive = vi.fn(async () => ({ ...second, archivedAtMs: 3 }));
+  const rpc = handlers({ operatorMessages: async () => ({ messages: [message, second] }), archiveOperatorMessage: archive });
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] }, rpc: rpc as never,
+  });
+  await rendered.findByRole("button", { name: /^Expand message #2/ });
+  await waitFor(() => expect(rendered.queryByRole("button", { name: "Mark message read" })).toBeNull());
+  fireEvent.click(rendered.getAllByRole("button", { name: "Archive message" })[1]!);
+  await waitFor(() => expect(rendered.queryByRole("button", { name: /^Expand message #2/ })).toBeNull());
+  expect(archive).toHaveBeenCalledWith({ projectId: "project-a", messageId: 2 });
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ })).toBeTruthy();
+  expect(rpc.markOperatorMessageRead).toHaveBeenCalledTimes(1);
+  expect(rpc.markOperatorMessageRead).toHaveBeenCalledWith({ projectId: "project-a", messageId: 1 });
 });
