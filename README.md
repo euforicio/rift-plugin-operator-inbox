@@ -7,7 +7,7 @@ in a long conversation. Operator Inbox brings those requests into one BB panel,
 with the sender, project, supporting links, and a reply field together. Review
 an artifact, answer the agent, and return to your work.
 
-[**Watch the plugin in action**](docs/bb-inbox.mp4) · MP4, 35 MB
+https://github.com/user-attachments/assets/bce96327-c9a5-44e3-aa0d-1ce06fcb00b3
 
 ## Install
 
