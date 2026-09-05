@@ -4,13 +4,14 @@ import plugin from "../server.js";
 
 function host(delivery: "sent" | "queued" | "deferred" = "queued") {
   const get = vi.fn(async ({ threadId }: { threadId: string }) => makeThreadResponse({ id: threadId, title: "Build worker" }));
+  const storageLocation = vi.fn(async () => ({ hostId: "host-sender", storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender" }));
   const send = vi.fn(async () => ({ ok: true as const, delivery }));
   const fixture = createFakePluginHost({
     pluginId: "operator-inbox",
-    sdk: { threads: { get, send } },
+    sdk: { threads: { get, send, storageLocation } },
   });
   plugin(fixture.bb);
-  return { ...fixture, get, send };
+  return { ...fixture, get, send, storageLocation };
 }
 
 async function storeMessage(fixture: ReturnType<typeof host>, overrides: Record<string, unknown> = {}) {
@@ -108,4 +109,65 @@ describe("Operator Inbox backend", () => {
     expect(fixture.harness.inspection.registrations.mentionProviders).toEqual([]);
     await fixture.harness.lifecycle.dispose();
   });
+});
+
+
+it("derives file context only from the stored sender and rejects missing/foreign/mismatched context", async () => {
+  const fixture = host();
+  await storeMessage(fixture);
+  const environment = { id: "env-sender", projectId: "project-a", hostId: "host-sender", path: "/Users/pixexid/Projects/demo", status: "ready" };
+  const native = { ...makeThreadResponse({ id: "thread-sender", projectId: "project-a", environmentId: "env-sender" }), environment };
+  fixture.get.mockResolvedValue(native);
+  const input = { projectId: "project-a", messageId: 1 };
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", input)).resolves.toEqual({
+    hostId: "host-sender", environmentId: "env-sender", workspacePath: environment.path,
+    threadId: "thread-sender", storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender",
+  });
+  expect(fixture.get).toHaveBeenLastCalledWith({ threadId: "thread-sender", include: "environment" });
+  expect(fixture.storageLocation).toHaveBeenLastCalledWith({ threadId: "thread-sender" });
+  for (const broken of [
+    { ...native, id: "foreign" }, { ...native, projectId: "foreign" }, { ...native, deletedAt: 1 },
+    { ...native, environment: null }, { ...native, environment: { ...environment, id: "foreign" } },
+    { ...native, environment: { ...environment, projectId: "foreign" } },
+    { ...native, environment: { ...environment, status: "destroyed" } },
+    { ...native, environment: { ...environment, hostId: "foreign-host" } },
+    { ...native, environment: { ...environment, path: "/a/../b" } },
+  ]) {
+    fixture.get.mockResolvedValue(broken);
+    await expect(fixture.harness.behavior.callRpc("messageFileContext", input)).resolves.toBeNull();
+  }
+  fixture.get.mockRejectedValue(new Error("Unavailable"));
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", input)).resolves.toBeNull();
+  const calls = fixture.get.mock.calls.length;
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", { ...input, projectId: "foreign" })).rejects.toThrow("not found");
+  expect(fixture.get).toHaveBeenCalledTimes(calls);
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", { ...input, threadId: "forged" })).rejects.toThrow();
+  await fixture.harness.lifecycle.dispose();
+});
+
+it("keeps creation order through read, reply, archive and repeat read without sending read receipts", async () => {
+  const fixture = host();
+  const now = vi.spyOn(Date, "now").mockReturnValue(1000);
+  try {
+    await storeMessage(fixture, { text: "First" });
+    await storeMessage(fixture, { text: "Second" });
+    await storeMessage(fixture, { text: "Third" });
+    const ids = async (includeArchived = true) => {
+      const result = await fixture.harness.behavior.callRpc("operatorMessages", { projectIds: ["project-a"], includeArchived }) as { messages: { messageId: number }[] };
+      return result.messages.map((item) => item.messageId);
+    };
+    expect(await ids()).toEqual([3, 2, 1]);
+    const read = await fixture.harness.behavior.callRpc("markOperatorMessageRead", { projectId: "project-a", messageId: 3 });
+    now.mockReturnValue(2000);
+    expect(await fixture.harness.behavior.callRpc("markOperatorMessageRead", { projectId: "project-a", messageId: 3 })).toEqual(read);
+    expect(fixture.send).not.toHaveBeenCalled();
+    expect(await ids()).toEqual([3, 2, 1]);
+    await expect(fixture.harness.behavior.callRpc("unreadOperatorMessageCount", { projectIds: ["project-a"] })).resolves.toEqual({ count: 2 });
+    await fixture.harness.behavior.callRpc("replyToOperatorMessage", { projectId: "project-a", messageId: 2, text: "Reply" });
+    expect(await ids()).toEqual([3, 2, 1]);
+    expect(fixture.send).toHaveBeenCalledTimes(1);
+    await fixture.harness.behavior.callRpc("archiveOperatorMessage", { projectId: "project-a", messageId: 3 });
+    expect(await ids()).toEqual([3, 2, 1]);
+    expect(await ids(false)).toEqual([2, 1]);
+  } finally { now.mockRestore(); await fixture.harness.lifecycle.dispose(); }
 });

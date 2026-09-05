@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, fireEvent, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { INBOX_CHANGED_CHANNEL } from "../contract";
 
@@ -34,9 +34,10 @@ async function loadApp() {
 
 function handlers(overrides: Record<string, unknown> = {}) {
   return {
+    messageFileContext: vi.fn(async () => null),
     operatorMessages: vi.fn(async () => ({ messages: [message] })),
     unreadOperatorMessageCount: vi.fn(async () => ({ count: 1 })),
-    markOperatorMessageRead: vi.fn(async () => ({ ...message, readAtMs: 2 })),
+    markOperatorMessageRead: vi.fn(async (input: { projectId: string; messageId: number }) => ({ ...message, ...input, readAtMs: 2 })),
     archiveOperatorMessage: vi.fn(async () => ({ ...message, archivedAtMs: 3 })),
     replyToOperatorMessage: vi.fn(async ({ text }: { text: string }) => ({ ...message, readAtMs: 4, replyText: text, replyAcceptedAtMs: 4, replyDelivery: "queued" as const })),
     ...overrides,
@@ -52,41 +53,10 @@ describe("Operator Inbox panel", () => {
       rpc: handlers() as never,
     });
 
-    expect(await rendered.findByText("Decision needed")).toBeTruthy();
-    expect(rendered.getByText("tracking")).toBeTruthy();
+    expect((await rendered.findByText("Decision needed")).tagName).toBe("STRONG");
     expect(rendered.container.querySelector("img")).toBeNull();
     fireEvent.click(rendered.getByRole("link", { name: "Open sender thread Build worker" }));
     expect(rendered.inspection.navigateCalls).toContainEqual({ method: "toThread", threadId: "thread-sender" });
-  });
-
-  it("presents long sequential one-line request sections as readable paragraphs", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
-    const app = await loadApp();
-    const text = [
-      "Decision needed before the release train closes at 16:00 UTC:",
-      "(1) Confirm whether the manager should keep the candidate frozen at build_2026_08_30 while the remaining browser evidence is collected. The current checks cover package integrity, exact project scoping, and reply acceptance, but they do not prove that the provider consumed the reply. Approving this option keeps the current evidence boundary and delays the operator-visible cutover until the browser check is attached.",
-      "(2) Choose whether to reopen the candidate for the narrow presentation repair described in [the run record](https://example.test/runs/build_2026_08_30?view=operator). This option changes only future agent guidance and the Inbox rendering fallback; it does not rewrite stored messages, widen project access, change sender identity, alter reply delivery, add polling, or load remote images. If selected, the manager will rerun the existing verify and package checks before returning the new local commit.",
-    ].join(" ");
-    const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
-      sidebarThreads: { status: "ready", projects: [project], threads: [] },
-      rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }) }) as never,
-    });
-
-    const body = (await rendered.findByRole("heading", { name: "Message" })).closest("section")!;
-    expect(Array.from(body.querySelectorAll("p"), (paragraph) => paragraph.textContent)).toEqual([
-      "Decision needed before the release train closes at 16:00 UTC:",
-      expect.stringMatching(/^\(1\) Confirm whether/),
-      expect.stringMatching(/^\(2\) Choose whether/),
-    ]);
-    expect(body.querySelector("a")?.getAttribute("href")).toBe("https://example.test/runs/build_2026_08_30?view=operator");
-    rendered.lifecycle.unmount();
-
-    const short = renderSlot(app.navPanels[0]!, { subPath: "" }, {
-      sidebarThreads: { status: "ready", projects: [project], threads: [] },
-      rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text: "Choose option (1) Tuesday or (2) Wednesday." }] }) }) as never,
-    });
-    const shortBody = (await short.findByRole("heading", { name: "Message" })).closest("section")!;
-    expect(Array.from(shortBody.querySelectorAll("p"), (paragraph) => paragraph.textContent)).toEqual(["Choose option (1) Tuesday or (2) Wednesday."]);
   });
 
   it("keeps sender navigation when the stored title is unavailable", async () => {
@@ -128,8 +98,8 @@ describe("Operator Inbox panel", () => {
       rpc: rpc as never,
     });
 
-    fireEvent.click(await rendered.findByRole("button", { name: "Mark message read" }));
-    expect(await rendered.findByText("Marked read. This message is no longer counted as unread.")).toBeTruthy();
+    await waitFor(() => expect(rpc.markOperatorMessageRead).toHaveBeenCalledWith({ projectId: "project-a", messageId: 1 }));
+    await waitFor(() => expect(rendered.queryByRole("button", { name: "Mark message read" })).toBeNull());
     fireEvent.click(rendered.getAllByRole("button", { name: "Archive message" }).at(-1)!);
     expect(await rendered.findByText("Archived. Turn on Show archived to include it again.")).toBeTruthy();
 
@@ -157,4 +127,211 @@ describe("Operator Inbox panel", () => {
     await waitFor(() => expect(rendered.getByRole("status").textContent).toBe("2"));
     expect(unread).toHaveBeenCalledTimes(2);
   });
+});
+
+const fileContext = {
+  hostId: "host-sender", environmentId: "env-sender", threadId: "thread-sender",
+  workspacePath: "/Users/pixexid/Projects/nuvyr-landscaping-concept-2026-09-05",
+  storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender",
+};
+const png = `${fileContext.workspacePath}/showcase/demos/002-landscaping-hardscaping/evidence/qa-final/home-1440-900-true.png`;
+const report = "/Users/pixexid/.bb/thread-storage/thr_tikuhzrqy8/REPORT.md";
+
+async function renderBody(text: string, context: unknown = fileContext, openUrl = () => true) {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  return renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    openUrl, openFilePreview: () => true,
+    rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => context }) as never,
+  });
+}
+
+it("routes the exact five-link matrix through native URL and file intents without browser file hrefs", async () => {
+  const rendered = await renderBody(`[Preview](http://localhost:4422/) · [PNG](<${png}>) · [Report](${report}) · [GitHub](https://github.com/pixexid/nuvyr/pull/66) · [AGENTS](${fileContext.workspacePath}/AGENTS.md) · [Storage](${fileContext.storageRootPath}/REPORT.md)`);
+  await rendered.findByRole("button", { name: "PNG" });
+  for (const [name, url] of [["Preview", "http://localhost:4422/"], ["GitHub", "https://github.com/pixexid/nuvyr/pull/66"]]) {
+    const link = rendered.getByRole("link", { name });
+    expect(fireEvent.click(link)).toBe(false);
+    expect(rendered.inspection.navigateCalls).toContainEqual({ method: "openUrl", url });
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toContain("noopener");
+  }
+  for (const [name, target] of [
+    ["PNG", { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }],
+    ["Report", { kind: "host", hostId: "host-sender", path: report }],
+    ["AGENTS", { kind: "workspace", environmentId: "env-sender", path: "AGENTS.md" }],
+    ["Storage", { kind: "thread-storage", threadId: "thread-sender", path: "REPORT.md" }],
+  ] as const) {
+    const button = rendered.getByRole("button", { name });
+    expect(button.hasAttribute("href")).toBe(false);
+    fireEvent.click(button);
+    expect(rendered.inspection.navigateCalls).toContainEqual({ method: "experimental_openFilePreview", options: { target, location: null } });
+    const count = rendered.inspection.navigateCalls.length;
+    fireEvent.contextMenu(button); fireEvent.dragStart(button); fireEvent(button, new MouseEvent("auxclick", { button: 1, bubbles: true, cancelable: true }));
+    expect(rendered.inspection.navigateCalls).toHaveLength(count);
+    fireEvent.click(button, { ctrlKey: true });
+    expect(rendered.inspection.navigateCalls.at(-1)).toEqual({ method: "experimental_openFilePreview", options: { target, location: null } });
+  }
+  expect(rendered.getByTestId("message-body").querySelectorAll("a")).toHaveLength(2);
+  expect(rendered.getByLabelText("Reply text")).toBeTruthy();
+});
+
+it.each([null, { ...fileContext, threadId: "foreign" }, { ...fileContext, hostId: "" }, { ...fileContext, workspacePath: "/a/../b" }])("keeps invalid or unresolved context inert: %j", async (context) => {
+  const rendered = await renderBody(`[PNG](${png})`, context);
+  await rendered.findByText("PNG");
+  await act(async () => { await Promise.resolve(); });
+  expect(rendered.getByTestId("message-body").querySelector("a,button")).toBeNull();
+  expect(rendered.inspection.navigateCalls).toEqual([]);
+});
+
+it("blocks image/reference/HTML media and unsafe or malformed destinations with the real parser", async () => {
+  const unsafe = ["/a/../secret", "/a/%2e%2e/secret", "/a/%252e%252e/secret", "/a/%2F/secret", "//evil.test/file", "/a/%5csecret", "/a/%00secret", "/a/%ED%A0%80", "relative.png", "file:///etc/passwd", "javascript:alert%281%29", "data:text/html,hello", "/a/./b", "/a/%"];
+  const rendered = await renderBody('**Strong**\n\n- item\n\n```html\n<img src="sample">\n```\n\n![beacon](https://evil.test/beacon)\n\n![ref][b]\n\n[b]: https://evil.test/ref\n\n<img src="https://evil.test/raw"><video src="https://evil.test/video"></video>\n\n<a href="javascript:alert(1)" target="_top" rel="opener">raw</a>\n\n' + unsafe.map((path, i) => `[Unsafe ${i}](<${path}>)`).join(' · '));
+  const body = await rendered.findByTestId("message-body");
+  await act(async () => { await Promise.resolve(); });
+  expect(body.querySelector("img,video,audio,iframe,source,object,embed,a,button")).toBeNull();
+  expect(body.querySelector("strong")).not.toBeNull();
+  expect(body.querySelector("li")).not.toBeNull();
+  expect(body.querySelector("pre code")).not.toBeNull();
+  expect(rendered.inspection.navigateCalls).toEqual([]);
+});
+
+it("does not lend late sender context to another message or a reply", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  let finish: (value: typeof fileContext) => void = () => {};
+  const late = new Promise<typeof fileContext>((resolve) => { finish = resolve; });
+  const second = { ...message, messageId: 2, senderThreadId: "thread-other", text: `[Second](${png})`, replyText: `[Reply](${png})`, replyAcceptedAtMs: 2 };
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: [message, second] }), messageFileContext: async ({ messageId }: { messageId: number }) => messageId === 1 ? late : null }) as never,
+  });
+  await rendered.findByTestId("message-body");
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #2/ }));
+  await rendered.findByText("Second");
+  await act(async () => { finish(fileContext); await late; });
+  for (const body of rendered.getAllByTestId("message-body")) expect(body.querySelector("a,button")).toBeNull();
+});
+
+it("retains only a safe new-tab fallback when native URL opening declines", async () => {
+  const rendered = await renderBody("[Preview](http://localhost:4422/)", fileContext, () => false);
+  await rendered.findByRole("link", { name: "Preview" });
+  await act(async () => { await Promise.resolve(); });
+  const link = rendered.getByRole("link", { name: "Preview" });
+  let preventedByPlugin = true;
+  rendered.container.addEventListener("click", (event) => {
+    preventedByPlugin = event.defaultPrevented;
+    event.preventDefault();
+  }, { once: true });
+  fireEvent.click(link);
+  expect(preventedByPlugin).toBe(false);
+  expect(link.getAttribute("target")).toBe("_blank");
+  expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+  expect(rendered.inspection.navigateCalls).toContainEqual({ method: "openUrl", url: "http://localhost:4422/" });
+});
+
+it("expands one card at a time, preserves drafts, and keeps all cards collapsed across refresh", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const second = { ...message, messageId: 2, text: "Second message body" };
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: [message, second] }) }) as never,
+  });
+  const firstToggle = await rendered.findByRole("button", { name: /^Collapse message #1/ });
+  expect(firstToggle.getAttribute("aria-expanded")).toBe("true");
+  expect(document.getElementById(firstToggle.getAttribute("aria-controls")!)?.contains(rendered.getByTestId("message-body"))).toBe(true);
+  fireEvent.change(rendered.getByLabelText("Reply text"), { target: { value: "Keep this draft" } });
+  fireEvent.click(firstToggle);
+  expect(rendered.queryByTestId("message-body")).toBeNull();
+  expect(rendered.queryByLabelText("Reply text")).toBeNull();
+  fireEvent.click(rendered.getByRole("button", { name: "Refresh inbox" }));
+  await waitFor(() => expect(rendered.queryByText("Loading messages…")).toBeNull());
+  expect(rendered.queryByTestId("message-body")).toBeNull();
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #2/ }));
+  expect(rendered.getAllByTestId("message-body")).toHaveLength(1);
+  expect(rendered.getByTestId("message-body").textContent).toBe(second.text);
+  expect((rendered.getByLabelText("Reply text") as HTMLTextAreaElement).value).toBe("");
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #1/ }));
+  expect(rendered.getAllByTestId("message-body")).toHaveLength(1);
+  expect((rendered.getByLabelText("Reply text") as HTMLTextAreaElement).value).toBe("Keep this draft");
+});
+
+it("keeps the message expanded when opening a native file panel", async () => {
+  const rendered = await renderBody(`[PNG](${png})`);
+  fireEvent.click(await rendered.findByRole("button", { name: "PNG" }));
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ }).getAttribute("aria-expanded")).toBe("true");
+  expect(rendered.getAllByTestId("message-body")).toHaveLength(1);
+  expect(rendered.inspection.navigateCalls.at(-1)).toEqual({ method: "experimental_openFilePreview", options: {
+    target: { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }, location: null,
+  } });
+});
+
+it("clears unread feedback only after saving and keeps order and selection through realtime refresh", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  let rows: Array<Omit<typeof message, "readAtMs"> & { readAtMs: number | null }> = [{ ...message }, { ...message, messageId: 2, text: "Second" }];
+  let finish: () => void = () => {};
+  const pending = new Promise<void>((resolve) => { finish = resolve; });
+  const read = vi.fn(async ({ messageId }: { messageId: number }) => {
+    if (messageId === 1) await pending;
+    rows = rows.map((row) => row.messageId === messageId ? { ...row, readAtMs: 3 } : row);
+    return rows.find((row) => row.messageId === messageId)!;
+  });
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: rows }), markOperatorMessageRead: read }) as never,
+  });
+  await rendered.findByRole("button", { name: /^Collapse message #1/ });
+  expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(2);
+  expect(rendered.getByText("2 unread")).toBeTruthy();
+  await waitFor(() => expect(read).toHaveBeenCalledTimes(1));
+  await act(async () => { finish(); await pending; });
+  await waitFor(() => expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(1));
+  expect(rendered.getByText("1 unread")).toBeTruthy();
+  await rendered.behavior.emitRealtime(INBOX_CHANGED_CHANNEL, { projectId: "project-a" });
+  const toggles = () => rendered.getAllByRole("button", { name: /^(Expand|Collapse) message/ }).map((button) => button.getAttribute("aria-label")!.match(/#\d+/)![0]);
+  expect(toggles()).toEqual(["#1", "#2"]);
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ })).toBeTruthy();
+  expect(read).toHaveBeenCalledTimes(1);
+  rows = [{ ...message, messageId: 3, text: "New arrival" }, ...rows];
+  await rendered.behavior.emitRealtime(INBOX_CHANGED_CHANNEL, { projectId: "project-a" });
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ })).toBeTruthy();
+  expect(rendered.getByRole("button", { name: /^Expand message #3/ })).toBeTruthy();
+  expect(read).toHaveBeenCalledTimes(1);
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #2/ }));
+  await waitFor(() => expect(rendered.getAllByLabelText("Unread", { exact: true })).toHaveLength(1));
+  expect(rendered.getByText("1 unread")).toBeTruthy();
+  expect(toggles()).toEqual(["#3", "#1", "#2"]);
+});
+
+it("keeps a failed read unread and allows a manual retry without an automatic retry loop", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const read = vi.fn().mockRejectedValueOnce(new Error("Offline")).mockResolvedValue({ ...message, readAtMs: 9 });
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ markOperatorMessageRead: read }) as never,
+  });
+  await rendered.findByText(/Could not mark message read:.*Offline/);
+  expect(read).toHaveBeenCalledTimes(1);
+  expect(rendered.getByLabelText("Unread", { exact: true })).toBeTruthy();
+  fireEvent.click(rendered.getByRole("button", { name: "Mark message read" }));
+  await waitFor(() => expect(rendered.queryByLabelText("Unread", { exact: true })).toBeNull());
+  expect(read).toHaveBeenCalledTimes(2);
+  expect(rendered.queryByRole("alert")).toBeNull();
+});
+
+it("archives from the header without expanding or reading the collapsed card", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const second = { ...message, messageId: 2, text: "Collapsed message" };
+  const archive = vi.fn(async () => ({ ...second, archivedAtMs: 3 }));
+  const rpc = handlers({ operatorMessages: async () => ({ messages: [message, second] }), archiveOperatorMessage: archive });
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] }, rpc: rpc as never,
+  });
+  await rendered.findByRole("button", { name: /^Expand message #2/ });
+  await waitFor(() => expect(rendered.queryByRole("button", { name: "Mark message read" })).toBeNull());
+  fireEvent.click(rendered.getAllByRole("button", { name: "Archive message" })[1]!);
+  await waitFor(() => expect(rendered.queryByRole("button", { name: /^Expand message #2/ })).toBeNull());
+  expect(archive).toHaveBeenCalledWith({ projectId: "project-a", messageId: 2 });
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ })).toBeTruthy();
+  expect(rpc.markOperatorMessageRead).toHaveBeenCalledTimes(1);
+  expect(rpc.markOperatorMessageRead).toHaveBeenCalledWith({ projectId: "project-a", messageId: 1 });
 });

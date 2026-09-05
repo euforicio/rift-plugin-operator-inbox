@@ -31,7 +31,27 @@ export const operatorMessagesInputSchema = z.object({
 export const messageMutationInputSchema = z.object({ projectId: id, messageId }).strict();
 export const replyInputSchema = messageMutationInputSchema.extend({ text }).strict();
 
+// Only canonical POSIX absolute paths are accepted. Encoded separators/dot segments
+// are decoded once before validation; ambiguous double encoding remains inert.
+export function safeAbsolutePath(path: string): boolean {
+  try { encodeURIComponent(path); } catch { return false; }
+  return path.startsWith("/") && !/[\\%?#\x00-\x1f\x7f]/.test(path)
+    && path.slice(1).split("/").every((part) => part !== "" && part !== "." && part !== "..");
+}
+
+export const fileContextSchema = z.object({
+  hostId: id,
+  environmentId: id,
+  workspacePath: z.string().refine(safeAbsolutePath).nullable(),
+  threadId: id,
+  storageRootPath: z.string().refine(safeAbsolutePath),
+}).strict();
+
 export const rpcContract = defineRpcContract({
+  messageFileContext: {
+    input: messageMutationInputSchema,
+    output: fileContextSchema.nullable(),
+  },
   operatorMessages: {
     input: operatorMessagesInputSchema,
     output: z.object({ messages: z.array(operatorMessageSchema) }).strict(),

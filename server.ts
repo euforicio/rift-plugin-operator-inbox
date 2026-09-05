@@ -3,6 +3,7 @@ import type Database from "better-sqlite3";
 import { z } from "zod";
 import {
   INBOX_CHANGED_CHANNEL,
+  fileContextSchema,
   operatorMessageSchema,
   operatorMessagesInputSchema,
   replyInputSchema,
@@ -107,11 +108,30 @@ export default function plugin(bb: BbPluginApi) {
   });
 
   bb.rpc.register(rpcContract, {
+    async messageFileContext({ projectId, messageId }) {
+      const message = getMessage(db, projectId, messageId);
+      try {
+        const thread = await bb.sdk.threads.get({ threadId: message.senderThreadId, include: "environment" });
+        const environment = "environment" in thread ? thread.environment : null;
+        if (thread.id !== message.senderThreadId || thread.projectId !== projectId || thread.deletedAt !== null
+          || !environment || environment.id !== thread.environmentId || environment.projectId !== projectId
+          || environment.status !== "ready") return null;
+        const storage = await bb.sdk.threads.storageLocation({ threadId: thread.id });
+        if (storage.hostId !== environment.hostId) return null;
+        const context = fileContextSchema.safeParse({
+          hostId: environment.hostId, environmentId: environment.id, workspacePath: environment.path,
+          threadId: thread.id, storageRootPath: storage.storageRootPath,
+        });
+        return context.success ? context.data : null;
+      } catch {
+        return null; // Missing native context must never fall back to this plugin's host/cwd.
+      }
+    },
     operatorMessages(input: z.infer<typeof operatorMessagesInputSchema>) {
       const placeholders = input.projectIds.map(() => "?").join(", ");
       const rows = db.prepare(`SELECT * FROM messages
         WHERE project_id IN (${placeholders}) ${input.includeArchived ? "" : "AND archived_at_ms IS NULL"}
-        ORDER BY (read_at_ms IS NOT NULL), created_at_ms DESC, id DESC
+        ORDER BY created_at_ms DESC, id DESC
         LIMIT 256`).all(...input.projectIds) as MessageRow[];
       return { messages: rows.map(toMessage) };
     },
