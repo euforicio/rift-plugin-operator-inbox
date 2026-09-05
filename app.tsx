@@ -50,8 +50,7 @@ function MessageBody({ text, message }: { text: string; message?: OperatorMessag
       a: ({ href = "", children }) => {
         if (/^https?:\/\//i.test(href)) return <UrlLink href={href} target="_blank" rel="noopener noreferrer" onClick={(event) => {
           if (event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-          event.preventDefault();
-          navigate.openUrl(href);
+          if (navigate.openUrl(href)) event.preventDefault();
         }} className="text-primary underline underline-offset-2">{children}</UrlLink>;
         const target = localTarget(href, context);
         if (!target) return <span>{children}</span>;

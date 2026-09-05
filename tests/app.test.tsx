@@ -137,11 +137,11 @@ const fileContext = {
 const png = `${fileContext.workspacePath}/showcase/demos/002-landscaping-hardscaping/evidence/qa-final/home-1440-900-true.png`;
 const report = "/Users/pixexid/.bb/thread-storage/thr_tikuhzrqy8/REPORT.md";
 
-async function renderBody(text: string, context: unknown = fileContext) {
+async function renderBody(text: string, context: unknown = fileContext, openUrl = () => true) {
   const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
   return renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
     sidebarThreads: { status: "ready", projects: [project], threads: [] },
-    openUrl: () => true, openFilePreview: () => true,
+    openUrl, openFilePreview: () => true,
     rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => context }) as never,
   });
 }
@@ -210,4 +210,19 @@ it("does not lend late sender context to another message or a reply", async () =
   await rendered.findByText("Second");
   await act(async () => { finish(fileContext); await late; });
   for (const body of rendered.getAllByTestId("message-body")) expect(body.querySelector("a,button")).toBeNull();
+});
+
+it("retains only a safe new-tab fallback when native URL opening declines", async () => {
+  const rendered = await renderBody("[Preview](http://localhost:4422/)", fileContext, () => false);
+  const link = await rendered.findByRole("link", { name: "Preview" });
+  let preventedByPlugin = true;
+  rendered.container.addEventListener("click", (event) => {
+    preventedByPlugin = event.defaultPrevented;
+    event.preventDefault();
+  }, { once: true });
+  fireEvent.click(link);
+  expect(preventedByPlugin).toBe(false);
+  expect(link.getAttribute("target")).toBe("_blank");
+  expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+  expect(rendered.inspection.navigateCalls).toContainEqual({ method: "openUrl", url: "http://localhost:4422/" });
 });
