@@ -26,9 +26,14 @@ The tool accepts `text` and one of three severities: `routine`, `urgent`, or
 `needs-decision`. Project and sender-thread identity always come from BB's tool
 context; the model cannot supply or override either value.
 
-Open **Inbox** in BB's navigation to read messages. The panel can show one
-project or all projects, include archived messages, open the sender thread,
-mark a message read, archive it, or send one reply.
+Open **Inbox** in BB's navigation to read messages. Click a message header to
+expand or collapse its card; one message opens at a time, and reply drafts
+survive switching cards. The single-column layout keeps the message readable
+when BB's file or browser panel opens beside it. File controls open BB's native
+preview without collapsing the card.
+
+Filter by project, include archived messages, open the sender thread, mark a
+message read, archive it, or send one reply.
 
 Replies go only through `bb.sdk.threads.send` to the sender thread recorded on
 the message. The Inbox records BB's accepted result (`sent`, `queued`, or

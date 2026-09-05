@@ -206,7 +206,7 @@ it("does not lend late sender context to another message or a reply", async () =
     rpc: handlers({ operatorMessages: async () => ({ messages: [message, second] }), messageFileContext: async ({ messageId }: { messageId: number }) => messageId === 1 ? late : null }) as never,
   });
   await rendered.findByTestId("message-body");
-  fireEvent.click(rendered.getByRole("button", { name: /^Select message #2/ }));
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #2/ }));
   await rendered.findByText("Second");
   await act(async () => { finish(fileContext); await late; });
   for (const body of rendered.getAllByTestId("message-body")) expect(body.querySelector("a,button")).toBeNull();
@@ -227,4 +227,40 @@ it("retains only a safe new-tab fallback when native URL opening declines", asyn
   expect(link.getAttribute("target")).toBe("_blank");
   expect(link.getAttribute("rel")).toBe("noopener noreferrer");
   expect(rendered.inspection.navigateCalls).toContainEqual({ method: "openUrl", url: "http://localhost:4422/" });
+});
+
+it("expands one card at a time, preserves drafts, and keeps all cards collapsed across refresh", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const second = { ...message, messageId: 2, text: "Second message body" };
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: [message, second] }) }) as never,
+  });
+  const firstToggle = await rendered.findByRole("button", { name: /^Collapse message #1/ });
+  expect(firstToggle.getAttribute("aria-expanded")).toBe("true");
+  expect(document.getElementById(firstToggle.getAttribute("aria-controls")!)?.contains(rendered.getByTestId("message-body"))).toBe(true);
+  fireEvent.change(rendered.getByLabelText("Reply text"), { target: { value: "Keep this draft" } });
+  fireEvent.click(firstToggle);
+  expect(rendered.queryByTestId("message-body")).toBeNull();
+  expect(rendered.queryByLabelText("Reply text")).toBeNull();
+  fireEvent.click(rendered.getByRole("button", { name: "Refresh inbox" }));
+  await waitFor(() => expect(rendered.queryByText("Loading messages…")).toBeNull());
+  expect(rendered.queryByTestId("message-body")).toBeNull();
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #2/ }));
+  expect(rendered.getAllByTestId("message-body")).toHaveLength(1);
+  expect(rendered.getByTestId("message-body").textContent).toBe(second.text);
+  expect((rendered.getByLabelText("Reply text") as HTMLTextAreaElement).value).toBe("");
+  fireEvent.click(rendered.getByRole("button", { name: /^Expand message #1/ }));
+  expect(rendered.getAllByTestId("message-body")).toHaveLength(1);
+  expect((rendered.getByLabelText("Reply text") as HTMLTextAreaElement).value).toBe("Keep this draft");
+});
+
+it("keeps the message expanded when opening a native file panel", async () => {
+  const rendered = await renderBody(`[PNG](${png})`);
+  fireEvent.click(await rendered.findByRole("button", { name: "PNG" }));
+  expect(rendered.getByRole("button", { name: /^Collapse message #1/ }).getAttribute("aria-expanded")).toBe("true");
+  expect(rendered.getAllByTestId("message-body")).toHaveLength(1);
+  expect(rendered.inspection.navigateCalls.at(-1)).toEqual({ method: "experimental_openFilePreview", options: {
+    target: { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }, location: null,
+  } });
 });
