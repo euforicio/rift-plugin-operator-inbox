@@ -214,7 +214,9 @@ it("does not lend late sender context to another message or a reply", async () =
 
 it("retains only a safe new-tab fallback when native URL opening declines", async () => {
   const rendered = await renderBody("[Preview](http://localhost:4422/)", fileContext, () => false);
-  const link = await rendered.findByRole("link", { name: "Preview" });
+  await rendered.findByRole("link", { name: "Preview" });
+  await act(async () => { await Promise.resolve(); });
+  const link = rendered.getByRole("link", { name: "Preview" });
   let preventedByPlugin = true;
   rendered.container.addEventListener("click", (event) => {
     preventedByPlugin = event.defaultPrevented;
