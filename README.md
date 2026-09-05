@@ -7,9 +7,7 @@ navigation, mark-read/archive actions, and replies.
 
 ## Install
 
-BB with SDK `0.4.35-inbox-parity.0` or a compatible newer SDK is required.
-This candidate SDK is not published yet: clean registry installation and live
-activation remain gated on its release and a matching BB host build.
+BB with SDK `0.4.34` or newer is required. This plugin uses the published SDK and does not require a custom BB build.
 
 ```sh
 git clone <repository-url>
@@ -67,26 +65,11 @@ npm run build
 
 `npm run verify` runs typecheck, tests, and `bb plugin build` together.
 
-Message bodies and replies use BB's host-owned `Markdown`, with
-`experimental_imagePolicy="alt-text"`. The plugin supplies only an explicit
-file resolver: sender identity comes from the stored message and native
-thread/environment/storage APIs, never from the current Inbox project or a
-thread id embedded in a path. Missing or unsafe local targets stay inert.
-Workspace and sender-storage paths use their native targets; other absolute
-paths, including another thread's report, use the verified sender host.
+Message bodies and replies use the existing ReactMarkdown parser with image alt text and escaped raw HTML. HTTP(S) links use BB's UrlLink and its browser preference. Validated local artifacts use button controls calling BB's native experimental_openFilePreview, with no browser href to leak through modified clicks, context menus, or dragging. These controls use normal button keyboard activation; they do not provide the native FileLink context menu.
 
-Native `FileLink` currently gates browser hrefs, modified/auxiliary clicks,
-and URL dragging. Use ordinary click/Enter or BB's native copy/open menu.
-The plugin does not intercept DOM events or parse Markdown. The SDK test
-Markdown is a text stub; real parser/media/navigation tests belong to the
-matching host implementation and composed integration verification.
+Sender identity comes from the stored message and native thread/environment/storage APIs, never from the currently selected project or a thread id embedded in a path. Missing or unsafe local targets stay selectable inert text. Workspace and sender-storage paths use their native targets; other absolute paths, including another thread's report, use the verified sender host.
 
-For this unpublished candidate, verification uses the reviewed SDK tarball from
-BB-core commit `77549a615200698fc8c4d053c6eec320d9ef6562`, SHA256
-`939e1dd06d965ed999bbf39965a524397f6c053c65e414161c66aee9625c3c80`.
-The lockfile pins those bytes at the intended registry version; `npm ci` cannot
-resolve it until publication. Do not substitute SDK 0.4.34 or reload this plugin
-into that host: unsupported props would silently lose the safety policy.
+The operator approved this plugin-only approach in place of exact host-Markdown rendering to avoid an upstream SDK/runtime dependency. File preview remains an experimental public API. Tests exercise the real parser and native navigation intents; installed-client panels require live verification.
 
 ## License
 

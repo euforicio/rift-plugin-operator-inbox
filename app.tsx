@@ -1,6 +1,8 @@
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArchiveIcon, ArrowClockwiseIcon, EnvelopeOpenIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
-import { definePluginApp, Markdown, experimental_useSidebarThreads, useBbNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@get-bb/plugin-sdk/app";
+import { definePluginApp, UrlLink, experimental_useSidebarThreads, useBbNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@get-bb/plugin-sdk/app";
 import type { ExperimentalLiveFileTarget, PluginNavPanelProps, PluginRpcResult } from "@get-bb/plugin-sdk/app";
 import { fileContextSchema, safeAbsolutePath, type rpcContract } from "./contract";
 
@@ -23,6 +25,8 @@ function localTarget(href: string, context: FileContext): ExperimentalLiveFileTa
 
 function MessageBody({ text, message }: { text: string; message?: OperatorMessage }) {
   const rpc = useRpc<typeof rpcContract>();
+  const navigate = useBbNavigate();
+  const [openError, setOpenError] = useState(false);
   const [context, setContext] = useState<FileContext>(null);
   const projectId = message?.projectId;
   const messageId = message?.messageId;
@@ -36,11 +40,28 @@ function MessageBody({ text, message }: { text: string; message?: OperatorMessag
     }).catch(() => { /* Unresolved file links stay copyable text. */ });
     return () => { active = false; };
   }, [rpc, projectId, messageId, senderThreadId]);
-  const resolveFileLink = useCallback((href: string) => {
-    const target = localTarget(href, context);
-    return target ? { target, location: null } : null;
-  }, [context]);
-  return <Markdown content={text} experimental_imagePolicy="alt-text" experimental_resolveFileLink={resolveFileLink} />;
+  return <div data-testid="message-body" className="break-words text-sm leading-6">
+    <ReactMarkdown remarkPlugins={[remarkBreaks]} components={{
+      img: ({ alt }) => <span>{alt}</span>,
+      p: ({ children }) => <p className="my-1.5">{children}</p>,
+      ol: ({ children }) => <ol className="my-1.5 list-decimal pl-5">{children}</ol>,
+      ul: ({ children }) => <ul className="my-1.5 list-disc pl-5">{children}</ul>,
+      li: ({ children }) => <li className="my-0.5">{children}</li>,
+      a: ({ href = "", children }) => {
+        if (/^https?:\/\//i.test(href)) return <UrlLink href={href} target="_blank" rel="noopener noreferrer" onClick={(event) => {
+          if (event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+          event.preventDefault();
+          navigate.openUrl(href);
+        }} className="text-primary underline underline-offset-2">{children}</UrlLink>;
+        const target = localTarget(href, context);
+        if (!target) return <span>{children}</span>;
+        return <button type="button" className="cursor-pointer text-left text-primary underline underline-offset-2" onClick={() => {
+          setOpenError(!navigate.experimental_openFilePreview({ target, location: null }));
+        }}>{children}</button>;
+      },
+    }}>{text}</ReactMarkdown>
+    {openError && <p role="alert">BB could not open this file preview.</p>}
+  </div>;
 }
 
 type OperatorMessagesResult = PluginRpcResult<typeof rpcContract["operatorMessages"]>;

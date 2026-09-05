@@ -2,20 +2,7 @@
 
 import { act, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { MarkdownProps } from "@get-bb/plugin-sdk/app";
 import { INBOX_CHANGED_CHANNEL } from "../contract";
-
-// The SDK harness intentionally does not parse Markdown. Inspect the public
-// props/resolver here; real rendering/navigation negatives live in the core slice.
-const markdown = vi.hoisted(() => vi.fn<(props: MarkdownProps) => void>());
-vi.mock("@get-bb/plugin-sdk/app", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@get-bb/plugin-sdk/app")>();
-  return { ...actual, Markdown: (props: MarkdownProps) => {
-    markdown(props);
-    return <actual.Markdown {...props} />;
-  } };
-});
-function bodyProps(): MarkdownProps { return markdown.mock.calls.at(-1)![0]; }
 
 const project = { id: "project-a", name: "Project A", isPersonal: false };
 const message = {
@@ -35,7 +22,6 @@ const message = {
 
 afterEach(() => {
   cleanup();
-  markdown.mockClear();
   window.localStorage.clear();
   vi.restoreAllMocks();
   vi.useRealTimers();
@@ -67,9 +53,7 @@ describe("Operator Inbox panel", () => {
       rpc: handlers() as never,
     });
 
-    expect((await rendered.findByTestId("bb-markdown")).textContent).toBe(message.text);
-    expect(bodyProps().experimental_imagePolicy).toBe("alt-text");
-    expect(bodyProps().experimental_resolveFileLink?.("/tmp/unknown.png")).toBeNull();
+    expect((await rendered.findByText("Decision needed")).tagName).toBe("STRONG");
     expect(rendered.container.querySelector("img")).toBeNull();
     fireEvent.click(rendered.getByRole("link", { name: "Open sender thread Build worker" }));
     expect(rendered.inspection.navigateCalls).toContainEqual({ method: "toThread", threadId: "thread-sender" });
@@ -153,77 +137,77 @@ const fileContext = {
 const png = `${fileContext.workspacePath}/showcase/demos/002-landscaping-hardscaping/evidence/qa-final/home-1440-900-true.png`;
 const report = "/Users/pixexid/.bb/thread-storage/thr_tikuhzrqy8/REPORT.md";
 
-it("passes the unchanged #133 matrix to host Markdown with validated native file options", async () => {
+async function renderBody(text: string, context: unknown = fileContext) {
   const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
-  const text = `[Live local preview](http://localhost:4422/) · [Desktop](<${png}>) · [Independent report](${report}) · [PR #66](https://github.com/pixexid/nuvyr/pull/66) · [AGENTS.md](${fileContext.workspacePath}/AGENTS.md)`;
-  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+  return renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
     sidebarThreads: { status: "ready", projects: [project], threads: [] },
-    rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => fileContext }) as never,
+    openUrl: () => true, openFilePreview: () => true,
+    rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => context }) as never,
   });
-  expect((await rendered.findByTestId("bb-markdown")).textContent).toBe(text);
-  await waitFor(() => expect(bodyProps().experimental_resolveFileLink?.(png)).toEqual({
-    target: { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }, location: null,
-  }));
-  const resolve = bodyProps().experimental_resolveFileLink!;
-  expect(resolve(`${fileContext.workspacePath}/AGENTS.md`)).toEqual({ target: { kind: "workspace", environmentId: "env-sender", path: "AGENTS.md" }, location: null });
-  expect(resolve(report)).toEqual({ target: { kind: "host", hostId: "host-sender", path: report }, location: null });
-  expect(resolve(`${fileContext.storageRootPath}/REPORT.md`)).toEqual({ target: { kind: "thread-storage", threadId: "thread-sender", path: "REPORT.md" }, location: null });
-  expect(resolve(`${fileContext.workspacePath}-sibling/file.png`)).toEqual({ target: { kind: "host", hostId: "host-sender", path: `${fileContext.workspacePath}-sibling/file.png` }, location: null });
-  expect(resolve("http://localhost:4422/")).toBeNull();
-  expect(resolve("https://github.com/pixexid/nuvyr/pull/66")).toBeNull();
-  expect(bodyProps().experimental_imagePolicy).toBe("alt-text");
-  expect(rendered.inspection.navigateCalls).toEqual([]);
-});
+}
 
-it.each([null, { ...fileContext, threadId: "foreign" }, { ...fileContext, hostId: "" }, { ...fileContext, workspacePath: "/a/../b" }])("keeps unresolved or invalid native context inert: %j", async (context) => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
-  const lookup = vi.fn(async () => context);
-  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
-    sidebarThreads: { status: "ready", projects: [project], threads: [] },
-    rpc: handlers({ messageFileContext: lookup }) as never,
-  });
-  await rendered.findByTestId("bb-markdown");
-  await act(async () => { await Promise.resolve(); });
-  expect(lookup).toHaveBeenCalledWith({ projectId: "project-a", messageId: 1 });
-  expect(bodyProps().experimental_resolveFileLink?.(png)).toBeNull();
-  expect(rendered.inspection.navigateCalls).toEqual([]);
-});
-
-it("rejects unsafe local destinations and delegates unmodified Markdown safety to the host policy", async () => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
-  const text = '# Heading\n\n| A | B |\n| - | - |\n| 1 | 2 |\n\n- item\n\n```html\n<img src="sample">\n```\n\n![beacon](https://evil.test/beacon)\n\n![ref][b]\n\n[b]: https://evil.test/ref\n\n<img src="https://evil.test/raw">\n\n<a href="javascript:alert(1)" target="_top" rel="opener">raw</a>';
-  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
-    sidebarThreads: { status: "ready", projects: [project], threads: [] },
-    rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => fileContext }) as never,
-  });
-  expect((await rendered.findByTestId("bb-markdown")).textContent).toBe(text);
-  await waitFor(() => expect(bodyProps().experimental_resolveFileLink?.(png)).not.toBeNull());
-  for (const path of ["/a/../secret", "/a/%2e%2e/secret", "/a/%252e%252e/secret", "/a/%2F/secret", "//evil.test/file", "/a/%5csecret", "/a/%00secret", "/a/%ED%A0%80", "relative.png", "file:///etc/passwd", "javascript:alert(1)", "data:text/html,hello", "/a/./b", "/a/%", String.fromCharCode(0xd800)]) {
-    expect(bodyProps().experimental_resolveFileLink?.(path), path).toBeNull();
+it("routes the exact five-link matrix through native URL and file intents without browser file hrefs", async () => {
+  const rendered = await renderBody(`[Preview](http://localhost:4422/) · [PNG](<${png}>) · [Report](${report}) · [GitHub](https://github.com/pixexid/nuvyr/pull/66) · [AGENTS](${fileContext.workspacePath}/AGENTS.md) · [Storage](${fileContext.storageRootPath}/REPORT.md)`);
+  await rendered.findByRole("button", { name: "PNG" });
+  for (const [name, url] of [["Preview", "http://localhost:4422/"], ["GitHub", "https://github.com/pixexid/nuvyr/pull/66"]]) {
+    const link = rendered.getByRole("link", { name });
+    expect(fireEvent.click(link)).toBe(false);
+    expect(rendered.inspection.navigateCalls).toContainEqual({ method: "openUrl", url });
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toContain("noopener");
   }
-  expect(bodyProps().experimental_imagePolicy).toBe("alt-text");
+  for (const [name, target] of [
+    ["PNG", { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }],
+    ["Report", { kind: "host", hostId: "host-sender", path: report }],
+    ["AGENTS", { kind: "workspace", environmentId: "env-sender", path: "AGENTS.md" }],
+    ["Storage", { kind: "thread-storage", threadId: "thread-sender", path: "REPORT.md" }],
+  ] as const) {
+    const button = rendered.getByRole("button", { name });
+    expect(button.hasAttribute("href")).toBe(false);
+    fireEvent.click(button);
+    expect(rendered.inspection.navigateCalls).toContainEqual({ method: "experimental_openFilePreview", options: { target, location: null } });
+    const count = rendered.inspection.navigateCalls.length;
+    fireEvent.contextMenu(button); fireEvent.dragStart(button); fireEvent(button, new MouseEvent("auxclick", { button: 1, bubbles: true, cancelable: true }));
+    expect(rendered.inspection.navigateCalls).toHaveLength(count);
+    fireEvent.click(button, { ctrlKey: true });
+    expect(rendered.inspection.navigateCalls.at(-1)).toEqual({ method: "experimental_openFilePreview", options: { target, location: null } });
+  }
+  expect(rendered.getByTestId("message-body").querySelectorAll("a")).toHaveLength(2);
+  expect(rendered.getByLabelText("Reply text")).toBeTruthy();
 });
 
-it("does not lend a late sender context to another selected message or to a reply", async () => {
+it.each([null, { ...fileContext, threadId: "foreign" }, { ...fileContext, hostId: "" }, { ...fileContext, workspacePath: "/a/../b" }])("keeps invalid or unresolved context inert: %j", async (context) => {
+  const rendered = await renderBody(`[PNG](${png})`, context);
+  await rendered.findByText("PNG");
+  await act(async () => { await Promise.resolve(); });
+  expect(rendered.getByTestId("message-body").querySelector("a,button")).toBeNull();
+  expect(rendered.inspection.navigateCalls).toEqual([]);
+});
+
+it("blocks image/reference/HTML media and unsafe or malformed destinations with the real parser", async () => {
+  const unsafe = ["/a/../secret", "/a/%2e%2e/secret", "/a/%252e%252e/secret", "/a/%2F/secret", "//evil.test/file", "/a/%5csecret", "/a/%00secret", "/a/%ED%A0%80", "relative.png", "file:///etc/passwd", "javascript:alert%281%29", "data:text/html,hello", "/a/./b", "/a/%"];
+  const rendered = await renderBody('**Strong**\n\n- item\n\n```html\n<img src="sample">\n```\n\n![beacon](https://evil.test/beacon)\n\n![ref][b]\n\n[b]: https://evil.test/ref\n\n<img src="https://evil.test/raw"><video src="https://evil.test/video"></video>\n\n<a href="javascript:alert(1)" target="_top" rel="opener">raw</a>\n\n' + unsafe.map((path, i) => `[Unsafe ${i}](<${path}>)`).join(' · '));
+  const body = await rendered.findByTestId("message-body");
+  await act(async () => { await Promise.resolve(); });
+  expect(body.querySelector("img,video,audio,iframe,source,object,embed,a,button")).toBeNull();
+  expect(body.querySelector("strong")).not.toBeNull();
+  expect(body.querySelector("li")).not.toBeNull();
+  expect(body.querySelector("pre code")).not.toBeNull();
+  expect(rendered.inspection.navigateCalls).toEqual([]);
+});
+
+it("does not lend late sender context to another message or a reply", async () => {
   const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
   let finish: (value: typeof fileContext) => void = () => {};
   const late = new Promise<typeof fileContext>((resolve) => { finish = resolve; });
-  const second = { ...message, messageId: 2, senderThreadId: "thread-other", text: "Second body", replyText: "Reply body", replyAcceptedAtMs: 2 };
+  const second = { ...message, messageId: 2, senderThreadId: "thread-other", text: `[Second](${png})`, replyText: `[Reply](${png})`, replyAcceptedAtMs: 2 };
   const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
     sidebarThreads: { status: "ready", projects: [project], threads: [] },
-    rpc: handlers({
-      operatorMessages: async () => ({ messages: [message, second] }),
-      messageFileContext: async ({ messageId }: { messageId: number }) => messageId === 1 ? late : null,
-    }) as never,
+    rpc: handlers({ operatorMessages: async () => ({ messages: [message, second] }), messageFileContext: async ({ messageId }: { messageId: number }) => messageId === 1 ? late : null }) as never,
   });
-  await rendered.findByTestId("bb-markdown");
+  await rendered.findByTestId("message-body");
   fireEvent.click(rendered.getByRole("button", { name: /^Select message #2/ }));
-  await waitFor(() => expect(rendered.getAllByTestId("bb-markdown").some((body) => body.textContent === "Second body")).toBe(true));
+  await rendered.findByText("Second");
   await act(async () => { finish(fileContext); await late; });
-  const current = markdown.mock.calls.map(([props]) => props).filter((props) => props.content === "Second body" || props.content === "Reply body");
-  expect(current.length).toBeGreaterThan(0);
-  for (const props of current) {
-    expect(props.experimental_imagePolicy).toBe("alt-text");
-    expect(props.experimental_resolveFileLink?.(png)).toBeNull();
-  }
+  for (const body of rendered.getAllByTestId("message-body")) expect(body.querySelector("a,button")).toBeNull();
 });
