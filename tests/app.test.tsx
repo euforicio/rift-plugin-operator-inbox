@@ -1,8 +1,21 @@
 // @vitest-environment jsdom
 
-import { cleanup, fireEvent, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { MarkdownProps } from "@get-bb/plugin-sdk/app";
 import { INBOX_CHANGED_CHANNEL } from "../contract";
+
+// The SDK harness intentionally does not parse Markdown. Inspect the public
+// props/resolver here; real rendering/navigation negatives live in the core slice.
+const markdown = vi.hoisted(() => vi.fn<(props: MarkdownProps) => void>());
+vi.mock("@get-bb/plugin-sdk/app", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@get-bb/plugin-sdk/app")>();
+  return { ...actual, Markdown: (props: MarkdownProps) => {
+    markdown(props);
+    return <actual.Markdown {...props} />;
+  } };
+});
+function bodyProps(): MarkdownProps { return markdown.mock.calls.at(-1)![0]; }
 
 const project = { id: "project-a", name: "Project A", isPersonal: false };
 const message = {
@@ -22,6 +35,7 @@ const message = {
 
 afterEach(() => {
   cleanup();
+  markdown.mockClear();
   window.localStorage.clear();
   vi.restoreAllMocks();
   vi.useRealTimers();
@@ -34,6 +48,7 @@ async function loadApp() {
 
 function handlers(overrides: Record<string, unknown> = {}) {
   return {
+    messageFileContext: vi.fn(async () => null),
     operatorMessages: vi.fn(async () => ({ messages: [message] })),
     unreadOperatorMessageCount: vi.fn(async () => ({ count: 1 })),
     markOperatorMessageRead: vi.fn(async () => ({ ...message, readAtMs: 2 })),
@@ -52,41 +67,12 @@ describe("Operator Inbox panel", () => {
       rpc: handlers() as never,
     });
 
-    expect(await rendered.findByText("Decision needed")).toBeTruthy();
-    expect(rendered.getByText("tracking")).toBeTruthy();
+    expect((await rendered.findByTestId("bb-markdown")).textContent).toBe(message.text);
+    expect(bodyProps().experimental_imagePolicy).toBe("alt-text");
+    expect(bodyProps().experimental_resolveFileLink?.("/tmp/unknown.png")).toBeNull();
     expect(rendered.container.querySelector("img")).toBeNull();
     fireEvent.click(rendered.getByRole("link", { name: "Open sender thread Build worker" }));
     expect(rendered.inspection.navigateCalls).toContainEqual({ method: "toThread", threadId: "thread-sender" });
-  });
-
-  it("presents long sequential one-line request sections as readable paragraphs", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
-    const app = await loadApp();
-    const text = [
-      "Decision needed before the release train closes at 16:00 UTC:",
-      "(1) Confirm whether the manager should keep the candidate frozen at build_2026_08_30 while the remaining browser evidence is collected. The current checks cover package integrity, exact project scoping, and reply acceptance, but they do not prove that the provider consumed the reply. Approving this option keeps the current evidence boundary and delays the operator-visible cutover until the browser check is attached.",
-      "(2) Choose whether to reopen the candidate for the narrow presentation repair described in [the run record](https://example.test/runs/build_2026_08_30?view=operator). This option changes only future agent guidance and the Inbox rendering fallback; it does not rewrite stored messages, widen project access, change sender identity, alter reply delivery, add polling, or load remote images. If selected, the manager will rerun the existing verify and package checks before returning the new local commit.",
-    ].join(" ");
-    const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
-      sidebarThreads: { status: "ready", projects: [project], threads: [] },
-      rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }) }) as never,
-    });
-
-    const body = (await rendered.findByRole("heading", { name: "Message" })).closest("section")!;
-    expect(Array.from(body.querySelectorAll("p"), (paragraph) => paragraph.textContent)).toEqual([
-      "Decision needed before the release train closes at 16:00 UTC:",
-      expect.stringMatching(/^\(1\) Confirm whether/),
-      expect.stringMatching(/^\(2\) Choose whether/),
-    ]);
-    expect(body.querySelector("a")?.getAttribute("href")).toBe("https://example.test/runs/build_2026_08_30?view=operator");
-    rendered.lifecycle.unmount();
-
-    const short = renderSlot(app.navPanels[0]!, { subPath: "" }, {
-      sidebarThreads: { status: "ready", projects: [project], threads: [] },
-      rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text: "Choose option (1) Tuesday or (2) Wednesday." }] }) }) as never,
-    });
-    const shortBody = (await short.findByRole("heading", { name: "Message" })).closest("section")!;
-    expect(Array.from(shortBody.querySelectorAll("p"), (paragraph) => paragraph.textContent)).toEqual(["Choose option (1) Tuesday or (2) Wednesday."]);
   });
 
   it("keeps sender navigation when the stored title is unavailable", async () => {
@@ -157,4 +143,87 @@ describe("Operator Inbox panel", () => {
     await waitFor(() => expect(rendered.getByRole("status").textContent).toBe("2"));
     expect(unread).toHaveBeenCalledTimes(2);
   });
+});
+
+const fileContext = {
+  hostId: "host-sender", environmentId: "env-sender", threadId: "thread-sender",
+  workspacePath: "/Users/pixexid/Projects/nuvyr-landscaping-concept-2026-09-05",
+  storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender",
+};
+const png = `${fileContext.workspacePath}/showcase/demos/002-landscaping-hardscaping/evidence/qa-final/home-1440-900-true.png`;
+const report = "/Users/pixexid/.bb/thread-storage/thr_tikuhzrqy8/REPORT.md";
+
+it("passes the unchanged #133 matrix to host Markdown with validated native file options", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const text = `[Live local preview](http://localhost:4422/) · [Desktop](<${png}>) · [Independent report](${report}) · [PR #66](https://github.com/pixexid/nuvyr/pull/66) · [AGENTS.md](${fileContext.workspacePath}/AGENTS.md)`;
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => fileContext }) as never,
+  });
+  expect((await rendered.findByTestId("bb-markdown")).textContent).toBe(text);
+  await waitFor(() => expect(bodyProps().experimental_resolveFileLink?.(png)).toEqual({
+    target: { kind: "workspace", environmentId: "env-sender", path: png.slice(fileContext.workspacePath.length + 1) }, location: null,
+  }));
+  const resolve = bodyProps().experimental_resolveFileLink!;
+  expect(resolve(`${fileContext.workspacePath}/AGENTS.md`)).toEqual({ target: { kind: "workspace", environmentId: "env-sender", path: "AGENTS.md" }, location: null });
+  expect(resolve(report)).toEqual({ target: { kind: "host", hostId: "host-sender", path: report }, location: null });
+  expect(resolve(`${fileContext.storageRootPath}/REPORT.md`)).toEqual({ target: { kind: "thread-storage", threadId: "thread-sender", path: "REPORT.md" }, location: null });
+  expect(resolve(`${fileContext.workspacePath}-sibling/file.png`)).toEqual({ target: { kind: "host", hostId: "host-sender", path: `${fileContext.workspacePath}-sibling/file.png` }, location: null });
+  expect(resolve("http://localhost:4422/")).toBeNull();
+  expect(resolve("https://github.com/pixexid/nuvyr/pull/66")).toBeNull();
+  expect(bodyProps().experimental_imagePolicy).toBe("alt-text");
+  expect(rendered.inspection.navigateCalls).toEqual([]);
+});
+
+it.each([null, { ...fileContext, threadId: "foreign" }, { ...fileContext, hostId: "" }, { ...fileContext, workspacePath: "/a/../b" }])("keeps unresolved or invalid native context inert: %j", async (context) => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const lookup = vi.fn(async () => context);
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ messageFileContext: lookup }) as never,
+  });
+  await rendered.findByTestId("bb-markdown");
+  await act(async () => { await Promise.resolve(); });
+  expect(lookup).toHaveBeenCalledWith({ projectId: "project-a", messageId: 1 });
+  expect(bodyProps().experimental_resolveFileLink?.(png)).toBeNull();
+  expect(rendered.inspection.navigateCalls).toEqual([]);
+});
+
+it("rejects unsafe local destinations and delegates unmodified Markdown safety to the host policy", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const text = '# Heading\n\n| A | B |\n| - | - |\n| 1 | 2 |\n\n- item\n\n```html\n<img src="sample">\n```\n\n![beacon](https://evil.test/beacon)\n\n![ref][b]\n\n[b]: https://evil.test/ref\n\n<img src="https://evil.test/raw">\n\n<a href="javascript:alert(1)" target="_top" rel="opener">raw</a>';
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({ operatorMessages: async () => ({ messages: [{ ...message, text }] }), messageFileContext: async () => fileContext }) as never,
+  });
+  expect((await rendered.findByTestId("bb-markdown")).textContent).toBe(text);
+  await waitFor(() => expect(bodyProps().experimental_resolveFileLink?.(png)).not.toBeNull());
+  for (const path of ["/a/../secret", "/a/%2e%2e/secret", "/a/%252e%252e/secret", "/a/%2F/secret", "//evil.test/file", "/a/%5csecret", "/a/%00secret", "/a/%ED%A0%80", "relative.png", "file:///etc/passwd", "javascript:alert(1)", "data:text/html,hello", "/a/./b", "/a/%", String.fromCharCode(0xd800)]) {
+    expect(bodyProps().experimental_resolveFileLink?.(path), path).toBeNull();
+  }
+  expect(bodyProps().experimental_imagePolicy).toBe("alt-text");
+});
+
+it("does not lend a late sender context to another selected message or to a reply", async () => {
+  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  let finish: (value: typeof fileContext) => void = () => {};
+  const late = new Promise<typeof fileContext>((resolve) => { finish = resolve; });
+  const second = { ...message, messageId: 2, senderThreadId: "thread-other", text: "Second body", replyText: "Reply body", replyAcceptedAtMs: 2 };
+  const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
+    sidebarThreads: { status: "ready", projects: [project], threads: [] },
+    rpc: handlers({
+      operatorMessages: async () => ({ messages: [message, second] }),
+      messageFileContext: async ({ messageId }: { messageId: number }) => messageId === 1 ? late : null,
+    }) as never,
+  });
+  await rendered.findByTestId("bb-markdown");
+  fireEvent.click(rendered.getByRole("button", { name: /^Select message #2/ }));
+  await waitFor(() => expect(rendered.getAllByTestId("bb-markdown").some((body) => body.textContent === "Second body")).toBe(true));
+  await act(async () => { finish(fileContext); await late; });
+  const current = markdown.mock.calls.map(([props]) => props).filter((props) => props.content === "Second body" || props.content === "Reply body");
+  expect(current.length).toBeGreaterThan(0);
+  for (const props of current) {
+    expect(props.experimental_imagePolicy).toBe("alt-text");
+    expect(props.experimental_resolveFileLink?.(png)).toBeNull();
+  }
 });

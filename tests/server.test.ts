@@ -4,13 +4,14 @@ import plugin from "../server.js";
 
 function host(delivery: "sent" | "queued" | "deferred" = "queued") {
   const get = vi.fn(async ({ threadId }: { threadId: string }) => makeThreadResponse({ id: threadId, title: "Build worker" }));
+  const storageLocation = vi.fn(async () => ({ hostId: "host-sender", storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender" }));
   const send = vi.fn(async () => ({ ok: true as const, delivery }));
   const fixture = createFakePluginHost({
     pluginId: "operator-inbox",
-    sdk: { threads: { get, send } },
+    sdk: { threads: { get, send, storageLocation } },
   });
   plugin(fixture.bb);
-  return { ...fixture, get, send };
+  return { ...fixture, get, send, storageLocation };
 }
 
 async function storeMessage(fixture: ReturnType<typeof host>, overrides: Record<string, unknown> = {}) {
@@ -108,4 +109,38 @@ describe("Operator Inbox backend", () => {
     expect(fixture.harness.inspection.registrations.mentionProviders).toEqual([]);
     await fixture.harness.lifecycle.dispose();
   });
+});
+
+
+it("derives file context only from the stored sender and rejects missing/foreign/mismatched context", async () => {
+  const fixture = host();
+  await storeMessage(fixture);
+  const environment = { id: "env-sender", projectId: "project-a", hostId: "host-sender", path: "/Users/pixexid/Projects/demo", status: "ready" };
+  const native = { ...makeThreadResponse({ id: "thread-sender", projectId: "project-a", environmentId: "env-sender" }), environment };
+  fixture.get.mockResolvedValue(native);
+  const input = { projectId: "project-a", messageId: 1 };
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", input)).resolves.toEqual({
+    hostId: "host-sender", environmentId: "env-sender", workspacePath: environment.path,
+    threadId: "thread-sender", storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender",
+  });
+  expect(fixture.get).toHaveBeenLastCalledWith({ threadId: "thread-sender", include: "environment" });
+  expect(fixture.storageLocation).toHaveBeenLastCalledWith({ threadId: "thread-sender" });
+  for (const broken of [
+    { ...native, id: "foreign" }, { ...native, projectId: "foreign" }, { ...native, deletedAt: 1 },
+    { ...native, environment: null }, { ...native, environment: { ...environment, id: "foreign" } },
+    { ...native, environment: { ...environment, projectId: "foreign" } },
+    { ...native, environment: { ...environment, status: "destroyed" } },
+    { ...native, environment: { ...environment, hostId: "foreign-host" } },
+    { ...native, environment: { ...environment, path: "/a/../b" } },
+  ]) {
+    fixture.get.mockResolvedValue(broken);
+    await expect(fixture.harness.behavior.callRpc("messageFileContext", input)).resolves.toBeNull();
+  }
+  fixture.get.mockRejectedValue(new Error("Unavailable"));
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", input)).resolves.toBeNull();
+  const calls = fixture.get.mock.calls.length;
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", { ...input, projectId: "foreign" })).rejects.toThrow("not found");
+  expect(fixture.get).toHaveBeenCalledTimes(calls);
+  await expect(fixture.harness.behavior.callRpc("messageFileContext", { ...input, threadId: "forged" })).rejects.toThrow();
+  await fixture.harness.lifecycle.dispose();
 });

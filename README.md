@@ -7,7 +7,9 @@ navigation, mark-read/archive actions, and replies.
 
 ## Install
 
-BB 0.40.0 or newer is required.
+BB with SDK `0.4.35-inbox-parity.0` or a compatible newer SDK is required.
+This candidate SDK is not published yet: clean registry installation and live
+activation remain gated on its release and a matching BB host build.
 
 ```sh
 git clone <repository-url>
@@ -64,6 +66,27 @@ npm run build
 ```
 
 `npm run verify` runs typecheck, tests, and `bb plugin build` together.
+
+Message bodies and replies use BB's host-owned `Markdown`, with
+`experimental_imagePolicy="alt-text"`. The plugin supplies only an explicit
+file resolver: sender identity comes from the stored message and native
+thread/environment/storage APIs, never from the current Inbox project or a
+thread id embedded in a path. Missing or unsafe local targets stay inert.
+Workspace and sender-storage paths use their native targets; other absolute
+paths, including another thread's report, use the verified sender host.
+
+Native `FileLink` currently gates browser hrefs, modified/auxiliary clicks,
+and URL dragging. Use ordinary click/Enter or BB's native copy/open menu.
+The plugin does not intercept DOM events or parse Markdown. The SDK test
+Markdown is a text stub; real parser/media/navigation tests belong to the
+matching host implementation and composed integration verification.
+
+For this unpublished candidate, verification uses the reviewed SDK tarball from
+BB-core commit `77549a615200698fc8c4d053c6eec320d9ef6562`, SHA256
+`939e1dd06d965ed999bbf39965a524397f6c053c65e414161c66aee9625c3c80`.
+The lockfile pins those bytes at the intended registry version; `npm ci` cannot
+resolve it until publication. Do not substitute SDK 0.4.34 or reload this plugin
+into that host: unsupported props would silently lose the safety policy.
 
 ## License
 

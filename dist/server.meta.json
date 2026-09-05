@@ -1,11 +1,11 @@
 {
   "sdkMajor": 0,
-  "sdkVersion": "0.4.21",
+  "sdkVersion": "0.4.35-inbox-parity.0",
   "artifactFormatVersion": 1,
   "pluginId": "operator-inbox",
   "pluginVersion": "0.1.2",
   "builtWith": {
     "bbVersion": "0.40.0",
-    "pluginSdkVersion": "0.4.21"
+    "pluginSdkVersion": "0.4.35-inbox-parity.0"
   }
 }

@@ -3059,7 +3059,7 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
             })));
           }
         }
-
+        
         if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -3067,7 +3067,7 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
         } else {
           newResult[${k}] = ${id2}.value;
         }
-
+        
       `);
       } else {
         doc.write(`
@@ -3077,7 +3077,7 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
-
+        
         if (${id2}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -3085,7 +3085,7 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
         } else {
           newResult[${k}] = ${id2}.value;
         }
-
+        
       `);
       }
     }
@@ -13805,7 +13805,26 @@ var operatorMessagesInputSchema = external_exports.object({
 }).strict();
 var messageMutationInputSchema = external_exports.object({ projectId: id, messageId }).strict();
 var replyInputSchema = messageMutationInputSchema.extend({ text }).strict();
+function safeAbsolutePath(path) {
+  try {
+    encodeURIComponent(path);
+  } catch {
+    return false;
+  }
+  return path.startsWith("/") && !/[\\%?#\x00-\x1f\x7f]/.test(path) && path.slice(1).split("/").every((part) => part !== "" && part !== "." && part !== "..");
+}
+var fileContextSchema = external_exports.object({
+  hostId: id,
+  environmentId: id,
+  workspacePath: external_exports.string().refine(safeAbsolutePath).nullable(),
+  threadId: id,
+  storageRootPath: external_exports.string().refine(safeAbsolutePath)
+}).strict();
 var rpcContract = defineRpcContract({
+  messageFileContext: {
+    input: messageMutationInputSchema,
+    output: fileContextSchema.nullable()
+  },
   operatorMessages: {
     input: operatorMessagesInputSchema,
     output: external_exports.object({ messages: external_exports.array(operatorMessageSchema) }).strict()
@@ -13895,6 +13914,26 @@ function plugin(bb) {
     }
   });
   bb.rpc.register(rpcContract, {
+    async messageFileContext({ projectId, messageId: messageId2 }) {
+      const message = getMessage(db, projectId, messageId2);
+      try {
+        const thread = await bb.sdk.threads.get({ threadId: message.senderThreadId, include: "environment" });
+        const environment = "environment" in thread ? thread.environment : null;
+        if (thread.id !== message.senderThreadId || thread.projectId !== projectId || thread.deletedAt !== null || !environment || environment.id !== thread.environmentId || environment.projectId !== projectId || environment.status !== "ready") return null;
+        const storage = await bb.sdk.threads.storageLocation({ threadId: thread.id });
+        if (storage.hostId !== environment.hostId) return null;
+        const context = fileContextSchema.safeParse({
+          hostId: environment.hostId,
+          environmentId: environment.id,
+          workspacePath: environment.path,
+          threadId: thread.id,
+          storageRootPath: storage.storageRootPath
+        });
+        return context.success ? context.data : null;
+      } catch {
+        return null;
+      }
+    },
     operatorMessages(input) {
       const placeholders = input.projectIds.map(() => "?").join(", ");
       const rows = db.prepare(`SELECT * FROM messages

@@ -1,47 +1,46 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArchiveIcon, ArrowClockwiseIcon, EnvelopeOpenIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
-import ReactMarkdown from "react-markdown";
-import type { Components } from "react-markdown";
-import remarkBreaks from "remark-breaks";
-import { definePluginApp, experimental_useSidebarThreads, useBbNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@get-bb/plugin-sdk/app";
-import type { PluginNavPanelProps, PluginRpcResult } from "@get-bb/plugin-sdk/app";
-import type { rpcContract } from "./contract";
+import { definePluginApp, Markdown, experimental_useSidebarThreads, useBbNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@get-bb/plugin-sdk/app";
+import type { ExperimentalLiveFileTarget, PluginNavPanelProps, PluginRpcResult } from "@get-bb/plugin-sdk/app";
+import { fileContextSchema, safeAbsolutePath, type rpcContract } from "./contract";
 
 const INBOX_CHANGED_CHANNEL = "messages-changed";
-const messageBodyClass = "break-words text-sm leading-6";
-// Agent-authored bodies are untrusted. Render image syntax as alt text so a remote
-// URL cannot become a tracking beacon. Raw HTML stays escaped and unsafe URL schemes
-// are rejected by react-markdown's default transform.
-// Host preflight zeroes <p>/list margins and strips markers, so unstyled markdown
-// elements render as one blob. ponytail: style only what bodies actually contain
-// (paragraphs, lists, links); headings/blockquotes keep defaults until a sender
-// uses them.
-const markdownComponents: Components = {
-  img: ({ alt }) => <span>{alt}</span>,
-  p: ({ children }) => <p className="my-1.5">{children}</p>,
+type FileContext = PluginRpcResult<typeof rpcContract["messageFileContext"]>;
 
-  ol: ({ children }) => <ol className="my-1.5 list-decimal pl-5">{children}</ol>,
-  ul: ({ children }) => <ul className="my-1.5 list-disc pl-5">{children}</ul>,
-  li: ({ children }) => <li className="my-0.5">{children}</li>,
-  a: ({ href, children }) => <a href={href} className="text-primary underline underline-offset-2">{children}</a>,
-};
-
-function readableMessageBody(text: string): string {
-  // ponytail: only substantive sequential (1)..(9) sections; add another
-  // marker form only when concrete stored messages prove it is safe.
-  if (text.length < 400 || /[\r\n]/.test(text)) return text;
-  const markers = Array.from(text.matchAll(/(^| )\(([1-9])\) /g), (match) => ({
-    number: Number(match[2]),
-    start: match.index + match[1].length,
-    contentStart: match.index + match[0].length,
-  }));
-  if (markers.length < 2 || markers.some((marker, index) => marker.number !== index + 1)) return text;
-  if (markers.some((marker, index) => text.slice(marker.contentStart, markers[index + 1]?.start ?? text.length).trim().length < 80)) return text;
-  return markers.reduceRight((body, marker) => marker.start === 0 ? body : `${body.slice(0, marker.start).trimEnd()}\n\n${body.slice(marker.start)}`, text);
+function localTarget(href: string, context: FileContext): ExperimentalLiveFileTarget | null {
+  if (!context) return null;
+  let path: string;
+  try { path = decodeURIComponent(href); } catch { return null; }
+  if (!safeAbsolutePath(path)) return null;
+  if (path.startsWith(`${context.storageRootPath}/`)) {
+    return { kind: "thread-storage", threadId: context.threadId, path: path.slice(context.storageRootPath.length + 1) };
+  }
+  if (context.workspacePath && path.startsWith(`${context.workspacePath}/`)) {
+    return { kind: "workspace", environmentId: context.environmentId, path: path.slice(context.workspacePath.length + 1) };
+  }
+  return { kind: "host", hostId: context.hostId, path };
 }
 
-function MessageBody({ text }: { text: string }) {
-  return <div className={messageBodyClass}><ReactMarkdown remarkPlugins={[remarkBreaks]} components={markdownComponents}>{readableMessageBody(text)}</ReactMarkdown></div>;
+function MessageBody({ text, message }: { text: string; message?: OperatorMessage }) {
+  const rpc = useRpc<typeof rpcContract>();
+  const [context, setContext] = useState<FileContext>(null);
+  const projectId = message?.projectId;
+  const messageId = message?.messageId;
+  const senderThreadId = message?.senderThreadId;
+  useEffect(() => {
+    if (!projectId || !messageId) return;
+    let active = true;
+    void rpc.call("messageFileContext", { projectId, messageId }).then((value) => {
+      const parsed = fileContextSchema.safeParse(value);
+      if (active && parsed.success && parsed.data.threadId === senderThreadId) setContext(parsed.data);
+    }).catch(() => { /* Unresolved file links stay copyable text. */ });
+    return () => { active = false; };
+  }, [rpc, projectId, messageId, senderThreadId]);
+  const resolveFileLink = useCallback((href: string) => {
+    const target = localTarget(href, context);
+    return target ? { target, location: null } : null;
+  }, [context]);
+  return <Markdown content={text} experimental_imagePolicy="alt-text" experimental_resolveFileLink={resolveFileLink} />;
 }
 
 type OperatorMessagesResult = PluginRpcResult<typeof rpcContract["operatorMessages"]>;
@@ -212,7 +211,7 @@ function InboxPanel(_props: PluginNavPanelProps) {
         })}</div>
       </div>
       {selectedMessage ? <article aria-labelledby="selected-message-heading" className="min-w-0 rounded-lg border border-border bg-background"><header className="grid gap-3 border-b border-border bg-muted/10 p-4"><div className="flex flex-wrap items-start justify-between gap-3"><div className="min-w-0"><p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Selected message</p><h2 id="selected-message-heading" className="mt-1 text-lg font-semibold">Message {messageNumberLabel(selectedMessage)}</h2><p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground"><span>From</span>{selectedSenderId ? <a href="#" className="min-w-0 break-words font-medium text-foreground underline decoration-muted-foreground/50 underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" aria-label={`Open sender thread ${senderLabel(selectedMessage)}`} onClick={(event) => { event.preventDefault(); navigate.toThread(selectedSenderId); }}>{senderLabel(selectedMessage)}</a> : <span>Sender unavailable</span>}<span aria-hidden="true">·</span><span>{selectedProjectLabel}</span><span aria-hidden="true">·</span><span>{severityLabel(selectedMessage.severity)}</span><span aria-hidden="true">·</span><time dateTime={new Date(selectedMessage.createdAtMs).toISOString()} title={formatExactTime(selectedMessage.createdAtMs)} aria-label={`Received ${formatExactTime(selectedMessage.createdAtMs)}`}>{formatRelativeTime(selectedMessage.createdAtMs)}</time></p></div><div className="flex flex-wrap gap-2 text-xs"><span className={`rounded-full px-2.5 py-1 font-medium ${selectedMessage.readAtMs === null ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{selectedMessage.readAtMs === null ? "Unread" : "Read"}</span>{selectedMessage.archivedAtMs != null ? <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">Archived</span> : null}{deliveryLabel(selectedMessage) ? <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">{deliveryLabel(selectedMessage)}</span> : null}</div></div></header>
-        <div className="grid gap-5 p-4"><section aria-labelledby="message-body-heading" className="grid gap-2"><h3 id="message-body-heading" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message</h3><MessageBody text={selectedMessage.text} /></section>
+        <div className="grid gap-5 p-4"><section aria-labelledby="message-body-heading" className="grid gap-2"><h3 id="message-body-heading" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Message</h3><MessageBody key={messageKey(selectedMessage)} text={selectedMessage.text} message={selectedMessage} /></section>
           {selectedMessage.replyAcceptedAtMs != null ? <section aria-label="Reply accepted by BB" className="grid gap-2 rounded-md border border-border bg-muted/10 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold">Reply accepted by BB</h3><time className="text-xs text-muted-foreground" dateTime={new Date(selectedMessage.replyAcceptedAtMs).toISOString()} title={formatExactTime(selectedMessage.replyAcceptedAtMs)} aria-label={`Accepted ${formatExactTime(selectedMessage.replyAcceptedAtMs)}`}>{formatRelativeTime(selectedMessage.replyAcceptedAtMs)}</time></div><MessageBody text={selectedMessage.replyText ?? ""} /><p className="text-xs text-muted-foreground">BB reported {selectedMessage.replyDelivery ?? "accepted"}. Provider consumption is not observed.</p></section> : <section aria-labelledby="reply-heading" className="grid gap-3 border-t border-border pt-4"><div><h3 id="reply-heading" className="text-sm font-semibold">Reply to sender</h3><p className="mt-1 text-xs text-muted-foreground">The Inbox records when BB accepts the send. It does not claim the provider consumed it.</p></div><label className="grid gap-1 text-sm" htmlFor={`operator-reply-${replyKey}`}><span className="text-xs font-medium text-muted-foreground">Reply text</span><textarea id={`operator-reply-${replyKey}`} className="min-h-24 w-full rounded-md border border-border bg-background p-2.5 text-sm leading-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" value={replyText} onChange={(event) => setDrafts((current) => ({ ...current, [replyKey!]: event.target.value }))} /></label></section>}
           <div className="flex flex-wrap gap-2 border-t border-border pt-4"><button type="button" aria-label={replyingMessageKey === replyKey ? "Sending reply" : selectedMessage.replyAcceptedAtMs != null ? "Reply accepted by BB" : "Send reply"} title={replyingMessageKey === replyKey ? "Sending reply" : selectedMessage.replyAcceptedAtMs != null ? "Reply accepted by BB" : "Send reply"} disabled={replyingMessageKey !== null || pendingAction !== null || selectedMessage.replyAcceptedAtMs != null || !replyText.trim()} className="min-h-10 min-w-10 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-150 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary motion-reduce:transition-none" onClick={() => { const text = replyText.trim(); if (!text || !replyKey) return; setErrors([]); setNotice(null); setReplyingMessageKey(replyKey); void rpc.call("replyToOperatorMessage", { projectId: selectedMessage.projectId, messageId: selectedMessage.messageId, text }).then((replied) => { updateMessage(replied); setNotice(`Reply accepted by BB (${replied.replyDelivery ?? "accepted"}). Provider consumption is not observed.`); }).catch((reason: unknown) => setErrors([String(reason)])).finally(() => setReplyingMessageKey(null)); }}><PaperPlaneTiltIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button>{selectedMessage.readAtMs === null ? <button type="button" aria-busy={markReadPending} aria-label={markReadPending ? "Marking message read" : "Mark message read"} title={markReadPending ? "Marking message read" : "Mark message read"} disabled={pendingAction !== null} className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={markSelectedMessageRead}><EnvelopeOpenIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button> : null}{selectedMessage.archivedAtMs === null ? <button type="button" aria-busy={archivePending} aria-label={archivePending ? "Archiving message" : "Archive message"} title={archivePending ? "Archiving message" : "Archive message"} disabled={pendingAction !== null} className="min-h-10 min-w-10 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted active:bg-muted/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none" onClick={archiveSelectedMessage}><ArchiveIcon aria-hidden="true" focusable="false" color="currentColor" weight="duotone" size={18} /></button> : null}</div>
         </div>
