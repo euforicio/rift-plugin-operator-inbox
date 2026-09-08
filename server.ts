@@ -1,4 +1,4 @@
-import type { BbPluginApi } from "@get-bb/plugin-sdk";
+import type { RiftPluginApi } from "@riftlabs/plugin-sdk";
 import type Database from "better-sqlite3";
 import { z } from "zod";
 import {
@@ -55,7 +55,7 @@ function getMessage(db: Database.Database, projectId: string, messageId: number)
   return toMessage(row);
 }
 
-export default function plugin(bb: BbPluginApi) {
+export default function plugin(bb: RiftPluginApi) {
   const db = bb.storage.database();
   bb.storage.migrate(db, [
     `CREATE TABLE messages (

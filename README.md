@@ -15,7 +15,7 @@ Requires BB with Plugin SDK **0.4.34 or newer**. Uses the published SDK; no cust
 BB build or bb-collab setup is required.
 
 ```sh
-bb plugin install https://github.com/pixexid/bb-plugin-operator-inbox
+rift plugin install https://github.com/pixexid/bb-plugin-operator-inbox
 ```
 
 Review and confirm the installation prompt. Open **Inbox** in BB's navigation.
@@ -126,7 +126,7 @@ npm test
 npm run build
 ```
 
-`npm run verify` runs typecheck, tests, and `bb plugin build` together.
+`npm run verify` runs typecheck, tests, and `rift plugin build` together.
 
 Message bodies and replies use the existing ReactMarkdown parser with image alt text and escaped raw HTML. HTTP(S) links use BB's UrlLink and its browser preference. Validated local artifacts use button controls calling BB's native experimental_openFilePreview, with no browser href to leak through modified clicks, context menus, or dragging. These controls use normal button keyboard activation; they do not provide the native FileLink context menu.
 
@@ -137,3 +137,7 @@ File preview uses an experimental public SDK API and may need updates as BB evol
 ## License
 
 MIT
+
+## Rift fork
+
+Maintained for Rift. Original source and credit: [pixexid/bb-plugin-operator-inbox](https://github.com/pixexid/bb-plugin-operator-inbox). Original licensing and attribution are preserved. Use `npm ci` and `npm run build`; the pinned SDK artifact is documented in [vendor/README.md](vendor/README.md).

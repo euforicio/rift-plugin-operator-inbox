@@ -1,5 +1,5 @@
 {
-  "name": "bb-plugin-operator-inbox",
+  "name": "rift-plugin-operator-inbox",
   "version": "0.1.2",
   "type": "module",
   "license": "MIT",
@@ -13,21 +13,11 @@
     "server.ts"
   ],
   "engines": {
-    "bb": ">=0.40.0",
-    "bbPluginSdk": ">=0.4.34"
-  },
-  "bb": {
-    "name": "Operator Inbox",
-    "description": "A standalone, project-scoped inbox for messages from BB agents.",
-    "branding": {
-      "icon": "./assets/envelope-simple-duotone.svg"
-    },
-    "server": "./server.ts",
-    "app": "./app.tsx",
-    "skills": []
+    "rift": ">=0.40.0",
+    "riftPluginSdk": ">=0.4.48"
   },
   "scripts": {
-    "build": "bb plugin build",
+    "build": "node tooling/build-plugin.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "verify": "npm run typecheck && npm test && npm run build"
@@ -36,10 +26,10 @@
     "@phosphor-icons/react": "2.1.10",
     "zod": "4.3.6",
     "react-markdown": "10.1.0",
-    "remark-breaks": "4.0.0"
+    "remark-breaks": "4.0.0",
+    "@riftlabs/plugin-sdk": "0.4.48"
   },
   "devDependencies": {
-    "@get-bb/plugin-sdk": "0.4.34",
     "@pierre/diffs": "^1.2.9",
     "@radix-ui/react-alert-dialog": "^1.1.19",
     "@radix-ui/react-context-menu": "^2.3.3",
@@ -55,7 +45,6 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
-    "bb-app": "0.40.0",
     "better-sqlite3": "^12.11.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,6 +57,28 @@
     "tailwind-merge": "^3.4.0",
     "typescript": "^5.7.0",
     "vaul": "^1.1.2",
-    "vitest": "^4.1.1"
+    "vitest": "^4.1.1",
+    "@tailwindcss/node": "4.3.0",
+    "@tailwindcss/oxide": "4.3.0",
+    "esbuild": "0.28.1",
+    "tailwindcss": "4.3.0"
+  },
+  "rift": {
+    "name": "Operator Inbox",
+    "description": "A standalone, project-scoped inbox for messages from Rift agents.",
+    "branding": {
+      "icon": "./assets/envelope-simple-duotone.svg"
+    },
+    "server": "./server.ts",
+    "app": "./app.tsx",
+    "skills": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/euforicio/rift-plugin-operator-inbox.git"
+  },
+  "homepage": "https://riftlabs.app",
+  "bugs": {
+    "url": "https://github.com/euforicio/rift-plugin-operator-inbox/issues"
   }
 }

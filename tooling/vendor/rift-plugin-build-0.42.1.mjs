@@ -4,13 +4,2466 @@ import { fileURLToPath as __fileURLToPath } from "node:url";
 const require = __createRequire(import.meta.url);
 var __filename = __fileURLToPath(import.meta.url);
 var __dirname = __pathDirname(__filename);
+var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+var __commonJS = (cb, mod) => function __require2() {
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
-// node_modules/zod/v4/classic/external.js
+// node_modules/.pnpm/xmlchars@2.2.0/node_modules/xmlchars/xml/1.0/ed5.js
+var require_ed5 = __commonJS({
+  "node_modules/.pnpm/xmlchars@2.2.0/node_modules/xmlchars/xml/1.0/ed5.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CHAR = "	\n\r -\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}";
+    exports.S = " 	\r\n";
+    exports.NAME_START_CHAR = ":A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}";
+    exports.NAME_CHAR = "-" + exports.NAME_START_CHAR + ".0-9\xB7\u0300-\u036F\u203F-\u2040";
+    exports.CHAR_RE = new RegExp("^[" + exports.CHAR + "]$", "u");
+    exports.S_RE = new RegExp("^[" + exports.S + "]+$", "u");
+    exports.NAME_START_CHAR_RE = new RegExp("^[" + exports.NAME_START_CHAR + "]$", "u");
+    exports.NAME_CHAR_RE = new RegExp("^[" + exports.NAME_CHAR + "]$", "u");
+    exports.NAME_RE = new RegExp("^[" + exports.NAME_START_CHAR + "][" + exports.NAME_CHAR + "]*$", "u");
+    exports.NMTOKEN_RE = new RegExp("^[" + exports.NAME_CHAR + "]+$", "u");
+    var TAB = 9;
+    var NL = 10;
+    var CR = 13;
+    var SPACE = 32;
+    exports.S_LIST = [SPACE, NL, CR, TAB];
+    function isChar(c) {
+      return c >= SPACE && c <= 55295 || c === NL || c === CR || c === TAB || c >= 57344 && c <= 65533 || c >= 65536 && c <= 1114111;
+    }
+    exports.isChar = isChar;
+    function isS(c) {
+      return c === SPACE || c === NL || c === CR || c === TAB;
+    }
+    exports.isS = isS;
+    function isNameStartChar(c) {
+      return c >= 65 && c <= 90 || c >= 97 && c <= 122 || c === 58 || c === 95 || c === 8204 || c === 8205 || c >= 192 && c <= 214 || c >= 216 && c <= 246 || c >= 248 && c <= 767 || c >= 880 && c <= 893 || c >= 895 && c <= 8191 || c >= 8304 && c <= 8591 || c >= 11264 && c <= 12271 || c >= 12289 && c <= 55295 || c >= 63744 && c <= 64975 || c >= 65008 && c <= 65533 || c >= 65536 && c <= 983039;
+    }
+    exports.isNameStartChar = isNameStartChar;
+    function isNameChar(c) {
+      return isNameStartChar(c) || c >= 48 && c <= 57 || c === 45 || c === 46 || c === 183 || c >= 768 && c <= 879 || c >= 8255 && c <= 8256;
+    }
+    exports.isNameChar = isNameChar;
+  }
+});
+
+// node_modules/.pnpm/xmlchars@2.2.0/node_modules/xmlchars/xml/1.1/ed2.js
+var require_ed2 = __commonJS({
+  "node_modules/.pnpm/xmlchars@2.2.0/node_modules/xmlchars/xml/1.1/ed2.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CHAR = "-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}";
+    exports.RESTRICTED_CHAR = "-\b\v\f-\x7F-\x84\x86-\x9F";
+    exports.S = " 	\r\n";
+    exports.NAME_START_CHAR = ":A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}";
+    exports.NAME_CHAR = "-" + exports.NAME_START_CHAR + ".0-9\xB7\u0300-\u036F\u203F-\u2040";
+    exports.CHAR_RE = new RegExp("^[" + exports.CHAR + "]$", "u");
+    exports.RESTRICTED_CHAR_RE = new RegExp("^[" + exports.RESTRICTED_CHAR + "]$", "u");
+    exports.S_RE = new RegExp("^[" + exports.S + "]+$", "u");
+    exports.NAME_START_CHAR_RE = new RegExp("^[" + exports.NAME_START_CHAR + "]$", "u");
+    exports.NAME_CHAR_RE = new RegExp("^[" + exports.NAME_CHAR + "]$", "u");
+    exports.NAME_RE = new RegExp("^[" + exports.NAME_START_CHAR + "][" + exports.NAME_CHAR + "]*$", "u");
+    exports.NMTOKEN_RE = new RegExp("^[" + exports.NAME_CHAR + "]+$", "u");
+    var TAB = 9;
+    var NL = 10;
+    var CR = 13;
+    var SPACE = 32;
+    exports.S_LIST = [SPACE, NL, CR, TAB];
+    function isChar(c) {
+      return c >= 1 && c <= 55295 || c >= 57344 && c <= 65533 || c >= 65536 && c <= 1114111;
+    }
+    exports.isChar = isChar;
+    function isRestrictedChar(c) {
+      return c >= 1 && c <= 8 || c === 11 || c === 12 || c >= 14 && c <= 31 || c >= 127 && c <= 132 || c >= 134 && c <= 159;
+    }
+    exports.isRestrictedChar = isRestrictedChar;
+    function isCharAndNotRestricted(c) {
+      return c === 9 || c === 10 || c === 13 || c > 31 && c < 127 || c === 133 || c > 159 && c <= 55295 || c >= 57344 && c <= 65533 || c >= 65536 && c <= 1114111;
+    }
+    exports.isCharAndNotRestricted = isCharAndNotRestricted;
+    function isS(c) {
+      return c === SPACE || c === NL || c === CR || c === TAB;
+    }
+    exports.isS = isS;
+    function isNameStartChar(c) {
+      return c >= 65 && c <= 90 || c >= 97 && c <= 122 || c === 58 || c === 95 || c === 8204 || c === 8205 || c >= 192 && c <= 214 || c >= 216 && c <= 246 || c >= 248 && c <= 767 || c >= 880 && c <= 893 || c >= 895 && c <= 8191 || c >= 8304 && c <= 8591 || c >= 11264 && c <= 12271 || c >= 12289 && c <= 55295 || c >= 63744 && c <= 64975 || c >= 65008 && c <= 65533 || c >= 65536 && c <= 983039;
+    }
+    exports.isNameStartChar = isNameStartChar;
+    function isNameChar(c) {
+      return isNameStartChar(c) || c >= 48 && c <= 57 || c === 45 || c === 46 || c === 183 || c >= 768 && c <= 879 || c >= 8255 && c <= 8256;
+    }
+    exports.isNameChar = isNameChar;
+  }
+});
+
+// node_modules/.pnpm/xmlchars@2.2.0/node_modules/xmlchars/xmlns/1.0/ed3.js
+var require_ed3 = __commonJS({
+  "node_modules/.pnpm/xmlchars@2.2.0/node_modules/xmlchars/xmlns/1.0/ed3.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.NC_NAME_START_CHAR = "A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}";
+    exports.NC_NAME_CHAR = "-" + exports.NC_NAME_START_CHAR + ".0-9\xB7\u0300-\u036F\u203F-\u2040";
+    exports.NC_NAME_START_CHAR_RE = new RegExp("^[" + exports.NC_NAME_START_CHAR + "]$", "u");
+    exports.NC_NAME_CHAR_RE = new RegExp("^[" + exports.NC_NAME_CHAR + "]$", "u");
+    exports.NC_NAME_RE = new RegExp("^[" + exports.NC_NAME_START_CHAR + "][" + exports.NC_NAME_CHAR + "]*$", "u");
+    function isNCNameStartChar(c) {
+      return c >= 65 && c <= 90 || c === 95 || c >= 97 && c <= 122 || c >= 192 && c <= 214 || c >= 216 && c <= 246 || c >= 248 && c <= 767 || c >= 880 && c <= 893 || c >= 895 && c <= 8191 || c >= 8204 && c <= 8205 || c >= 8304 && c <= 8591 || c >= 11264 && c <= 12271 || c >= 12289 && c <= 55295 || c >= 63744 && c <= 64975 || c >= 65008 && c <= 65533 || c >= 65536 && c <= 983039;
+    }
+    exports.isNCNameStartChar = isNCNameStartChar;
+    function isNCNameChar(c) {
+      return isNCNameStartChar(c) || (c === 45 || c === 46 || c >= 48 && c <= 57 || c === 183 || c >= 768 && c <= 879 || c >= 8255 && c <= 8256);
+    }
+    exports.isNCNameChar = isNCNameChar;
+  }
+});
+
+// node_modules/.pnpm/saxes@6.0.0/node_modules/saxes/saxes.js
+var require_saxes = __commonJS({
+  "node_modules/.pnpm/saxes@6.0.0/node_modules/saxes/saxes.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SaxesParser = exports.EVENTS = void 0;
+    var ed5 = require_ed5();
+    var ed2 = require_ed2();
+    var NSed3 = require_ed3();
+    var isS = ed5.isS;
+    var isChar10 = ed5.isChar;
+    var isNameStartChar = ed5.isNameStartChar;
+    var isNameChar = ed5.isNameChar;
+    var S_LIST = ed5.S_LIST;
+    var NAME_RE = ed5.NAME_RE;
+    var isChar11 = ed2.isChar;
+    var isNCNameStartChar = NSed3.isNCNameStartChar;
+    var isNCNameChar = NSed3.isNCNameChar;
+    var NC_NAME_RE = NSed3.NC_NAME_RE;
+    var XML_NAMESPACE2 = "http://www.w3.org/XML/1998/namespace";
+    var XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/";
+    var rootNS = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+      __proto__: null,
+      xml: XML_NAMESPACE2,
+      xmlns: XMLNS_NAMESPACE
+    };
+    var XML_ENTITIES = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+      __proto__: null,
+      amp: "&",
+      gt: ">",
+      lt: "<",
+      quot: '"',
+      apos: "'"
+    };
+    var EOC = -1;
+    var NL_LIKE = -2;
+    var S_BEGIN = 0;
+    var S_BEGIN_WHITESPACE = 1;
+    var S_DOCTYPE = 2;
+    var S_DOCTYPE_QUOTE = 3;
+    var S_DTD = 4;
+    var S_DTD_QUOTED = 5;
+    var S_DTD_OPEN_WAKA = 6;
+    var S_DTD_OPEN_WAKA_BANG = 7;
+    var S_DTD_COMMENT = 8;
+    var S_DTD_COMMENT_ENDING = 9;
+    var S_DTD_COMMENT_ENDED = 10;
+    var S_DTD_PI = 11;
+    var S_DTD_PI_ENDING = 12;
+    var S_TEXT = 13;
+    var S_ENTITY = 14;
+    var S_OPEN_WAKA = 15;
+    var S_OPEN_WAKA_BANG = 16;
+    var S_COMMENT = 17;
+    var S_COMMENT_ENDING = 18;
+    var S_COMMENT_ENDED = 19;
+    var S_CDATA = 20;
+    var S_CDATA_ENDING = 21;
+    var S_CDATA_ENDING_2 = 22;
+    var S_PI_FIRST_CHAR = 23;
+    var S_PI_REST = 24;
+    var S_PI_BODY = 25;
+    var S_PI_ENDING = 26;
+    var S_XML_DECL_NAME_START = 27;
+    var S_XML_DECL_NAME = 28;
+    var S_XML_DECL_EQ = 29;
+    var S_XML_DECL_VALUE_START = 30;
+    var S_XML_DECL_VALUE = 31;
+    var S_XML_DECL_SEPARATOR = 32;
+    var S_XML_DECL_ENDING = 33;
+    var S_OPEN_TAG = 34;
+    var S_OPEN_TAG_SLASH = 35;
+    var S_ATTRIB = 36;
+    var S_ATTRIB_NAME = 37;
+    var S_ATTRIB_NAME_SAW_WHITE = 38;
+    var S_ATTRIB_VALUE = 39;
+    var S_ATTRIB_VALUE_QUOTED = 40;
+    var S_ATTRIB_VALUE_CLOSED = 41;
+    var S_ATTRIB_VALUE_UNQUOTED = 42;
+    var S_CLOSE_TAG = 43;
+    var S_CLOSE_TAG_SAW_WHITE = 44;
+    var TAB = 9;
+    var NL = 10;
+    var CR = 13;
+    var SPACE = 32;
+    var BANG = 33;
+    var DQUOTE = 34;
+    var AMP = 38;
+    var SQUOTE = 39;
+    var MINUS = 45;
+    var FORWARD_SLASH = 47;
+    var SEMICOLON = 59;
+    var LESS = 60;
+    var EQUAL = 61;
+    var GREATER = 62;
+    var QUESTION = 63;
+    var OPEN_BRACKET = 91;
+    var CLOSE_BRACKET = 93;
+    var NEL = 133;
+    var LS = 8232;
+    var isQuote = (c) => c === DQUOTE || c === SQUOTE;
+    var QUOTES = [DQUOTE, SQUOTE];
+    var DOCTYPE_TERMINATOR = [...QUOTES, OPEN_BRACKET, GREATER];
+    var DTD_TERMINATOR = [...QUOTES, LESS, CLOSE_BRACKET];
+    var XML_DECL_NAME_TERMINATOR = [EQUAL, QUESTION, ...S_LIST];
+    var ATTRIB_VALUE_UNQUOTED_TERMINATOR = [...S_LIST, GREATER, AMP, LESS];
+    function nsPairCheck(parser, prefix, uri) {
+      switch (prefix) {
+        case "xml":
+          if (uri !== XML_NAMESPACE2) {
+            parser.fail(`xml prefix must be bound to ${XML_NAMESPACE2}.`);
+          }
+          break;
+        case "xmlns":
+          if (uri !== XMLNS_NAMESPACE) {
+            parser.fail(`xmlns prefix must be bound to ${XMLNS_NAMESPACE}.`);
+          }
+          break;
+        default:
+      }
+      switch (uri) {
+        case XMLNS_NAMESPACE:
+          parser.fail(prefix === "" ? `the default namespace may not be set to ${uri}.` : `may not assign a prefix (even "xmlns") to the URI ${XMLNS_NAMESPACE}.`);
+          break;
+        case XML_NAMESPACE2:
+          switch (prefix) {
+            case "xml":
+              break;
+            case "":
+              parser.fail(`the default namespace may not be set to ${uri}.`);
+              break;
+            default:
+              parser.fail("may not assign the xml namespace to another prefix.");
+          }
+          break;
+        default:
+      }
+    }
+    function nsMappingCheck(parser, mapping) {
+      for (const local of Object.keys(mapping)) {
+        nsPairCheck(parser, local, mapping[local]);
+      }
+    }
+    var isNCName = (name) => NC_NAME_RE.test(name);
+    var isName = (name) => NAME_RE.test(name);
+    var FORBIDDEN_START = 0;
+    var FORBIDDEN_BRACKET = 1;
+    var FORBIDDEN_BRACKET_BRACKET = 2;
+    exports.EVENTS = [
+      "xmldecl",
+      "text",
+      "processinginstruction",
+      "doctype",
+      "comment",
+      "opentagstart",
+      "attribute",
+      "opentag",
+      "closetag",
+      "cdata",
+      "error",
+      "end",
+      "ready"
+    ];
+    var EVENT_NAME_TO_HANDLER_NAME = {
+      xmldecl: "xmldeclHandler",
+      text: "textHandler",
+      processinginstruction: "piHandler",
+      doctype: "doctypeHandler",
+      comment: "commentHandler",
+      opentagstart: "openTagStartHandler",
+      attribute: "attributeHandler",
+      opentag: "openTagHandler",
+      closetag: "closeTagHandler",
+      cdata: "cdataHandler",
+      error: "errorHandler",
+      end: "endHandler",
+      ready: "readyHandler"
+    };
+    var SaxesParser2 = class {
+      /**
+       * @param opt The parser options.
+       */
+      constructor(opt) {
+        this.opt = opt !== null && opt !== void 0 ? opt : {};
+        this.fragmentOpt = !!this.opt.fragment;
+        const xmlnsOpt = this.xmlnsOpt = !!this.opt.xmlns;
+        this.trackPosition = this.opt.position !== false;
+        this.fileName = this.opt.fileName;
+        if (xmlnsOpt) {
+          this.nameStartCheck = isNCNameStartChar;
+          this.nameCheck = isNCNameChar;
+          this.isName = isNCName;
+          this.processAttribs = this.processAttribsNS;
+          this.pushAttrib = this.pushAttribNS;
+          this.ns = Object.assign({ __proto__: null }, rootNS);
+          const additional = this.opt.additionalNamespaces;
+          if (additional != null) {
+            nsMappingCheck(this, additional);
+            Object.assign(this.ns, additional);
+          }
+        } else {
+          this.nameStartCheck = isNameStartChar;
+          this.nameCheck = isNameChar;
+          this.isName = isName;
+          this.processAttribs = this.processAttribsPlain;
+          this.pushAttrib = this.pushAttribPlain;
+        }
+        this.stateTable = [
+          /* eslint-disable @typescript-eslint/unbound-method */
+          this.sBegin,
+          this.sBeginWhitespace,
+          this.sDoctype,
+          this.sDoctypeQuote,
+          this.sDTD,
+          this.sDTDQuoted,
+          this.sDTDOpenWaka,
+          this.sDTDOpenWakaBang,
+          this.sDTDComment,
+          this.sDTDCommentEnding,
+          this.sDTDCommentEnded,
+          this.sDTDPI,
+          this.sDTDPIEnding,
+          this.sText,
+          this.sEntity,
+          this.sOpenWaka,
+          this.sOpenWakaBang,
+          this.sComment,
+          this.sCommentEnding,
+          this.sCommentEnded,
+          this.sCData,
+          this.sCDataEnding,
+          this.sCDataEnding2,
+          this.sPIFirstChar,
+          this.sPIRest,
+          this.sPIBody,
+          this.sPIEnding,
+          this.sXMLDeclNameStart,
+          this.sXMLDeclName,
+          this.sXMLDeclEq,
+          this.sXMLDeclValueStart,
+          this.sXMLDeclValue,
+          this.sXMLDeclSeparator,
+          this.sXMLDeclEnding,
+          this.sOpenTag,
+          this.sOpenTagSlash,
+          this.sAttrib,
+          this.sAttribName,
+          this.sAttribNameSawWhite,
+          this.sAttribValue,
+          this.sAttribValueQuoted,
+          this.sAttribValueClosed,
+          this.sAttribValueUnquoted,
+          this.sCloseTag,
+          this.sCloseTagSawWhite
+          /* eslint-enable @typescript-eslint/unbound-method */
+        ];
+        this._init();
+      }
+      /**
+       * Indicates whether or not the parser is closed. If ``true``, wait for
+       * the ``ready`` event to write again.
+       */
+      get closed() {
+        return this._closed;
+      }
+      _init() {
+        var _a2;
+        this.openWakaBang = "";
+        this.text = "";
+        this.name = "";
+        this.piTarget = "";
+        this.entity = "";
+        this.q = null;
+        this.tags = [];
+        this.tag = null;
+        this.topNS = null;
+        this.chunk = "";
+        this.chunkPosition = 0;
+        this.i = 0;
+        this.prevI = 0;
+        this.carriedFromPrevious = void 0;
+        this.forbiddenState = FORBIDDEN_START;
+        this.attribList = [];
+        const { fragmentOpt } = this;
+        this.state = fragmentOpt ? S_TEXT : S_BEGIN;
+        this.reportedTextBeforeRoot = this.reportedTextAfterRoot = this.closedRoot = this.sawRoot = fragmentOpt;
+        this.xmlDeclPossible = !fragmentOpt;
+        this.xmlDeclExpects = ["version"];
+        this.entityReturnState = void 0;
+        let { defaultXMLVersion } = this.opt;
+        if (defaultXMLVersion === void 0) {
+          if (this.opt.forceXMLVersion === true) {
+            throw new Error("forceXMLVersion set but defaultXMLVersion is not set");
+          }
+          defaultXMLVersion = "1.0";
+        }
+        this.setXMLVersion(defaultXMLVersion);
+        this.positionAtNewLine = 0;
+        this.doctype = false;
+        this._closed = false;
+        this.xmlDecl = {
+          version: void 0,
+          encoding: void 0,
+          standalone: void 0
+        };
+        this.line = 1;
+        this.column = 0;
+        this.ENTITIES = Object.create(XML_ENTITIES);
+        (_a2 = this.readyHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this);
+      }
+      /**
+       * The stream position the parser is currently looking at. This field is
+       * zero-based.
+       *
+       * This field is not based on counting Unicode characters but is to be
+       * interpreted as a plain index into a JavaScript string.
+       */
+      get position() {
+        return this.chunkPosition + this.i;
+      }
+      /**
+       * The column number of the next character to be read by the parser.  *
+       * This field is zero-based. (The first column in a line is 0.)
+       *
+       * This field reports the index at which the next character would be in the
+       * line if the line were represented as a JavaScript string.  Note that this
+       * *can* be different to a count based on the number of *Unicode characters*
+       * due to how JavaScript handles astral plane characters.
+       *
+       * See [[column]] for a number that corresponds to a count of Unicode
+       * characters.
+       */
+      get columnIndex() {
+        return this.position - this.positionAtNewLine;
+      }
+      /**
+       * Set an event listener on an event. The parser supports one handler per
+       * event type. If you try to set an event handler over an existing handler,
+       * the old handler is silently overwritten.
+       *
+       * @param name The event to listen to.
+       *
+       * @param handler The handler to set.
+       */
+      on(name, handler) {
+        this[EVENT_NAME_TO_HANDLER_NAME[name]] = handler;
+      }
+      /**
+       * Unset an event handler.
+       *
+       * @parma name The event to stop listening to.
+       */
+      off(name) {
+        this[EVENT_NAME_TO_HANDLER_NAME[name]] = void 0;
+      }
+      /**
+       * Make an error object. The error object will have a message that contains
+       * the ``fileName`` option passed at the creation of the parser. If position
+       * tracking was turned on, it will also have line and column number
+       * information.
+       *
+       * @param message The message describing the error to report.
+       *
+       * @returns An error object with a properly formatted message.
+       */
+      makeError(message) {
+        var _a2;
+        let msg = (_a2 = this.fileName) !== null && _a2 !== void 0 ? _a2 : "";
+        if (this.trackPosition) {
+          if (msg.length > 0) {
+            msg += ":";
+          }
+          msg += `${this.line}:${this.column}`;
+        }
+        if (msg.length > 0) {
+          msg += ": ";
+        }
+        return new Error(msg + message);
+      }
+      /**
+       * Report a parsing error. This method is made public so that client code may
+       * check for issues that are outside the scope of this project and can report
+       * errors.
+       *
+       * @param message The error to report.
+       *
+       * @returns this
+       */
+      fail(message) {
+        const err = this.makeError(message);
+        const handler = this.errorHandler;
+        if (handler === void 0) {
+          throw err;
+        } else {
+          handler(err);
+        }
+        return this;
+      }
+      /**
+       * Write a XML data to the parser.
+       *
+       * @param chunk The XML data to write.
+       *
+       * @returns this
+       */
+      // We do need object for the type here. Yes, it often causes problems
+      // but not in this case.
+      write(chunk) {
+        if (this.closed) {
+          return this.fail("cannot write after close; assign an onready handler.");
+        }
+        let end = false;
+        if (chunk === null) {
+          end = true;
+          chunk = "";
+        } else if (typeof chunk === "object") {
+          chunk = chunk.toString();
+        }
+        if (this.carriedFromPrevious !== void 0) {
+          chunk = `${this.carriedFromPrevious}${chunk}`;
+          this.carriedFromPrevious = void 0;
+        }
+        let limit = chunk.length;
+        const lastCode = chunk.charCodeAt(limit - 1);
+        if (!end && // A trailing CR or surrogate must be carried over to the next
+        // chunk.
+        (lastCode === CR || lastCode >= 55296 && lastCode <= 56319)) {
+          this.carriedFromPrevious = chunk[limit - 1];
+          limit--;
+          chunk = chunk.slice(0, limit);
+        }
+        const { stateTable } = this;
+        this.chunk = chunk;
+        this.i = 0;
+        while (this.i < limit) {
+          stateTable[this.state].call(this);
+        }
+        this.chunkPosition += limit;
+        return end ? this.end() : this;
+      }
+      /**
+       * Close the current stream. Perform final well-formedness checks and reset
+       * the parser tstate.
+       *
+       * @returns this
+       */
+      close() {
+        return this.write(null);
+      }
+      /**
+       * Get a single code point out of the current chunk. This updates the current
+       * position if we do position tracking.
+       *
+       * This is the algorithm to use for XML 1.0.
+       *
+       * @returns The character read.
+       */
+      getCode10() {
+        const { chunk, i } = this;
+        this.prevI = i;
+        this.i = i + 1;
+        if (i >= chunk.length) {
+          return EOC;
+        }
+        const code = chunk.charCodeAt(i);
+        this.column++;
+        if (code < 55296) {
+          if (code >= SPACE || code === TAB) {
+            return code;
+          }
+          switch (code) {
+            case NL:
+              this.line++;
+              this.column = 0;
+              this.positionAtNewLine = this.position;
+              return NL;
+            case CR:
+              if (chunk.charCodeAt(i + 1) === NL) {
+                this.i = i + 2;
+              }
+              this.line++;
+              this.column = 0;
+              this.positionAtNewLine = this.position;
+              return NL_LIKE;
+            default:
+              this.fail("disallowed character.");
+              return code;
+          }
+        }
+        if (code > 56319) {
+          if (!(code >= 57344 && code <= 65533)) {
+            this.fail("disallowed character.");
+          }
+          return code;
+        }
+        const final = 65536 + (code - 55296) * 1024 + (chunk.charCodeAt(i + 1) - 56320);
+        this.i = i + 2;
+        if (final > 1114111) {
+          this.fail("disallowed character.");
+        }
+        return final;
+      }
+      /**
+       * Get a single code point out of the current chunk. This updates the current
+       * position if we do position tracking.
+       *
+       * This is the algorithm to use for XML 1.1.
+       *
+       * @returns {number} The character read.
+       */
+      getCode11() {
+        const { chunk, i } = this;
+        this.prevI = i;
+        this.i = i + 1;
+        if (i >= chunk.length) {
+          return EOC;
+        }
+        const code = chunk.charCodeAt(i);
+        this.column++;
+        if (code < 55296) {
+          if (code > 31 && code < 127 || code > 159 && code !== LS || code === TAB) {
+            return code;
+          }
+          switch (code) {
+            case NL:
+              this.line++;
+              this.column = 0;
+              this.positionAtNewLine = this.position;
+              return NL;
+            case CR: {
+              const next = chunk.charCodeAt(i + 1);
+              if (next === NL || next === NEL) {
+                this.i = i + 2;
+              }
+            }
+            /* yes, fall through */
+            case NEL:
+            // 0x85
+            case LS:
+              this.line++;
+              this.column = 0;
+              this.positionAtNewLine = this.position;
+              return NL_LIKE;
+            default:
+              this.fail("disallowed character.");
+              return code;
+          }
+        }
+        if (code > 56319) {
+          if (!(code >= 57344 && code <= 65533)) {
+            this.fail("disallowed character.");
+          }
+          return code;
+        }
+        const final = 65536 + (code - 55296) * 1024 + (chunk.charCodeAt(i + 1) - 56320);
+        this.i = i + 2;
+        if (final > 1114111) {
+          this.fail("disallowed character.");
+        }
+        return final;
+      }
+      /**
+       * Like ``getCode`` but with the return value normalized so that ``NL`` is
+       * returned for ``NL_LIKE``.
+       */
+      getCodeNorm() {
+        const c = this.getCode();
+        return c === NL_LIKE ? NL : c;
+      }
+      unget() {
+        this.i = this.prevI;
+        this.column--;
+      }
+      /**
+       * Capture characters into a buffer until encountering one of a set of
+       * characters.
+       *
+       * @param chars An array of codepoints. Encountering a character in the array
+       * ends the capture. (``chars`` may safely contain ``NL``.)
+       *
+       * @return The character code that made the capture end, or ``EOC`` if we hit
+       * the end of the chunk. The return value cannot be NL_LIKE: NL is returned
+       * instead.
+       */
+      captureTo(chars) {
+        let { i: start } = this;
+        const { chunk } = this;
+        while (true) {
+          const c = this.getCode();
+          const isNLLike = c === NL_LIKE;
+          const final = isNLLike ? NL : c;
+          if (final === EOC || chars.includes(final)) {
+            this.text += chunk.slice(start, this.prevI);
+            return final;
+          }
+          if (isNLLike) {
+            this.text += `${chunk.slice(start, this.prevI)}
+`;
+            start = this.i;
+          }
+        }
+      }
+      /**
+       * Capture characters into a buffer until encountering a character.
+       *
+       * @param char The codepoint that ends the capture. **NOTE ``char`` MAY NOT
+       * CONTAIN ``NL``.** Passing ``NL`` will result in buggy behavior.
+       *
+       * @return ``true`` if we ran into the character. Otherwise, we ran into the
+       * end of the current chunk.
+       */
+      captureToChar(char) {
+        let { i: start } = this;
+        const { chunk } = this;
+        while (true) {
+          let c = this.getCode();
+          switch (c) {
+            case NL_LIKE:
+              this.text += `${chunk.slice(start, this.prevI)}
+`;
+              start = this.i;
+              c = NL;
+              break;
+            case EOC:
+              this.text += chunk.slice(start);
+              return false;
+            default:
+          }
+          if (c === char) {
+            this.text += chunk.slice(start, this.prevI);
+            return true;
+          }
+        }
+      }
+      /**
+       * Capture characters that satisfy ``isNameChar`` into the ``name`` field of
+       * this parser.
+       *
+       * @return The character code that made the test fail, or ``EOC`` if we hit
+       * the end of the chunk. The return value cannot be NL_LIKE: NL is returned
+       * instead.
+       */
+      captureNameChars() {
+        const { chunk, i: start } = this;
+        while (true) {
+          const c = this.getCode();
+          if (c === EOC) {
+            this.name += chunk.slice(start);
+            return EOC;
+          }
+          if (!isNameChar(c)) {
+            this.name += chunk.slice(start, this.prevI);
+            return c === NL_LIKE ? NL : c;
+          }
+        }
+      }
+      /**
+       * Skip white spaces.
+       *
+       * @return The character that ended the skip, or ``EOC`` if we hit
+       * the end of the chunk. The return value cannot be NL_LIKE: NL is returned
+       * instead.
+       */
+      skipSpaces() {
+        while (true) {
+          const c = this.getCodeNorm();
+          if (c === EOC || !isS(c)) {
+            return c;
+          }
+        }
+      }
+      setXMLVersion(version2) {
+        this.currentXMLVersion = version2;
+        if (version2 === "1.0") {
+          this.isChar = isChar10;
+          this.getCode = this.getCode10;
+        } else {
+          this.isChar = isChar11;
+          this.getCode = this.getCode11;
+        }
+      }
+      // STATE ENGINE METHODS
+      // This needs to be a state separate from S_BEGIN_WHITESPACE because we want
+      // to be sure never to come back to this state later.
+      sBegin() {
+        if (this.chunk.charCodeAt(0) === 65279) {
+          this.i++;
+          this.column++;
+        }
+        this.state = S_BEGIN_WHITESPACE;
+      }
+      sBeginWhitespace() {
+        const iBefore = this.i;
+        const c = this.skipSpaces();
+        if (this.prevI !== iBefore) {
+          this.xmlDeclPossible = false;
+        }
+        switch (c) {
+          case LESS:
+            this.state = S_OPEN_WAKA;
+            if (this.text.length !== 0) {
+              throw new Error("no-empty text at start");
+            }
+            break;
+          case EOC:
+            break;
+          default:
+            this.unget();
+            this.state = S_TEXT;
+            this.xmlDeclPossible = false;
+        }
+      }
+      sDoctype() {
+        var _a2;
+        const c = this.captureTo(DOCTYPE_TERMINATOR);
+        switch (c) {
+          case GREATER: {
+            (_a2 = this.doctypeHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, this.text);
+            this.text = "";
+            this.state = S_TEXT;
+            this.doctype = true;
+            break;
+          }
+          case EOC:
+            break;
+          default:
+            this.text += String.fromCodePoint(c);
+            if (c === OPEN_BRACKET) {
+              this.state = S_DTD;
+            } else if (isQuote(c)) {
+              this.state = S_DOCTYPE_QUOTE;
+              this.q = c;
+            }
+        }
+      }
+      sDoctypeQuote() {
+        const q = this.q;
+        if (this.captureToChar(q)) {
+          this.text += String.fromCodePoint(q);
+          this.q = null;
+          this.state = S_DOCTYPE;
+        }
+      }
+      sDTD() {
+        const c = this.captureTo(DTD_TERMINATOR);
+        if (c === EOC) {
+          return;
+        }
+        this.text += String.fromCodePoint(c);
+        if (c === CLOSE_BRACKET) {
+          this.state = S_DOCTYPE;
+        } else if (c === LESS) {
+          this.state = S_DTD_OPEN_WAKA;
+        } else if (isQuote(c)) {
+          this.state = S_DTD_QUOTED;
+          this.q = c;
+        }
+      }
+      sDTDQuoted() {
+        const q = this.q;
+        if (this.captureToChar(q)) {
+          this.text += String.fromCodePoint(q);
+          this.state = S_DTD;
+          this.q = null;
+        }
+      }
+      sDTDOpenWaka() {
+        const c = this.getCodeNorm();
+        this.text += String.fromCodePoint(c);
+        switch (c) {
+          case BANG:
+            this.state = S_DTD_OPEN_WAKA_BANG;
+            this.openWakaBang = "";
+            break;
+          case QUESTION:
+            this.state = S_DTD_PI;
+            break;
+          default:
+            this.state = S_DTD;
+        }
+      }
+      sDTDOpenWakaBang() {
+        const char = String.fromCodePoint(this.getCodeNorm());
+        const owb = this.openWakaBang += char;
+        this.text += char;
+        if (owb !== "-") {
+          this.state = owb === "--" ? S_DTD_COMMENT : S_DTD;
+          this.openWakaBang = "";
+        }
+      }
+      sDTDComment() {
+        if (this.captureToChar(MINUS)) {
+          this.text += "-";
+          this.state = S_DTD_COMMENT_ENDING;
+        }
+      }
+      sDTDCommentEnding() {
+        const c = this.getCodeNorm();
+        this.text += String.fromCodePoint(c);
+        this.state = c === MINUS ? S_DTD_COMMENT_ENDED : S_DTD_COMMENT;
+      }
+      sDTDCommentEnded() {
+        const c = this.getCodeNorm();
+        this.text += String.fromCodePoint(c);
+        if (c === GREATER) {
+          this.state = S_DTD;
+        } else {
+          this.fail("malformed comment.");
+          this.state = S_DTD_COMMENT;
+        }
+      }
+      sDTDPI() {
+        if (this.captureToChar(QUESTION)) {
+          this.text += "?";
+          this.state = S_DTD_PI_ENDING;
+        }
+      }
+      sDTDPIEnding() {
+        const c = this.getCodeNorm();
+        this.text += String.fromCodePoint(c);
+        if (c === GREATER) {
+          this.state = S_DTD;
+        }
+      }
+      sText() {
+        if (this.tags.length !== 0) {
+          this.handleTextInRoot();
+        } else {
+          this.handleTextOutsideRoot();
+        }
+      }
+      sEntity() {
+        let { i: start } = this;
+        const { chunk } = this;
+        loop:
+          while (true) {
+            switch (this.getCode()) {
+              case NL_LIKE:
+                this.entity += `${chunk.slice(start, this.prevI)}
+`;
+                start = this.i;
+                break;
+              case SEMICOLON: {
+                const { entityReturnState } = this;
+                const entity = this.entity + chunk.slice(start, this.prevI);
+                this.state = entityReturnState;
+                let parsed;
+                if (entity === "") {
+                  this.fail("empty entity name.");
+                  parsed = "&;";
+                } else {
+                  parsed = this.parseEntity(entity);
+                  this.entity = "";
+                }
+                if (entityReturnState !== S_TEXT || this.textHandler !== void 0) {
+                  this.text += parsed;
+                }
+                break loop;
+              }
+              case EOC:
+                this.entity += chunk.slice(start);
+                break loop;
+              default:
+            }
+          }
+      }
+      sOpenWaka() {
+        const c = this.getCode();
+        if (isNameStartChar(c)) {
+          this.state = S_OPEN_TAG;
+          this.unget();
+          this.xmlDeclPossible = false;
+        } else {
+          switch (c) {
+            case FORWARD_SLASH:
+              this.state = S_CLOSE_TAG;
+              this.xmlDeclPossible = false;
+              break;
+            case BANG:
+              this.state = S_OPEN_WAKA_BANG;
+              this.openWakaBang = "";
+              this.xmlDeclPossible = false;
+              break;
+            case QUESTION:
+              this.state = S_PI_FIRST_CHAR;
+              break;
+            default:
+              this.fail("disallowed character in tag name");
+              this.state = S_TEXT;
+              this.xmlDeclPossible = false;
+          }
+        }
+      }
+      sOpenWakaBang() {
+        this.openWakaBang += String.fromCodePoint(this.getCodeNorm());
+        switch (this.openWakaBang) {
+          case "[CDATA[":
+            if (!this.sawRoot && !this.reportedTextBeforeRoot) {
+              this.fail("text data outside of root node.");
+              this.reportedTextBeforeRoot = true;
+            }
+            if (this.closedRoot && !this.reportedTextAfterRoot) {
+              this.fail("text data outside of root node.");
+              this.reportedTextAfterRoot = true;
+            }
+            this.state = S_CDATA;
+            this.openWakaBang = "";
+            break;
+          case "--":
+            this.state = S_COMMENT;
+            this.openWakaBang = "";
+            break;
+          case "DOCTYPE":
+            this.state = S_DOCTYPE;
+            if (this.doctype || this.sawRoot) {
+              this.fail("inappropriately located doctype declaration.");
+            }
+            this.openWakaBang = "";
+            break;
+          default:
+            if (this.openWakaBang.length >= 7) {
+              this.fail("incorrect syntax.");
+            }
+        }
+      }
+      sComment() {
+        if (this.captureToChar(MINUS)) {
+          this.state = S_COMMENT_ENDING;
+        }
+      }
+      sCommentEnding() {
+        var _a2;
+        const c = this.getCodeNorm();
+        if (c === MINUS) {
+          this.state = S_COMMENT_ENDED;
+          (_a2 = this.commentHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, this.text);
+          this.text = "";
+        } else {
+          this.text += `-${String.fromCodePoint(c)}`;
+          this.state = S_COMMENT;
+        }
+      }
+      sCommentEnded() {
+        const c = this.getCodeNorm();
+        if (c !== GREATER) {
+          this.fail("malformed comment.");
+          this.text += `--${String.fromCodePoint(c)}`;
+          this.state = S_COMMENT;
+        } else {
+          this.state = S_TEXT;
+        }
+      }
+      sCData() {
+        if (this.captureToChar(CLOSE_BRACKET)) {
+          this.state = S_CDATA_ENDING;
+        }
+      }
+      sCDataEnding() {
+        const c = this.getCodeNorm();
+        if (c === CLOSE_BRACKET) {
+          this.state = S_CDATA_ENDING_2;
+        } else {
+          this.text += `]${String.fromCodePoint(c)}`;
+          this.state = S_CDATA;
+        }
+      }
+      sCDataEnding2() {
+        var _a2;
+        const c = this.getCodeNorm();
+        switch (c) {
+          case GREATER: {
+            (_a2 = this.cdataHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, this.text);
+            this.text = "";
+            this.state = S_TEXT;
+            break;
+          }
+          case CLOSE_BRACKET:
+            this.text += "]";
+            break;
+          default:
+            this.text += `]]${String.fromCodePoint(c)}`;
+            this.state = S_CDATA;
+        }
+      }
+      // We need this separate state to check the first character fo the pi target
+      // with this.nameStartCheck which allows less characters than this.nameCheck.
+      sPIFirstChar() {
+        const c = this.getCodeNorm();
+        if (this.nameStartCheck(c)) {
+          this.piTarget += String.fromCodePoint(c);
+          this.state = S_PI_REST;
+        } else if (c === QUESTION || isS(c)) {
+          this.fail("processing instruction without a target.");
+          this.state = c === QUESTION ? S_PI_ENDING : S_PI_BODY;
+        } else {
+          this.fail("disallowed character in processing instruction name.");
+          this.piTarget += String.fromCodePoint(c);
+          this.state = S_PI_REST;
+        }
+      }
+      sPIRest() {
+        const { chunk, i: start } = this;
+        while (true) {
+          const c = this.getCodeNorm();
+          if (c === EOC) {
+            this.piTarget += chunk.slice(start);
+            return;
+          }
+          if (!this.nameCheck(c)) {
+            this.piTarget += chunk.slice(start, this.prevI);
+            const isQuestion = c === QUESTION;
+            if (isQuestion || isS(c)) {
+              if (this.piTarget === "xml") {
+                if (!this.xmlDeclPossible) {
+                  this.fail("an XML declaration must be at the start of the document.");
+                }
+                this.state = isQuestion ? S_XML_DECL_ENDING : S_XML_DECL_NAME_START;
+              } else {
+                this.state = isQuestion ? S_PI_ENDING : S_PI_BODY;
+              }
+            } else {
+              this.fail("disallowed character in processing instruction name.");
+              this.piTarget += String.fromCodePoint(c);
+            }
+            break;
+          }
+        }
+      }
+      sPIBody() {
+        if (this.text.length === 0) {
+          const c = this.getCodeNorm();
+          if (c === QUESTION) {
+            this.state = S_PI_ENDING;
+          } else if (!isS(c)) {
+            this.text = String.fromCodePoint(c);
+          }
+        } else if (this.captureToChar(QUESTION)) {
+          this.state = S_PI_ENDING;
+        }
+      }
+      sPIEnding() {
+        var _a2;
+        const c = this.getCodeNorm();
+        if (c === GREATER) {
+          const { piTarget } = this;
+          if (piTarget.toLowerCase() === "xml") {
+            this.fail("the XML declaration must appear at the start of the document.");
+          }
+          (_a2 = this.piHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, {
+            target: piTarget,
+            body: this.text
+          });
+          this.piTarget = this.text = "";
+          this.state = S_TEXT;
+        } else if (c === QUESTION) {
+          this.text += "?";
+        } else {
+          this.text += `?${String.fromCodePoint(c)}`;
+          this.state = S_PI_BODY;
+        }
+        this.xmlDeclPossible = false;
+      }
+      sXMLDeclNameStart() {
+        const c = this.skipSpaces();
+        if (c === QUESTION) {
+          this.state = S_XML_DECL_ENDING;
+          return;
+        }
+        if (c !== EOC) {
+          this.state = S_XML_DECL_NAME;
+          this.name = String.fromCodePoint(c);
+        }
+      }
+      sXMLDeclName() {
+        const c = this.captureTo(XML_DECL_NAME_TERMINATOR);
+        if (c === QUESTION) {
+          this.state = S_XML_DECL_ENDING;
+          this.name += this.text;
+          this.text = "";
+          this.fail("XML declaration is incomplete.");
+          return;
+        }
+        if (!(isS(c) || c === EQUAL)) {
+          return;
+        }
+        this.name += this.text;
+        this.text = "";
+        if (!this.xmlDeclExpects.includes(this.name)) {
+          switch (this.name.length) {
+            case 0:
+              this.fail("did not expect any more name/value pairs.");
+              break;
+            case 1:
+              this.fail(`expected the name ${this.xmlDeclExpects[0]}.`);
+              break;
+            default:
+              this.fail(`expected one of ${this.xmlDeclExpects.join(", ")}`);
+          }
+        }
+        this.state = c === EQUAL ? S_XML_DECL_VALUE_START : S_XML_DECL_EQ;
+      }
+      sXMLDeclEq() {
+        const c = this.getCodeNorm();
+        if (c === QUESTION) {
+          this.state = S_XML_DECL_ENDING;
+          this.fail("XML declaration is incomplete.");
+          return;
+        }
+        if (isS(c)) {
+          return;
+        }
+        if (c !== EQUAL) {
+          this.fail("value required.");
+        }
+        this.state = S_XML_DECL_VALUE_START;
+      }
+      sXMLDeclValueStart() {
+        const c = this.getCodeNorm();
+        if (c === QUESTION) {
+          this.state = S_XML_DECL_ENDING;
+          this.fail("XML declaration is incomplete.");
+          return;
+        }
+        if (isS(c)) {
+          return;
+        }
+        if (!isQuote(c)) {
+          this.fail("value must be quoted.");
+          this.q = SPACE;
+        } else {
+          this.q = c;
+        }
+        this.state = S_XML_DECL_VALUE;
+      }
+      sXMLDeclValue() {
+        const c = this.captureTo([this.q, QUESTION]);
+        if (c === QUESTION) {
+          this.state = S_XML_DECL_ENDING;
+          this.text = "";
+          this.fail("XML declaration is incomplete.");
+          return;
+        }
+        if (c === EOC) {
+          return;
+        }
+        const value = this.text;
+        this.text = "";
+        switch (this.name) {
+          case "version": {
+            this.xmlDeclExpects = ["encoding", "standalone"];
+            const version2 = value;
+            this.xmlDecl.version = version2;
+            if (!/^1\.[0-9]+$/.test(version2)) {
+              this.fail("version number must match /^1\\.[0-9]+$/.");
+            } else if (!this.opt.forceXMLVersion) {
+              this.setXMLVersion(version2);
+            }
+            break;
+          }
+          case "encoding":
+            if (!/^[A-Za-z][A-Za-z0-9._-]*$/.test(value)) {
+              this.fail("encoding value must match /^[A-Za-z0-9][A-Za-z0-9._-]*$/.");
+            }
+            this.xmlDeclExpects = ["standalone"];
+            this.xmlDecl.encoding = value;
+            break;
+          case "standalone":
+            if (value !== "yes" && value !== "no") {
+              this.fail('standalone value must match "yes" or "no".');
+            }
+            this.xmlDeclExpects = [];
+            this.xmlDecl.standalone = value;
+            break;
+          default:
+        }
+        this.name = "";
+        this.state = S_XML_DECL_SEPARATOR;
+      }
+      sXMLDeclSeparator() {
+        const c = this.getCodeNorm();
+        if (c === QUESTION) {
+          this.state = S_XML_DECL_ENDING;
+          return;
+        }
+        if (!isS(c)) {
+          this.fail("whitespace required.");
+          this.unget();
+        }
+        this.state = S_XML_DECL_NAME_START;
+      }
+      sXMLDeclEnding() {
+        var _a2;
+        const c = this.getCodeNorm();
+        if (c === GREATER) {
+          if (this.piTarget !== "xml") {
+            this.fail("processing instructions are not allowed before root.");
+          } else if (this.name !== "version" && this.xmlDeclExpects.includes("version")) {
+            this.fail("XML declaration must contain a version.");
+          }
+          (_a2 = this.xmldeclHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, this.xmlDecl);
+          this.name = "";
+          this.piTarget = this.text = "";
+          this.state = S_TEXT;
+        } else {
+          this.fail("The character ? is disallowed anywhere in XML declarations.");
+        }
+        this.xmlDeclPossible = false;
+      }
+      sOpenTag() {
+        var _a2;
+        const c = this.captureNameChars();
+        if (c === EOC) {
+          return;
+        }
+        const tag = this.tag = {
+          name: this.name,
+          attributes: /* @__PURE__ */ Object.create(null)
+        };
+        this.name = "";
+        if (this.xmlnsOpt) {
+          this.topNS = tag.ns = /* @__PURE__ */ Object.create(null);
+        }
+        (_a2 = this.openTagStartHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, tag);
+        this.sawRoot = true;
+        if (!this.fragmentOpt && this.closedRoot) {
+          this.fail("documents may contain only one root.");
+        }
+        switch (c) {
+          case GREATER:
+            this.openTag();
+            break;
+          case FORWARD_SLASH:
+            this.state = S_OPEN_TAG_SLASH;
+            break;
+          default:
+            if (!isS(c)) {
+              this.fail("disallowed character in tag name.");
+            }
+            this.state = S_ATTRIB;
+        }
+      }
+      sOpenTagSlash() {
+        if (this.getCode() === GREATER) {
+          this.openSelfClosingTag();
+        } else {
+          this.fail("forward-slash in opening tag not followed by >.");
+          this.state = S_ATTRIB;
+        }
+      }
+      sAttrib() {
+        const c = this.skipSpaces();
+        if (c === EOC) {
+          return;
+        }
+        if (isNameStartChar(c)) {
+          this.unget();
+          this.state = S_ATTRIB_NAME;
+        } else if (c === GREATER) {
+          this.openTag();
+        } else if (c === FORWARD_SLASH) {
+          this.state = S_OPEN_TAG_SLASH;
+        } else {
+          this.fail("disallowed character in attribute name.");
+        }
+      }
+      sAttribName() {
+        const c = this.captureNameChars();
+        if (c === EQUAL) {
+          this.state = S_ATTRIB_VALUE;
+        } else if (isS(c)) {
+          this.state = S_ATTRIB_NAME_SAW_WHITE;
+        } else if (c === GREATER) {
+          this.fail("attribute without value.");
+          this.pushAttrib(this.name, this.name);
+          this.name = this.text = "";
+          this.openTag();
+        } else if (c !== EOC) {
+          this.fail("disallowed character in attribute name.");
+        }
+      }
+      sAttribNameSawWhite() {
+        const c = this.skipSpaces();
+        switch (c) {
+          case EOC:
+            return;
+          case EQUAL:
+            this.state = S_ATTRIB_VALUE;
+            break;
+          default:
+            this.fail("attribute without value.");
+            this.text = "";
+            this.name = "";
+            if (c === GREATER) {
+              this.openTag();
+            } else if (isNameStartChar(c)) {
+              this.unget();
+              this.state = S_ATTRIB_NAME;
+            } else {
+              this.fail("disallowed character in attribute name.");
+              this.state = S_ATTRIB;
+            }
+        }
+      }
+      sAttribValue() {
+        const c = this.getCodeNorm();
+        if (isQuote(c)) {
+          this.q = c;
+          this.state = S_ATTRIB_VALUE_QUOTED;
+        } else if (!isS(c)) {
+          this.fail("unquoted attribute value.");
+          this.state = S_ATTRIB_VALUE_UNQUOTED;
+          this.unget();
+        }
+      }
+      sAttribValueQuoted() {
+        const { q, chunk } = this;
+        let { i: start } = this;
+        while (true) {
+          switch (this.getCode()) {
+            case q:
+              this.pushAttrib(this.name, this.text + chunk.slice(start, this.prevI));
+              this.name = this.text = "";
+              this.q = null;
+              this.state = S_ATTRIB_VALUE_CLOSED;
+              return;
+            case AMP:
+              this.text += chunk.slice(start, this.prevI);
+              this.state = S_ENTITY;
+              this.entityReturnState = S_ATTRIB_VALUE_QUOTED;
+              return;
+            case NL:
+            case NL_LIKE:
+            case TAB:
+              this.text += `${chunk.slice(start, this.prevI)} `;
+              start = this.i;
+              break;
+            case LESS:
+              this.text += chunk.slice(start, this.prevI);
+              this.fail("disallowed character.");
+              return;
+            case EOC:
+              this.text += chunk.slice(start);
+              return;
+            default:
+          }
+        }
+      }
+      sAttribValueClosed() {
+        const c = this.getCodeNorm();
+        if (isS(c)) {
+          this.state = S_ATTRIB;
+        } else if (c === GREATER) {
+          this.openTag();
+        } else if (c === FORWARD_SLASH) {
+          this.state = S_OPEN_TAG_SLASH;
+        } else if (isNameStartChar(c)) {
+          this.fail("no whitespace between attributes.");
+          this.unget();
+          this.state = S_ATTRIB_NAME;
+        } else {
+          this.fail("disallowed character in attribute name.");
+        }
+      }
+      sAttribValueUnquoted() {
+        const c = this.captureTo(ATTRIB_VALUE_UNQUOTED_TERMINATOR);
+        switch (c) {
+          case AMP:
+            this.state = S_ENTITY;
+            this.entityReturnState = S_ATTRIB_VALUE_UNQUOTED;
+            break;
+          case LESS:
+            this.fail("disallowed character.");
+            break;
+          case EOC:
+            break;
+          default:
+            if (this.text.includes("]]>")) {
+              this.fail('the string "]]>" is disallowed in char data.');
+            }
+            this.pushAttrib(this.name, this.text);
+            this.name = this.text = "";
+            if (c === GREATER) {
+              this.openTag();
+            } else {
+              this.state = S_ATTRIB;
+            }
+        }
+      }
+      sCloseTag() {
+        const c = this.captureNameChars();
+        if (c === GREATER) {
+          this.closeTag();
+        } else if (isS(c)) {
+          this.state = S_CLOSE_TAG_SAW_WHITE;
+        } else if (c !== EOC) {
+          this.fail("disallowed character in closing tag.");
+        }
+      }
+      sCloseTagSawWhite() {
+        switch (this.skipSpaces()) {
+          case GREATER:
+            this.closeTag();
+            break;
+          case EOC:
+            break;
+          default:
+            this.fail("disallowed character in closing tag.");
+        }
+      }
+      // END OF STATE ENGINE METHODS
+      handleTextInRoot() {
+        let { i: start, forbiddenState } = this;
+        const { chunk, textHandler: handler } = this;
+        scanLoop:
+          while (true) {
+            switch (this.getCode()) {
+              case LESS: {
+                this.state = S_OPEN_WAKA;
+                if (handler !== void 0) {
+                  const { text } = this;
+                  const slice = chunk.slice(start, this.prevI);
+                  if (text.length !== 0) {
+                    handler(text + slice);
+                    this.text = "";
+                  } else if (slice.length !== 0) {
+                    handler(slice);
+                  }
+                }
+                forbiddenState = FORBIDDEN_START;
+                break scanLoop;
+              }
+              case AMP:
+                this.state = S_ENTITY;
+                this.entityReturnState = S_TEXT;
+                if (handler !== void 0) {
+                  this.text += chunk.slice(start, this.prevI);
+                }
+                forbiddenState = FORBIDDEN_START;
+                break scanLoop;
+              case CLOSE_BRACKET:
+                switch (forbiddenState) {
+                  case FORBIDDEN_START:
+                    forbiddenState = FORBIDDEN_BRACKET;
+                    break;
+                  case FORBIDDEN_BRACKET:
+                    forbiddenState = FORBIDDEN_BRACKET_BRACKET;
+                    break;
+                  case FORBIDDEN_BRACKET_BRACKET:
+                    break;
+                  default:
+                    throw new Error("impossible state");
+                }
+                break;
+              case GREATER:
+                if (forbiddenState === FORBIDDEN_BRACKET_BRACKET) {
+                  this.fail('the string "]]>" is disallowed in char data.');
+                }
+                forbiddenState = FORBIDDEN_START;
+                break;
+              case NL_LIKE:
+                if (handler !== void 0) {
+                  this.text += `${chunk.slice(start, this.prevI)}
+`;
+                }
+                start = this.i;
+                forbiddenState = FORBIDDEN_START;
+                break;
+              case EOC:
+                if (handler !== void 0) {
+                  this.text += chunk.slice(start);
+                }
+                break scanLoop;
+              default:
+                forbiddenState = FORBIDDEN_START;
+            }
+          }
+        this.forbiddenState = forbiddenState;
+      }
+      handleTextOutsideRoot() {
+        let { i: start } = this;
+        const { chunk, textHandler: handler } = this;
+        let nonSpace = false;
+        outRootLoop:
+          while (true) {
+            const code = this.getCode();
+            switch (code) {
+              case LESS: {
+                this.state = S_OPEN_WAKA;
+                if (handler !== void 0) {
+                  const { text } = this;
+                  const slice = chunk.slice(start, this.prevI);
+                  if (text.length !== 0) {
+                    handler(text + slice);
+                    this.text = "";
+                  } else if (slice.length !== 0) {
+                    handler(slice);
+                  }
+                }
+                break outRootLoop;
+              }
+              case AMP:
+                this.state = S_ENTITY;
+                this.entityReturnState = S_TEXT;
+                if (handler !== void 0) {
+                  this.text += chunk.slice(start, this.prevI);
+                }
+                nonSpace = true;
+                break outRootLoop;
+              case NL_LIKE:
+                if (handler !== void 0) {
+                  this.text += `${chunk.slice(start, this.prevI)}
+`;
+                }
+                start = this.i;
+                break;
+              case EOC:
+                if (handler !== void 0) {
+                  this.text += chunk.slice(start);
+                }
+                break outRootLoop;
+              default:
+                if (!isS(code)) {
+                  nonSpace = true;
+                }
+            }
+          }
+        if (!nonSpace) {
+          return;
+        }
+        if (!this.sawRoot && !this.reportedTextBeforeRoot) {
+          this.fail("text data outside of root node.");
+          this.reportedTextBeforeRoot = true;
+        }
+        if (this.closedRoot && !this.reportedTextAfterRoot) {
+          this.fail("text data outside of root node.");
+          this.reportedTextAfterRoot = true;
+        }
+      }
+      pushAttribNS(name, value) {
+        var _a2;
+        const { prefix, local } = this.qname(name);
+        const attr = { name, prefix, local, value };
+        this.attribList.push(attr);
+        (_a2 = this.attributeHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, attr);
+        if (prefix === "xmlns") {
+          const trimmed = value.trim();
+          if (this.currentXMLVersion === "1.0" && trimmed === "") {
+            this.fail("invalid attempt to undefine prefix in XML 1.0");
+          }
+          this.topNS[local] = trimmed;
+          nsPairCheck(this, local, trimmed);
+        } else if (name === "xmlns") {
+          const trimmed = value.trim();
+          this.topNS[""] = trimmed;
+          nsPairCheck(this, "", trimmed);
+        }
+      }
+      pushAttribPlain(name, value) {
+        var _a2;
+        const attr = { name, value };
+        this.attribList.push(attr);
+        (_a2 = this.attributeHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, attr);
+      }
+      /**
+       * End parsing. This performs final well-formedness checks and resets the
+       * parser to a clean state.
+       *
+       * @returns this
+       */
+      end() {
+        var _a2, _b;
+        if (!this.sawRoot) {
+          this.fail("document must contain a root element.");
+        }
+        const { tags } = this;
+        while (tags.length > 0) {
+          const tag = tags.pop();
+          this.fail(`unclosed tag: ${tag.name}`);
+        }
+        if (this.state !== S_BEGIN && this.state !== S_TEXT) {
+          this.fail("unexpected end.");
+        }
+        const { text } = this;
+        if (text.length !== 0) {
+          (_a2 = this.textHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, text);
+          this.text = "";
+        }
+        this._closed = true;
+        (_b = this.endHandler) === null || _b === void 0 ? void 0 : _b.call(this);
+        this._init();
+        return this;
+      }
+      /**
+       * Resolve a namespace prefix.
+       *
+       * @param prefix The prefix to resolve.
+       *
+       * @returns The namespace URI or ``undefined`` if the prefix is not defined.
+       */
+      resolve(prefix) {
+        var _a2, _b;
+        let uri = this.topNS[prefix];
+        if (uri !== void 0) {
+          return uri;
+        }
+        const { tags } = this;
+        for (let index = tags.length - 1; index >= 0; index--) {
+          uri = tags[index].ns[prefix];
+          if (uri !== void 0) {
+            return uri;
+          }
+        }
+        uri = this.ns[prefix];
+        if (uri !== void 0) {
+          return uri;
+        }
+        return (_b = (_a2 = this.opt).resolvePrefix) === null || _b === void 0 ? void 0 : _b.call(_a2, prefix);
+      }
+      /**
+       * Parse a qname into its prefix and local name parts.
+       *
+       * @param name The name to parse
+       *
+       * @returns
+       */
+      qname(name) {
+        const colon = name.indexOf(":");
+        if (colon === -1) {
+          return { prefix: "", local: name };
+        }
+        const local = name.slice(colon + 1);
+        const prefix = name.slice(0, colon);
+        if (prefix === "" || local === "" || local.includes(":")) {
+          this.fail(`malformed name: ${name}.`);
+        }
+        return { prefix, local };
+      }
+      processAttribsNS() {
+        var _a2;
+        const { attribList } = this;
+        const tag = this.tag;
+        {
+          const { prefix, local } = this.qname(tag.name);
+          tag.prefix = prefix;
+          tag.local = local;
+          const uri = tag.uri = (_a2 = this.resolve(prefix)) !== null && _a2 !== void 0 ? _a2 : "";
+          if (prefix !== "") {
+            if (prefix === "xmlns") {
+              this.fail('tags may not have "xmlns" as prefix.');
+            }
+            if (uri === "") {
+              this.fail(`unbound namespace prefix: ${JSON.stringify(prefix)}.`);
+              tag.uri = prefix;
+            }
+          }
+        }
+        if (attribList.length === 0) {
+          return;
+        }
+        const { attributes } = tag;
+        const seen = /* @__PURE__ */ new Set();
+        for (const attr of attribList) {
+          const { name, prefix, local } = attr;
+          let uri;
+          let eqname;
+          if (prefix === "") {
+            uri = name === "xmlns" ? XMLNS_NAMESPACE : "";
+            eqname = name;
+          } else {
+            uri = this.resolve(prefix);
+            if (uri === void 0) {
+              this.fail(`unbound namespace prefix: ${JSON.stringify(prefix)}.`);
+              uri = prefix;
+            }
+            eqname = `{${uri}}${local}`;
+          }
+          if (seen.has(eqname)) {
+            this.fail(`duplicate attribute: ${eqname}.`);
+          }
+          seen.add(eqname);
+          attr.uri = uri;
+          attributes[name] = attr;
+        }
+        this.attribList = [];
+      }
+      processAttribsPlain() {
+        const { attribList } = this;
+        const attributes = this.tag.attributes;
+        for (const { name, value } of attribList) {
+          if (attributes[name] !== void 0) {
+            this.fail(`duplicate attribute: ${name}.`);
+          }
+          attributes[name] = value;
+        }
+        this.attribList = [];
+      }
+      /**
+       * Handle a complete open tag. This parser code calls this once it has seen
+       * the whole tag. This method checks for well-formeness and then emits
+       * ``onopentag``.
+       */
+      openTag() {
+        var _a2;
+        this.processAttribs();
+        const { tags } = this;
+        const tag = this.tag;
+        tag.isSelfClosing = false;
+        (_a2 = this.openTagHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, tag);
+        tags.push(tag);
+        this.state = S_TEXT;
+        this.name = "";
+      }
+      /**
+       * Handle a complete self-closing tag. This parser code calls this once it has
+       * seen the whole tag. This method checks for well-formeness and then emits
+       * ``onopentag`` and ``onclosetag``.
+       */
+      openSelfClosingTag() {
+        var _a2, _b, _c;
+        this.processAttribs();
+        const { tags } = this;
+        const tag = this.tag;
+        tag.isSelfClosing = true;
+        (_a2 = this.openTagHandler) === null || _a2 === void 0 ? void 0 : _a2.call(this, tag);
+        (_b = this.closeTagHandler) === null || _b === void 0 ? void 0 : _b.call(this, tag);
+        const top = this.tag = (_c = tags[tags.length - 1]) !== null && _c !== void 0 ? _c : null;
+        if (top === null) {
+          this.closedRoot = true;
+        }
+        this.state = S_TEXT;
+        this.name = "";
+      }
+      /**
+       * Handle a complete close tag. This parser code calls this once it has seen
+       * the whole tag. This method checks for well-formeness and then emits
+       * ``onclosetag``.
+       */
+      closeTag() {
+        const { tags, name } = this;
+        this.state = S_TEXT;
+        this.name = "";
+        if (name === "") {
+          this.fail("weird empty close tag.");
+          this.text += "</>";
+          return;
+        }
+        const handler = this.closeTagHandler;
+        let l = tags.length;
+        while (l-- > 0) {
+          const tag = this.tag = tags.pop();
+          this.topNS = tag.ns;
+          handler === null || handler === void 0 ? void 0 : handler(tag);
+          if (tag.name === name) {
+            break;
+          }
+          this.fail("unexpected close tag.");
+        }
+        if (l === 0) {
+          this.closedRoot = true;
+        } else if (l < 0) {
+          this.fail(`unmatched closing tag: ${name}.`);
+          this.text += `</${name}>`;
+        }
+      }
+      /**
+       * Resolves an entity. Makes any necessary well-formedness checks.
+       *
+       * @param entity The entity to resolve.
+       *
+       * @returns The parsed entity.
+       */
+      parseEntity(entity) {
+        if (entity[0] !== "#") {
+          const defined = this.ENTITIES[entity];
+          if (defined !== void 0) {
+            return defined;
+          }
+          this.fail(this.isName(entity) ? "undefined entity." : "disallowed character in entity name.");
+          return `&${entity};`;
+        }
+        let num = NaN;
+        if (entity[1] === "x" && /^#x[0-9a-f]+$/i.test(entity)) {
+          num = parseInt(entity.slice(2), 16);
+        } else if (/^#[0-9]+$/.test(entity)) {
+          num = parseInt(entity.slice(1), 10);
+        }
+        if (!this.isChar(num)) {
+          this.fail("malformed character entity.");
+          return `&${entity};`;
+        }
+        return String.fromCodePoint(num);
+      }
+    };
+    exports.SaxesParser = SaxesParser2;
+  }
+});
+
+// node_modules/.pnpm/isexe@2.0.0/node_modules/isexe/windows.js
+var require_windows = __commonJS({
+  "node_modules/.pnpm/isexe@2.0.0/node_modules/isexe/windows.js"(exports, module) {
+    module.exports = isexe;
+    isexe.sync = sync;
+    var fs = __require("fs");
+    function checkPathExt(path, options) {
+      var pathext = options.pathExt !== void 0 ? options.pathExt : process.env.PATHEXT;
+      if (!pathext) {
+        return true;
+      }
+      pathext = pathext.split(";");
+      if (pathext.indexOf("") !== -1) {
+        return true;
+      }
+      for (var i = 0; i < pathext.length; i++) {
+        var p = pathext[i].toLowerCase();
+        if (p && path.substr(-p.length).toLowerCase() === p) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function checkStat(stat6, path, options) {
+      if (!stat6.isSymbolicLink() && !stat6.isFile()) {
+        return false;
+      }
+      return checkPathExt(path, options);
+    }
+    function isexe(path, options, cb) {
+      fs.stat(path, function(er, stat6) {
+        cb(er, er ? false : checkStat(stat6, path, options));
+      });
+    }
+    function sync(path, options) {
+      return checkStat(fs.statSync(path), path, options);
+    }
+  }
+});
+
+// node_modules/.pnpm/isexe@2.0.0/node_modules/isexe/mode.js
+var require_mode = __commonJS({
+  "node_modules/.pnpm/isexe@2.0.0/node_modules/isexe/mode.js"(exports, module) {
+    module.exports = isexe;
+    isexe.sync = sync;
+    var fs = __require("fs");
+    function isexe(path, options, cb) {
+      fs.stat(path, function(er, stat6) {
+        cb(er, er ? false : checkStat(stat6, options));
+      });
+    }
+    function sync(path, options) {
+      return checkStat(fs.statSync(path), options);
+    }
+    function checkStat(stat6, options) {
+      return stat6.isFile() && checkMode(stat6, options);
+    }
+    function checkMode(stat6, options) {
+      var mod = stat6.mode;
+      var uid = stat6.uid;
+      var gid = stat6.gid;
+      var myUid = options.uid !== void 0 ? options.uid : process.getuid && process.getuid();
+      var myGid = options.gid !== void 0 ? options.gid : process.getgid && process.getgid();
+      var u = parseInt("100", 8);
+      var g = parseInt("010", 8);
+      var o = parseInt("001", 8);
+      var ug = u | g;
+      var ret = mod & o || mod & g && gid === myGid || mod & u && uid === myUid || mod & ug && myUid === 0;
+      return ret;
+    }
+  }
+});
+
+// node_modules/.pnpm/isexe@2.0.0/node_modules/isexe/index.js
+var require_isexe = __commonJS({
+  "node_modules/.pnpm/isexe@2.0.0/node_modules/isexe/index.js"(exports, module) {
+    var fs = __require("fs");
+    var core;
+    if (process.platform === "win32" || global.TESTING_WINDOWS) {
+      core = require_windows();
+    } else {
+      core = require_mode();
+    }
+    module.exports = isexe;
+    isexe.sync = sync;
+    function isexe(path, options, cb) {
+      if (typeof options === "function") {
+        cb = options;
+        options = {};
+      }
+      if (!cb) {
+        if (typeof Promise !== "function") {
+          throw new TypeError("callback not provided");
+        }
+        return new Promise(function(resolve5, reject) {
+          isexe(path, options || {}, function(er, is) {
+            if (er) {
+              reject(er);
+            } else {
+              resolve5(is);
+            }
+          });
+        });
+      }
+      core(path, options || {}, function(er, is) {
+        if (er) {
+          if (er.code === "EACCES" || options && options.ignoreErrors) {
+            er = null;
+            is = false;
+          }
+        }
+        cb(er, is);
+      });
+    }
+    function sync(path, options) {
+      try {
+        return core.sync(path, options || {});
+      } catch (er) {
+        if (options && options.ignoreErrors || er.code === "EACCES") {
+          return false;
+        } else {
+          throw er;
+        }
+      }
+    }
+  }
+});
+
+// node_modules/.pnpm/which@2.0.2/node_modules/which/which.js
+var require_which = __commonJS({
+  "node_modules/.pnpm/which@2.0.2/node_modules/which/which.js"(exports, module) {
+    var isWindows = process.platform === "win32" || process.env.OSTYPE === "cygwin" || process.env.OSTYPE === "msys";
+    var path = __require("path");
+    var COLON = isWindows ? ";" : ":";
+    var isexe = require_isexe();
+    var getNotFoundError = (cmd) => Object.assign(new Error(`not found: ${cmd}`), { code: "ENOENT" });
+    var getPathInfo = (cmd, opt) => {
+      const colon = opt.colon || COLON;
+      const pathEnv = cmd.match(/\//) || isWindows && cmd.match(/\\/) ? [""] : [
+        // windows always checks the cwd first
+        ...isWindows ? [process.cwd()] : [],
+        ...(opt.path || process.env.PATH || /* istanbul ignore next: very unusual */
+        "").split(colon)
+      ];
+      const pathExtExe = isWindows ? opt.pathExt || process.env.PATHEXT || ".EXE;.CMD;.BAT;.COM" : "";
+      const pathExt = isWindows ? pathExtExe.split(colon) : [""];
+      if (isWindows) {
+        if (cmd.indexOf(".") !== -1 && pathExt[0] !== "")
+          pathExt.unshift("");
+      }
+      return {
+        pathEnv,
+        pathExt,
+        pathExtExe
+      };
+    };
+    var which = (cmd, opt, cb) => {
+      if (typeof opt === "function") {
+        cb = opt;
+        opt = {};
+      }
+      if (!opt)
+        opt = {};
+      const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
+      const found = [];
+      const step = (i) => new Promise((resolve5, reject) => {
+        if (i === pathEnv.length)
+          return opt.all && found.length ? resolve5(found) : reject(getNotFoundError(cmd));
+        const ppRaw = pathEnv[i];
+        const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
+        const pCmd = path.join(pathPart, cmd);
+        const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd : pCmd;
+        resolve5(subStep(p, i, 0));
+      });
+      const subStep = (p, i, ii) => new Promise((resolve5, reject) => {
+        if (ii === pathExt.length)
+          return resolve5(step(i + 1));
+        const ext = pathExt[ii];
+        isexe(p + ext, { pathExt: pathExtExe }, (er, is) => {
+          if (!er && is) {
+            if (opt.all)
+              found.push(p + ext);
+            else
+              return resolve5(p + ext);
+          }
+          return resolve5(subStep(p, i, ii + 1));
+        });
+      });
+      return cb ? step(0).then((res) => cb(null, res), cb) : step(0);
+    };
+    var whichSync = (cmd, opt) => {
+      opt = opt || {};
+      const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
+      const found = [];
+      for (let i = 0; i < pathEnv.length; i++) {
+        const ppRaw = pathEnv[i];
+        const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
+        const pCmd = path.join(pathPart, cmd);
+        const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd : pCmd;
+        for (let j = 0; j < pathExt.length; j++) {
+          const cur = p + pathExt[j];
+          try {
+            const is = isexe.sync(cur, { pathExt: pathExtExe });
+            if (is) {
+              if (opt.all)
+                found.push(cur);
+              else
+                return cur;
+            }
+          } catch (ex) {
+          }
+        }
+      }
+      if (opt.all && found.length)
+        return found;
+      if (opt.nothrow)
+        return null;
+      throw getNotFoundError(cmd);
+    };
+    module.exports = which;
+    which.sync = whichSync;
+  }
+});
+
+// node_modules/.pnpm/path-key@3.1.1/node_modules/path-key/index.js
+var require_path_key = __commonJS({
+  "node_modules/.pnpm/path-key@3.1.1/node_modules/path-key/index.js"(exports, module) {
+    "use strict";
+    var pathKey = (options = {}) => {
+      const environment = options.env || process.env;
+      const platform = options.platform || process.platform;
+      if (platform !== "win32") {
+        return "PATH";
+      }
+      return Object.keys(environment).reverse().find((key) => key.toUpperCase() === "PATH") || "Path";
+    };
+    module.exports = pathKey;
+    module.exports.default = pathKey;
+  }
+});
+
+// node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/util/resolveCommand.js
+var require_resolveCommand = __commonJS({
+  "node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/util/resolveCommand.js"(exports, module) {
+    "use strict";
+    var path = __require("path");
+    var which = require_which();
+    var getPathKey = require_path_key();
+    function resolveCommandAttempt(parsed, withoutPathExt) {
+      const env = parsed.options.env || process.env;
+      const cwd = process.cwd();
+      const hasCustomCwd = parsed.options.cwd != null;
+      const shouldSwitchCwd = hasCustomCwd && process.chdir !== void 0 && !process.chdir.disabled;
+      if (shouldSwitchCwd) {
+        try {
+          process.chdir(parsed.options.cwd);
+        } catch (err) {
+        }
+      }
+      let resolved;
+      try {
+        resolved = which.sync(parsed.command, {
+          path: env[getPathKey({ env })],
+          pathExt: withoutPathExt ? path.delimiter : void 0
+        });
+      } catch (e) {
+      } finally {
+        if (shouldSwitchCwd) {
+          process.chdir(cwd);
+        }
+      }
+      if (resolved) {
+        resolved = path.resolve(hasCustomCwd ? parsed.options.cwd : "", resolved);
+      }
+      return resolved;
+    }
+    function resolveCommand(parsed) {
+      return resolveCommandAttempt(parsed) || resolveCommandAttempt(parsed, true);
+    }
+    module.exports = resolveCommand;
+  }
+});
+
+// node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/util/escape.js
+var require_escape = __commonJS({
+  "node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/util/escape.js"(exports, module) {
+    "use strict";
+    var metaCharsRegExp = /([()\][%!^"`<>&|;, *?])/g;
+    function escapeCommand(arg) {
+      arg = arg.replace(metaCharsRegExp, "^$1");
+      return arg;
+    }
+    function escapeArgument(arg, doubleEscapeMetaChars) {
+      arg = `${arg}`;
+      arg = arg.replace(/(?=(\\+?)?)\1"/g, '$1$1\\"');
+      arg = arg.replace(/(?=(\\+?)?)\1$/, "$1$1");
+      arg = `"${arg}"`;
+      arg = arg.replace(metaCharsRegExp, "^$1");
+      if (doubleEscapeMetaChars) {
+        arg = arg.replace(metaCharsRegExp, "^$1");
+      }
+      return arg;
+    }
+    module.exports.command = escapeCommand;
+    module.exports.argument = escapeArgument;
+  }
+});
+
+// node_modules/.pnpm/shebang-regex@3.0.0/node_modules/shebang-regex/index.js
+var require_shebang_regex = __commonJS({
+  "node_modules/.pnpm/shebang-regex@3.0.0/node_modules/shebang-regex/index.js"(exports, module) {
+    "use strict";
+    module.exports = /^#!(.*)/;
+  }
+});
+
+// node_modules/.pnpm/shebang-command@2.0.0/node_modules/shebang-command/index.js
+var require_shebang_command = __commonJS({
+  "node_modules/.pnpm/shebang-command@2.0.0/node_modules/shebang-command/index.js"(exports, module) {
+    "use strict";
+    var shebangRegex = require_shebang_regex();
+    module.exports = (string4 = "") => {
+      const match = string4.match(shebangRegex);
+      if (!match) {
+        return null;
+      }
+      const [path, argument] = match[0].replace(/#! ?/, "").split(" ");
+      const binary = path.split("/").pop();
+      if (binary === "env") {
+        return argument;
+      }
+      return argument ? `${binary} ${argument}` : binary;
+    };
+  }
+});
+
+// node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/util/readShebang.js
+var require_readShebang = __commonJS({
+  "node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/util/readShebang.js"(exports, module) {
+    "use strict";
+    var fs = __require("fs");
+    var shebangCommand = require_shebang_command();
+    function readShebang(command) {
+      const size = 150;
+      const buffer = Buffer.alloc(size);
+      let fd;
+      try {
+        fd = fs.openSync(command, "r");
+        fs.readSync(fd, buffer, 0, size, 0);
+        fs.closeSync(fd);
+      } catch (e) {
+      }
+      return shebangCommand(buffer.toString());
+    }
+    module.exports = readShebang;
+  }
+});
+
+// node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/parse.js
+var require_parse = __commonJS({
+  "node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/parse.js"(exports, module) {
+    "use strict";
+    var path = __require("path");
+    var resolveCommand = require_resolveCommand();
+    var escape = require_escape();
+    var readShebang = require_readShebang();
+    var isWin = process.platform === "win32";
+    var isExecutableRegExp = /\.(?:com|exe)$/i;
+    var isCmdShimRegExp = /node_modules[\\/].bin[\\/][^\\/]+\.cmd$/i;
+    function detectShebang(parsed) {
+      parsed.file = resolveCommand(parsed);
+      const shebang = parsed.file && readShebang(parsed.file);
+      if (shebang) {
+        parsed.args.unshift(parsed.file);
+        parsed.command = shebang;
+        return resolveCommand(parsed);
+      }
+      return parsed.file;
+    }
+    function parseNonShell(parsed) {
+      if (!isWin) {
+        return parsed;
+      }
+      const commandFile = detectShebang(parsed);
+      const needsShell = !isExecutableRegExp.test(commandFile);
+      if (parsed.options.forceShell || needsShell) {
+        const needsDoubleEscapeMetaChars = isCmdShimRegExp.test(commandFile);
+        parsed.command = path.normalize(parsed.command);
+        parsed.command = escape.command(parsed.command);
+        parsed.args = parsed.args.map((arg) => escape.argument(arg, needsDoubleEscapeMetaChars));
+        const shellCommand = [parsed.command].concat(parsed.args).join(" ");
+        parsed.args = ["/d", "/s", "/c", `"${shellCommand}"`];
+        parsed.command = process.env.comspec || "cmd.exe";
+        parsed.options.windowsVerbatimArguments = true;
+      }
+      return parsed;
+    }
+    function parse3(command, args, options) {
+      if (args && !Array.isArray(args)) {
+        options = args;
+        args = null;
+      }
+      args = args ? args.slice(0) : [];
+      options = Object.assign({}, options);
+      const parsed = {
+        command,
+        args,
+        options,
+        file: void 0,
+        original: {
+          command,
+          args
+        }
+      };
+      return options.shell ? parsed : parseNonShell(parsed);
+    }
+    module.exports = parse3;
+  }
+});
+
+// node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/enoent.js
+var require_enoent = __commonJS({
+  "node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/lib/enoent.js"(exports, module) {
+    "use strict";
+    var isWin = process.platform === "win32";
+    function notFoundError(original, syscall) {
+      return Object.assign(new Error(`${syscall} ${original.command} ENOENT`), {
+        code: "ENOENT",
+        errno: "ENOENT",
+        syscall: `${syscall} ${original.command}`,
+        path: original.command,
+        spawnargs: original.args
+      });
+    }
+    function hookChildProcess(cp, parsed) {
+      if (!isWin) {
+        return;
+      }
+      const originalEmit = cp.emit;
+      cp.emit = function(name, arg1) {
+        if (name === "exit") {
+          const err = verifyENOENT(arg1, parsed);
+          if (err) {
+            return originalEmit.call(cp, "error", err);
+          }
+        }
+        return originalEmit.apply(cp, arguments);
+      };
+    }
+    function verifyENOENT(status, parsed) {
+      if (isWin && status === 1 && !parsed.file) {
+        return notFoundError(parsed.original, "spawn");
+      }
+      return null;
+    }
+    function verifyENOENTSync(status, parsed) {
+      if (isWin && status === 1 && !parsed.file) {
+        return notFoundError(parsed.original, "spawnSync");
+      }
+      return null;
+    }
+    module.exports = {
+      hookChildProcess,
+      verifyENOENT,
+      verifyENOENTSync,
+      notFoundError
+    };
+  }
+});
+
+// node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/index.js
+var require_cross_spawn = __commonJS({
+  "node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/index.js"(exports, module) {
+    "use strict";
+    var cp = __require("child_process");
+    var parse3 = require_parse();
+    var enoent = require_enoent();
+    function spawn(command, args, options) {
+      const parsed = parse3(command, args, options);
+      const spawned = cp.spawn(parsed.command, parsed.args, parsed.options);
+      enoent.hookChildProcess(spawned, parsed);
+      return spawned;
+    }
+    function spawnSync(command, args, options) {
+      const parsed = parse3(command, args, options);
+      const result = cp.spawnSync(parsed.command, parsed.args, parsed.options);
+      result.error = result.error || enoent.verifyENOENTSync(result.status, parsed);
+      return result;
+    }
+    module.exports = spawn;
+    module.exports.spawn = spawn;
+    module.exports.sync = spawnSync;
+    module.exports._parse = parse3;
+    module.exports._enoent = enoent;
+  }
+});
+
+// packages/plugin-build/src/build-plugin-app.ts
+import {
+  mkdir,
+  mkdtemp,
+  readFile as readFile2,
+  realpath as realpath2,
+  rename,
+  rm,
+  stat as stat2,
+  writeFile
+} from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { dirname, extname, isAbsolute as isAbsolute2, join, resolve as resolve2 } from "node:path";
+
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/external.js
 var external_exports = {};
 __export(external_exports, {
   $brand: () => $brand,
@@ -251,7 +2704,7 @@ __export(external_exports, {
   xor: () => xor
 });
 
-// node_modules/zod/v4/core/index.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/index.js
 var core_exports2 = {};
 __export(core_exports2, {
   $ZodAny: () => $ZodAny,
@@ -513,7 +2966,7 @@ __export(core_exports2, {
   parse: () => parse,
   parseAsync: () => parseAsync,
   prettifyError: () => prettifyError,
-  process: () => process,
+  process: () => process2,
   regexes: () => regexes_exports,
   registry: () => registry,
   safeDecode: () => safeDecode,
@@ -529,7 +2982,7 @@ __export(core_exports2, {
   version: () => version
 });
 
-// node_modules/zod/v4/core/core.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/core.js
 var NEVER = Object.freeze({
   status: "aborted"
 });
@@ -604,7 +3057,7 @@ function config(newConfig) {
   return globalConfig;
 }
 
-// node_modules/zod/v4/core/util.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/util.js
 var util_exports = {};
 __export(util_exports, {
   BIGINT_FORMAT_RANGES: () => BIGINT_FORMAT_RANGES,
@@ -1283,7 +3736,7 @@ var Class = class {
   }
 };
 
-// node_modules/zod/v4/core/errors.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/errors.js
 var initializer = (inst, def) => {
   inst.name = "$ZodError";
   Object.defineProperty(inst, "_zod", {
@@ -1419,7 +3872,7 @@ function prettifyError(error48) {
   return lines.join("\n");
 }
 
-// node_modules/zod/v4/core/parse.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/parse.js
 var _parse = (_Err) => (schema, value, _ctx, _params) => {
   const ctx = _ctx ? Object.assign(_ctx, { async: false }) : { async: false };
   const result = schema._zod.run({ value, issues: [] }, ctx);
@@ -1507,7 +3960,7 @@ var _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 var safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync($ZodRealError);
 
-// node_modules/zod/v4/core/regexes.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/regexes.js
 var regexes_exports = {};
 __export(regexes_exports, {
   base64: () => base64,
@@ -1664,7 +4117,7 @@ var sha512_hex = /^[0-9a-fA-F]{128}$/;
 var sha512_base64 = /* @__PURE__ */ fixedBase64(86, "==");
 var sha512_base64url = /* @__PURE__ */ fixedBase64url(86);
 
-// node_modules/zod/v4/core/checks.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/checks.js
 var $ZodCheck = /* @__PURE__ */ $constructor("$ZodCheck", (inst, def) => {
   var _a2;
   inst._zod ?? (inst._zod = {});
@@ -2212,7 +4665,7 @@ var $ZodCheckOverwrite = /* @__PURE__ */ $constructor("$ZodCheckOverwrite", (ins
   };
 });
 
-// node_modules/zod/v4/core/doc.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/doc.js
 var Doc = class {
   constructor(args = []) {
     this.content = [];
@@ -2248,14 +4701,14 @@ var Doc = class {
   }
 };
 
-// node_modules/zod/v4/core/versions.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/versions.js
 var version = {
   major: 4,
   minor: 3,
   patch: 6
 };
 
-// node_modules/zod/v4/core/schemas.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/schemas.js
 var $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
   var _a2;
   inst ?? (inst = {});
@@ -3044,46 +5497,46 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     }
     doc.write(`const newResult = {};`);
     for (const key of normalized.keys) {
-      const id2 = ids[key];
+      const id = ids[key];
       const k = esc(key);
       const schema = shape[key];
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id2} = ${parseStr(key)};`);
+      doc.write(`const ${id} = ${parseStr(key)};`);
       if (isOptionalOut) {
         doc.write(`
-        if (${id2}.issues.length) {
+        if (${id}.issues.length) {
           if (${k} in input) {
-            payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
+            payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
               ...iss,
               path: iss.path ? [${k}, ...iss.path] : [${k}]
             })));
           }
         }
         
-        if (${id2}.value === undefined) {
+        if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id2}.value;
+          newResult[${k}] = ${id}.value;
         }
         
       `);
       } else {
         doc.write(`
-        if (${id2}.issues.length) {
-          payload.issues = payload.issues.concat(${id2}.issues.map(iss => ({
+        if (${id}.issues.length) {
+          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
             ...iss,
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
         
-        if (${id2}.value === undefined) {
+        if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
           }
         } else {
-          newResult[${k}] = ${id2}.value;
+          newResult[${k}] = ${id}.value;
         }
         
       `);
@@ -4226,7 +6679,7 @@ function handleRefineResult(result, payload, input, inst) {
   }
 }
 
-// node_modules/zod/v4/locales/index.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/index.js
 var locales_exports = {};
 __export(locales_exports, {
   ar: () => ar_default,
@@ -4280,7 +6733,7 @@ __export(locales_exports, {
   zhTW: () => zh_TW_default
 });
 
-// node_modules/zod/v4/locales/ar.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ar.js
 var error = () => {
   const Sizable = {
     string: { unit: "\u062D\u0631\u0641", verb: "\u0623\u0646 \u064A\u062D\u0648\u064A" },
@@ -4387,7 +6840,7 @@ function ar_default() {
   };
 }
 
-// node_modules/zod/v4/locales/az.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/az.js
 var error2 = () => {
   const Sizable = {
     string: { unit: "simvol", verb: "olmal\u0131d\u0131r" },
@@ -4493,7 +6946,7 @@ function az_default() {
   };
 }
 
-// node_modules/zod/v4/locales/be.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/be.js
 function getBelarusianPlural(count, one, few, many) {
   const absCount = Math.abs(count);
   const lastDigit = absCount % 10;
@@ -4650,7 +7103,7 @@ function be_default() {
   };
 }
 
-// node_modules/zod/v4/locales/bg.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/bg.js
 var error4 = () => {
   const Sizable = {
     string: { unit: "\u0441\u0438\u043C\u0432\u043E\u043B\u0430", verb: "\u0434\u0430 \u0441\u044A\u0434\u044A\u0440\u0436\u0430" },
@@ -4771,7 +7224,7 @@ function bg_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ca.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ca.js
 var error5 = () => {
   const Sizable = {
     string: { unit: "car\xE0cters", verb: "contenir" },
@@ -4880,7 +7333,7 @@ function ca_default() {
   };
 }
 
-// node_modules/zod/v4/locales/cs.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/cs.js
 var error6 = () => {
   const Sizable = {
     string: { unit: "znak\u016F", verb: "m\xEDt" },
@@ -4992,7 +7445,7 @@ function cs_default() {
   };
 }
 
-// node_modules/zod/v4/locales/da.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/da.js
 var error7 = () => {
   const Sizable = {
     string: { unit: "tegn", verb: "havde" },
@@ -5108,7 +7561,7 @@ function da_default() {
   };
 }
 
-// node_modules/zod/v4/locales/de.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/de.js
 var error8 = () => {
   const Sizable = {
     string: { unit: "Zeichen", verb: "zu haben" },
@@ -5217,7 +7670,7 @@ function de_default() {
   };
 }
 
-// node_modules/zod/v4/locales/en.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/en.js
 var error9 = () => {
   const Sizable = {
     string: { unit: "characters", verb: "to have" },
@@ -5326,7 +7779,7 @@ function en_default() {
   };
 }
 
-// node_modules/zod/v4/locales/eo.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/eo.js
 var error10 = () => {
   const Sizable = {
     string: { unit: "karaktrojn", verb: "havi" },
@@ -5436,7 +7889,7 @@ function eo_default() {
   };
 }
 
-// node_modules/zod/v4/locales/es.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/es.js
 var error11 = () => {
   const Sizable = {
     string: { unit: "caracteres", verb: "tener" },
@@ -5569,7 +8022,7 @@ function es_default() {
   };
 }
 
-// node_modules/zod/v4/locales/fa.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fa.js
 var error12 = () => {
   const Sizable = {
     string: { unit: "\u06A9\u0627\u0631\u0627\u06A9\u062A\u0631", verb: "\u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634\u062F" },
@@ -5684,7 +8137,7 @@ function fa_default() {
   };
 }
 
-// node_modules/zod/v4/locales/fi.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fi.js
 var error13 = () => {
   const Sizable = {
     string: { unit: "merkki\xE4", subject: "merkkijonon" },
@@ -5797,7 +8250,7 @@ function fi_default() {
   };
 }
 
-// node_modules/zod/v4/locales/fr.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fr.js
 var error14 = () => {
   const Sizable = {
     string: { unit: "caract\xE8res", verb: "avoir" },
@@ -5906,7 +8359,7 @@ function fr_default() {
   };
 }
 
-// node_modules/zod/v4/locales/fr-CA.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fr-CA.js
 var error15 = () => {
   const Sizable = {
     string: { unit: "caract\xE8res", verb: "avoir" },
@@ -6014,7 +8467,7 @@ function fr_CA_default() {
   };
 }
 
-// node_modules/zod/v4/locales/he.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/he.js
 var error16 = () => {
   const TypeNames = {
     string: { label: "\u05DE\u05D7\u05E8\u05D5\u05D6\u05EA", gender: "f" },
@@ -6209,7 +8662,7 @@ function he_default() {
   };
 }
 
-// node_modules/zod/v4/locales/hu.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/hu.js
 var error17 = () => {
   const Sizable = {
     string: { unit: "karakter", verb: "legyen" },
@@ -6318,7 +8771,7 @@ function hu_default() {
   };
 }
 
-// node_modules/zod/v4/locales/hy.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/hy.js
 function getArmenianPlural(count, one, many) {
   return Math.abs(count) === 1 ? one : many;
 }
@@ -6466,7 +8919,7 @@ function hy_default() {
   };
 }
 
-// node_modules/zod/v4/locales/id.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/id.js
 var error19 = () => {
   const Sizable = {
     string: { unit: "karakter", verb: "memiliki" },
@@ -6573,7 +9026,7 @@ function id_default() {
   };
 }
 
-// node_modules/zod/v4/locales/is.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/is.js
 var error20 = () => {
   const Sizable = {
     string: { unit: "stafi", verb: "a\xF0 hafa" },
@@ -6683,7 +9136,7 @@ function is_default() {
   };
 }
 
-// node_modules/zod/v4/locales/it.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/it.js
 var error21 = () => {
   const Sizable = {
     string: { unit: "caratteri", verb: "avere" },
@@ -6792,7 +9245,7 @@ function it_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ja.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ja.js
 var error22 = () => {
   const Sizable = {
     string: { unit: "\u6587\u5B57", verb: "\u3067\u3042\u308B" },
@@ -6900,7 +9353,7 @@ function ja_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ka.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ka.js
 var error23 = () => {
   const Sizable = {
     string: { unit: "\u10E1\u10D8\u10DB\u10D1\u10DD\u10DA\u10DD", verb: "\u10E3\u10DC\u10D3\u10D0 \u10E8\u10D4\u10D8\u10EA\u10D0\u10D5\u10D3\u10D4\u10E1" },
@@ -7013,7 +9466,7 @@ function ka_default() {
   };
 }
 
-// node_modules/zod/v4/locales/km.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/km.js
 var error24 = () => {
   const Sizable = {
     string: { unit: "\u178F\u17BD\u17A2\u1780\u17D2\u179F\u179A", verb: "\u1782\u17BD\u179A\u1798\u17B6\u1793" },
@@ -7124,12 +9577,12 @@ function km_default() {
   };
 }
 
-// node_modules/zod/v4/locales/kh.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/kh.js
 function kh_default() {
   return km_default();
 }
 
-// node_modules/zod/v4/locales/ko.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ko.js
 var error25 = () => {
   const Sizable = {
     string: { unit: "\uBB38\uC790", verb: "to have" },
@@ -7241,9 +9694,9 @@ function ko_default() {
   };
 }
 
-// node_modules/zod/v4/locales/lt.js
-var capitalizeFirstCharacter = (text2) => {
-  return text2.charAt(0).toUpperCase() + text2.slice(1);
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/lt.js
+var capitalizeFirstCharacter = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
 };
 function getUnitTypeFromNumber(number4) {
   const abs = Math.abs(number4);
@@ -7445,7 +9898,7 @@ function lt_default() {
   };
 }
 
-// node_modules/zod/v4/locales/mk.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/mk.js
 var error27 = () => {
   const Sizable = {
     string: { unit: "\u0437\u043D\u0430\u0446\u0438", verb: "\u0434\u0430 \u0438\u043C\u0430\u0430\u0442" },
@@ -7555,7 +10008,7 @@ function mk_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ms.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ms.js
 var error28 = () => {
   const Sizable = {
     string: { unit: "aksara", verb: "mempunyai" },
@@ -7663,7 +10116,7 @@ function ms_default() {
   };
 }
 
-// node_modules/zod/v4/locales/nl.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/nl.js
 var error29 = () => {
   const Sizable = {
     string: { unit: "tekens", verb: "heeft" },
@@ -7774,7 +10227,7 @@ function nl_default() {
   };
 }
 
-// node_modules/zod/v4/locales/no.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/no.js
 var error30 = () => {
   const Sizable = {
     string: { unit: "tegn", verb: "\xE5 ha" },
@@ -7883,7 +10336,7 @@ function no_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ota.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ota.js
 var error31 = () => {
   const Sizable = {
     string: { unit: "harf", verb: "olmal\u0131d\u0131r" },
@@ -7993,7 +10446,7 @@ function ota_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ps.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ps.js
 var error32 = () => {
   const Sizable = {
     string: { unit: "\u062A\u0648\u06A9\u064A", verb: "\u0648\u0644\u0631\u064A" },
@@ -8108,7 +10561,7 @@ function ps_default() {
   };
 }
 
-// node_modules/zod/v4/locales/pl.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/pl.js
 var error33 = () => {
   const Sizable = {
     string: { unit: "znak\xF3w", verb: "mie\u0107" },
@@ -8218,7 +10671,7 @@ function pl_default() {
   };
 }
 
-// node_modules/zod/v4/locales/pt.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/pt.js
 var error34 = () => {
   const Sizable = {
     string: { unit: "caracteres", verb: "ter" },
@@ -8327,7 +10780,7 @@ function pt_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ru.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ru.js
 function getRussianPlural(count, one, few, many) {
   const absCount = Math.abs(count);
   const lastDigit = absCount % 10;
@@ -8484,7 +10937,7 @@ function ru_default() {
   };
 }
 
-// node_modules/zod/v4/locales/sl.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/sl.js
 var error36 = () => {
   const Sizable = {
     string: { unit: "znakov", verb: "imeti" },
@@ -8594,7 +11047,7 @@ function sl_default() {
   };
 }
 
-// node_modules/zod/v4/locales/sv.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/sv.js
 var error37 = () => {
   const Sizable = {
     string: { unit: "tecken", verb: "att ha" },
@@ -8705,7 +11158,7 @@ function sv_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ta.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ta.js
 var error38 = () => {
   const Sizable = {
     string: { unit: "\u0B8E\u0BB4\u0BC1\u0BA4\u0BCD\u0BA4\u0BC1\u0B95\u0BCD\u0B95\u0BB3\u0BCD", verb: "\u0B95\u0BCA\u0BA3\u0BCD\u0B9F\u0BBF\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD" },
@@ -8816,7 +11269,7 @@ function ta_default() {
   };
 }
 
-// node_modules/zod/v4/locales/th.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/th.js
 var error39 = () => {
   const Sizable = {
     string: { unit: "\u0E15\u0E31\u0E27\u0E2D\u0E31\u0E01\u0E29\u0E23", verb: "\u0E04\u0E27\u0E23\u0E21\u0E35" },
@@ -8927,7 +11380,7 @@ function th_default() {
   };
 }
 
-// node_modules/zod/v4/locales/tr.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/tr.js
 var error40 = () => {
   const Sizable = {
     string: { unit: "karakter", verb: "olmal\u0131" },
@@ -9033,7 +11486,7 @@ function tr_default() {
   };
 }
 
-// node_modules/zod/v4/locales/uk.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/uk.js
 var error41 = () => {
   const Sizable = {
     string: { unit: "\u0441\u0438\u043C\u0432\u043E\u043B\u0456\u0432", verb: "\u043C\u0430\u0442\u0438\u043C\u0435" },
@@ -9142,12 +11595,12 @@ function uk_default() {
   };
 }
 
-// node_modules/zod/v4/locales/ua.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ua.js
 function ua_default() {
   return uk_default();
 }
 
-// node_modules/zod/v4/locales/ur.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ur.js
 var error42 = () => {
   const Sizable = {
     string: { unit: "\u062D\u0631\u0648\u0641", verb: "\u06C1\u0648\u0646\u0627" },
@@ -9258,7 +11711,7 @@ function ur_default() {
   };
 }
 
-// node_modules/zod/v4/locales/uz.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/uz.js
 var error43 = () => {
   const Sizable = {
     string: { unit: "belgi", verb: "bo\u2018lishi kerak" },
@@ -9368,7 +11821,7 @@ function uz_default() {
   };
 }
 
-// node_modules/zod/v4/locales/vi.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/vi.js
 var error44 = () => {
   const Sizable = {
     string: { unit: "k\xFD t\u1EF1", verb: "c\xF3" },
@@ -9477,7 +11930,7 @@ function vi_default() {
   };
 }
 
-// node_modules/zod/v4/locales/zh-CN.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/zh-CN.js
 var error45 = () => {
   const Sizable = {
     string: { unit: "\u5B57\u7B26", verb: "\u5305\u542B" },
@@ -9587,7 +12040,7 @@ function zh_CN_default() {
   };
 }
 
-// node_modules/zod/v4/locales/zh-TW.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/zh-TW.js
 var error46 = () => {
   const Sizable = {
     string: { unit: "\u5B57\u5143", verb: "\u64C1\u6709" },
@@ -9695,7 +12148,7 @@ function zh_TW_default() {
   };
 }
 
-// node_modules/zod/v4/locales/yo.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/yo.js
 var error47 = () => {
   const Sizable = {
     string: { unit: "\xE0mi", verb: "n\xED" },
@@ -9803,7 +12256,7 @@ function yo_default() {
   };
 }
 
-// node_modules/zod/v4/core/registries.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/registries.js
 var _a;
 var $output = /* @__PURE__ */ Symbol("ZodOutput");
 var $input = /* @__PURE__ */ Symbol("ZodInput");
@@ -9853,7 +12306,7 @@ function registry() {
 (_a = globalThis).__zod_globalRegistry ?? (_a.__zod_globalRegistry = registry());
 var globalRegistry = globalThis.__zod_globalRegistry;
 
-// node_modules/zod/v4/core/api.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/api.js
 // @__NO_SIDE_EFFECTS__
 function _string(Class2, params) {
   return new Class2({
@@ -10892,7 +13345,7 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
   return inst;
 }
 
-// node_modules/zod/v4/core/to-json-schema.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/to-json-schema.js
 function initializeContext(params) {
   let target = params?.target ?? "draft-2020-12";
   if (target === "draft-4")
@@ -10914,7 +13367,7 @@ function initializeContext(params) {
     external: params?.external ?? void 0
   };
 }
-function process(schema, ctx, _params = { path: [], schemaPath: [] }) {
+function process2(schema, ctx, _params = { path: [], schemaPath: [] }) {
   var _a2;
   const def = schema._zod.def;
   const seen = ctx.seen.get(schema);
@@ -10951,7 +13404,7 @@ function process(schema, ctx, _params = { path: [], schemaPath: [] }) {
     if (parent) {
       if (!result.ref)
         result.ref = parent;
-      process(parent, ctx, params);
+      process2(parent, ctx, params);
       ctx.seen.get(parent).isParent = true;
     }
   }
@@ -10974,26 +13427,26 @@ function extractDefs(ctx, schema) {
     throw new Error("Unprocessed schema. This is a bug in Zod.");
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id2 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id2) {
-      const existing = idToSchema.get(id2);
+    const id = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id) {
+      const existing = idToSchema.get(id);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id2}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id2, entry[0]);
+      idToSchema.set(id, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id3) => id3);
+      const uriGenerator = ctx.external.uri ?? ((id2) => id2);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id2 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id2;
-      return { defId: id2, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id2}` };
+      const id = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id;
+      return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id}` };
     }
     if (entry[1] === root) {
       return { ref: "#" };
@@ -11041,8 +13494,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id2 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id2) {
+    const id = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id) {
       extractToDef(entry);
       continue;
     }
@@ -11138,10 +13591,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id2 = ctx.external.registry.get(schema)?.id;
-    if (!id2)
+    const id = ctx.external.registry.get(schema)?.id;
+    if (!id)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id2);
+    result.$id = ctx.external.uri(id);
   }
   Object.assign(result, root.def ?? root.schema);
   const defs = ctx.external?.defs ?? {};
@@ -11232,19 +13685,19 @@ function isTransforming(_schema, _ctx) {
 }
 var createToJSONSchemaMethod = (schema, processors = {}) => (params) => {
   const ctx = initializeContext({ ...params, processors });
-  process(schema, ctx);
+  process2(schema, ctx);
   extractDefs(ctx, schema);
   return finalize(ctx, schema);
 };
 var createStandardJSONSchemaMethod = (schema, io, processors = {}) => (params) => {
   const { libraryOptions, target } = params ?? {};
   const ctx = initializeContext({ ...libraryOptions ?? {}, target, io, processors });
-  process(schema, ctx);
+  process2(schema, ctx);
   extractDefs(ctx, schema);
   return finalize(ctx, schema);
 };
 
-// node_modules/zod/v4/core/json-schema-processors.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/json-schema-processors.js
 var formatMap = {
   guid: "uuid",
   url: "uri",
@@ -11496,7 +13949,7 @@ var arrayProcessor = (schema, ctx, _json, params) => {
   if (typeof maximum === "number")
     json2.maxItems = maximum;
   json2.type = "array";
-  json2.items = process(def.element, ctx, { ...params, path: [...params.path, "items"] });
+  json2.items = process2(def.element, ctx, { ...params, path: [...params.path, "items"] });
 };
 var objectProcessor = (schema, ctx, _json, params) => {
   const json2 = _json;
@@ -11505,7 +13958,7 @@ var objectProcessor = (schema, ctx, _json, params) => {
   json2.properties = {};
   const shape = def.shape;
   for (const key in shape) {
-    json2.properties[key] = process(shape[key], ctx, {
+    json2.properties[key] = process2(shape[key], ctx, {
       ...params,
       path: [...params.path, "properties", key]
     });
@@ -11528,7 +13981,7 @@ var objectProcessor = (schema, ctx, _json, params) => {
     if (ctx.io === "output")
       json2.additionalProperties = false;
   } else if (def.catchall) {
-    json2.additionalProperties = process(def.catchall, ctx, {
+    json2.additionalProperties = process2(def.catchall, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
@@ -11537,7 +13990,7 @@ var objectProcessor = (schema, ctx, _json, params) => {
 var unionProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
   const isExclusive = def.inclusive === false;
-  const options = def.options.map((x, i) => process(x, ctx, {
+  const options = def.options.map((x, i) => process2(x, ctx, {
     ...params,
     path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
   }));
@@ -11549,11 +14002,11 @@ var unionProcessor = (schema, ctx, json2, params) => {
 };
 var intersectionProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
-  const a = process(def.left, ctx, {
+  const a = process2(def.left, ctx, {
     ...params,
     path: [...params.path, "allOf", 0]
   });
-  const b = process(def.right, ctx, {
+  const b = process2(def.right, ctx, {
     ...params,
     path: [...params.path, "allOf", 1]
   });
@@ -11570,11 +14023,11 @@ var tupleProcessor = (schema, ctx, _json, params) => {
   json2.type = "array";
   const prefixPath = ctx.target === "draft-2020-12" ? "prefixItems" : "items";
   const restPath = ctx.target === "draft-2020-12" ? "items" : ctx.target === "openapi-3.0" ? "items" : "additionalItems";
-  const prefixItems = def.items.map((x, i) => process(x, ctx, {
+  const prefixItems = def.items.map((x, i) => process2(x, ctx, {
     ...params,
     path: [...params.path, prefixPath, i]
   }));
-  const rest = def.rest ? process(def.rest, ctx, {
+  const rest = def.rest ? process2(def.rest, ctx, {
     ...params,
     path: [...params.path, restPath, ...ctx.target === "openapi-3.0" ? [def.items.length] : []]
   }) : null;
@@ -11614,7 +14067,7 @@ var recordProcessor = (schema, ctx, _json, params) => {
   const keyBag = keyType._zod.bag;
   const patterns = keyBag?.patterns;
   if (def.mode === "loose" && patterns && patterns.size > 0) {
-    const valueSchema = process(def.valueType, ctx, {
+    const valueSchema = process2(def.valueType, ctx, {
       ...params,
       path: [...params.path, "patternProperties", "*"]
     });
@@ -11624,12 +14077,12 @@ var recordProcessor = (schema, ctx, _json, params) => {
     }
   } else {
     if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-      json2.propertyNames = process(def.keyType, ctx, {
+      json2.propertyNames = process2(def.keyType, ctx, {
         ...params,
         path: [...params.path, "propertyNames"]
       });
     }
-    json2.additionalProperties = process(def.valueType, ctx, {
+    json2.additionalProperties = process2(def.valueType, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
@@ -11644,7 +14097,7 @@ var recordProcessor = (schema, ctx, _json, params) => {
 };
 var nullableProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
-  const inner = process(def.innerType, ctx, params);
+  const inner = process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   if (ctx.target === "openapi-3.0") {
     seen.ref = def.innerType;
@@ -11655,20 +14108,20 @@ var nullableProcessor = (schema, ctx, json2, params) => {
 };
 var nonoptionalProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
 };
 var defaultProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   json2.default = JSON.parse(JSON.stringify(def.defaultValue));
 };
 var prefaultProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   if (ctx.io === "input")
@@ -11676,7 +14129,7 @@ var prefaultProcessor = (schema, ctx, json2, params) => {
 };
 var catchProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   let catchValue;
@@ -11690,32 +14143,32 @@ var catchProcessor = (schema, ctx, json2, params) => {
 var pipeProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
   const innerType = ctx.io === "input" ? def.in._zod.def.type === "transform" ? def.out : def.in : def.out;
-  process(innerType, ctx, params);
+  process2(innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = innerType;
 };
 var readonlyProcessor = (schema, ctx, json2, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   json2.readOnly = true;
 };
 var promiseProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
 };
 var optionalProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
-  process(def.innerType, ctx, params);
+  process2(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
 };
 var lazyProcessor = (schema, ctx, _json, params) => {
   const innerType = schema._zod.innerType;
-  process(innerType, ctx, params);
+  process2(innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = innerType;
 };
@@ -11767,7 +14220,7 @@ function toJSONSchema(input, params) {
     const defs = {};
     for (const entry of registry2._idmap.entries()) {
       const [_, schema] = entry;
-      process(schema, ctx2);
+      process2(schema, ctx2);
     }
     const schemas = {};
     const external = {
@@ -11790,12 +14243,12 @@ function toJSONSchema(input, params) {
     return { schemas };
   }
   const ctx = initializeContext({ ...params, processors: allProcessors });
-  process(input, ctx);
+  process2(input, ctx);
   extractDefs(ctx, input);
   return finalize(ctx, input);
 }
 
-// node_modules/zod/v4/core/json-schema-generator.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/json-schema-generator.js
 var JSONSchemaGenerator = class {
   /** @deprecated Access via ctx instead */
   get metadataRegistry() {
@@ -11848,7 +14301,7 @@ var JSONSchemaGenerator = class {
    * This must be called before emit().
    */
   process(schema, _params = { path: [], schemaPath: [] }) {
-    return process(schema, this.ctx, _params);
+    return process2(schema, this.ctx, _params);
   }
   /**
    * Emit the final JSON Schema after processing.
@@ -11870,10 +14323,10 @@ var JSONSchemaGenerator = class {
   }
 };
 
-// node_modules/zod/v4/core/json-schema.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/json-schema.js
 var json_schema_exports = {};
 
-// node_modules/zod/v4/classic/schemas.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/schemas.js
 var schemas_exports2 = {};
 __export(schemas_exports2, {
   ZodAny: () => ZodAny,
@@ -12042,7 +14495,7 @@ __export(schemas_exports2, {
   xor: () => xor
 });
 
-// node_modules/zod/v4/classic/checks.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/checks.js
 var checks_exports2 = {};
 __export(checks_exports2, {
   endsWith: () => _endsWith,
@@ -12076,7 +14529,7 @@ __export(checks_exports2, {
   uppercase: () => _uppercase
 });
 
-// node_modules/zod/v4/classic/iso.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/iso.js
 var iso_exports = {};
 __export(iso_exports, {
   ZodISODate: () => ZodISODate,
@@ -12117,7 +14570,7 @@ function duration2(params) {
   return _isoDuration(ZodISODuration, params);
 }
 
-// node_modules/zod/v4/classic/errors.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/errors.js
 var initializer2 = (inst, issues) => {
   $ZodError.init(inst, issues);
   inst.name = "ZodError";
@@ -12157,7 +14610,7 @@ var ZodRealError = $constructor("ZodError", initializer2, {
   Parent: Error
 });
 
-// node_modules/zod/v4/classic/parse.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/parse.js
 var parse2 = /* @__PURE__ */ _parse(ZodRealError);
 var parseAsync2 = /* @__PURE__ */ _parseAsync(ZodRealError);
 var safeParse2 = /* @__PURE__ */ _safeParse(ZodRealError);
@@ -12171,7 +14624,7 @@ var safeDecode2 = /* @__PURE__ */ _safeDecode(ZodRealError);
 var safeEncodeAsync2 = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
 var safeDecodeAsync2 = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-// node_modules/zod/v4/classic/schemas.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/schemas.js
 var ZodType = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
   $ZodType.init(inst, def);
   Object.assign(inst["~standard"], {
@@ -13250,7 +15703,7 @@ function preprocess(fn, schema) {
   return pipe(transform(fn), schema);
 }
 
-// node_modules/zod/v4/classic/compat.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/compat.js
 var ZodIssueCode = {
   invalid_type: "invalid_type",
   too_big: "too_big",
@@ -13276,7 +15729,7 @@ var ZodFirstPartyTypeKind;
 /* @__PURE__ */ (function(ZodFirstPartyTypeKind2) {
 })(ZodFirstPartyTypeKind || (ZodFirstPartyTypeKind = {}));
 
-// node_modules/zod/v4/classic/from-json-schema.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/from-json-schema.js
 var z = {
   ...schemas_exports2,
   ...checks_exports2,
@@ -13750,7 +16203,7 @@ function fromJSONSchema(schema, params) {
   return convertSchema(schema, ctx);
 }
 
-// node_modules/zod/v4/classic/coerce.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/coerce.js
 var coerce_exports = {};
 __export(coerce_exports, {
   bigint: () => bigint3,
@@ -13775,212 +16228,2644 @@ function date4(params) {
   return _coercedDate(ZodDate, params);
 }
 
-// node_modules/zod/v4/classic/external.js
+// node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/external.js
 config(en_default());
 
-// contract.ts
-import { defineRpcContract } from "@riftlabs/plugin-sdk";
-var id = external_exports.string().trim().min(1).max(256);
-var text = external_exports.string().trim().min(1).max(16e3);
-var messageId = external_exports.number().int().positive();
-var projectIds = external_exports.array(id).min(1).max(256);
-var INBOX_CHANGED_CHANNEL = "messages-changed";
-var operatorMessageSchema = external_exports.object({
-  messageId,
-  projectId: id,
-  senderThreadId: id,
-  senderTitle: external_exports.string().nullable(),
-  severity: external_exports.enum(["routine", "needs-decision", "urgent"]),
-  text,
-  createdAtMs: external_exports.number().int().nonnegative(),
-  readAtMs: external_exports.number().int().nonnegative().nullable(),
-  archivedAtMs: external_exports.number().int().nonnegative().nullable(),
-  replyText: text.nullable(),
-  replyAcceptedAtMs: external_exports.number().int().nonnegative().nullable(),
-  replyDelivery: external_exports.enum(["sent", "queued", "deferred"]).nullable()
+// packages/domain/src/json-value.ts
+var jsonValueSchema = external_exports.lazy(
+  () => external_exports.union([
+    external_exports.string(),
+    external_exports.number(),
+    external_exports.boolean(),
+    external_exports.null(),
+    external_exports.array(jsonValueSchema),
+    external_exports.record(external_exports.string(), jsonValueSchema)
+  ])
+);
+var jsonObjectSchema = external_exports.record(
+  external_exports.string(),
+  jsonValueSchema
+);
+
+// packages/domain/src/code-theme.ts
+var codeThemeNameSchema = external_exports.string().min(1).max(128).regex(
+  /^[a-zA-Z0-9][a-zA-Z0-9._:-]*$/,
+  "Code theme names may use letters, digits, '.', '_', ':', and '-' and cannot start with '.'"
+);
+var codeThemePairSchema = external_exports.object({
+  dark: codeThemeNameSchema,
+  light: codeThemeNameSchema
 }).strict();
-var operatorMessagesInputSchema = external_exports.object({
-  projectIds,
-  includeArchived: external_exports.boolean().optional()
+var vscodeThemeJsonSchema = jsonObjectSchema.refine(
+  (value) => typeof value.name === "string" && value.name.length > 0,
+  { message: "Code theme JSON must include a non-empty name" }
+);
+var resolvedCodeThemeSchema = external_exports.object({
+  dark: codeThemeNameSchema,
+  light: codeThemeNameSchema,
+  files: external_exports.record(external_exports.string(), jsonObjectSchema)
 }).strict();
-var messageMutationInputSchema = external_exports.object({ projectId: id, messageId }).strict();
-var replyInputSchema = messageMutationInputSchema.extend({ text }).strict();
-function safeAbsolutePath(path) {
+var uiCodeThemeDeclarationSchema = external_exports.object({
+  dark: external_exports.string().min(1).max(256).optional(),
+  light: external_exports.string().min(1).max(256).optional()
+}).strict();
+
+// packages/domain/src/plugin-id.ts
+var pluginIdSchema = external_exports.string().regex(/^[a-z0-9][a-z0-9-]*$/u);
+function derivePluginId(packageName) {
+  const base = packageName.includes("/") ? packageName.split("/").at(-1) ?? packageName : packageName;
+  const id = base.replace(/^rift-plugin-/, "").toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/^-+|-+$/g, "");
+  if (id.length === 0) {
+    throw new Error(
+      `cannot derive a plugin id from package name "${packageName}"`
+    );
+  }
+  return id;
+}
+
+// packages/domain/src/plugin-icon.ts
+function isPluginOwnedIconPath(icon) {
+  return icon.startsWith("./");
+}
+var PLUGIN_ICON_NAME_PATTERN = /^[a-z0-9][a-z0-9-]*$/u;
+var PLUGIN_ICON_NAME_MAX_LENGTH = 48;
+var PLUGIN_ICON_MAX_BYTES = 32 * 1024;
+var PLUGIN_ICONS_MAX_COUNT = 64;
+var NAMESPACED_GLYPH_PATTERN = /^[a-z0-9-]+\/[a-z0-9][a-z0-9-]*$/u;
+function isNamespacedGlyph(glyph) {
+  return NAMESPACED_GLYPH_PATTERN.test(glyph);
+}
+
+// packages/domain/src/plugin-manifest.ts
+var requiredManifestString = external_exports.string().trim().min(1);
+var pluginBrandingIconsSchema = external_exports.record(
+  external_exports.string().max(
+    PLUGIN_ICON_NAME_MAX_LENGTH,
+    `icon names are at most ${PLUGIN_ICON_NAME_MAX_LENGTH} characters`
+  ).regex(
+    PLUGIN_ICON_NAME_PATTERN,
+    'icon names use lowercase letters, digits and "-", starting with a letter or digit'
+  ),
+  requiredManifestString.refine(
+    (path) => isPluginOwnedIconPath(path) && path.toLowerCase().endsWith(".svg"),
+    {
+      message: 'icon paths are plugin-relative .svg files starting with "./" (for example "./icons/receipt.svg")'
+    }
+  )
+).refine((icons) => Object.keys(icons).length <= PLUGIN_ICONS_MAX_COUNT, {
+  message: `a plugin declares at most ${PLUGIN_ICONS_MAX_COUNT} icons`
+});
+var pluginBrandingSchema = external_exports.object({
+  icon: requiredManifestString.optional(),
+  logo: external_exports.object({
+    light: requiredManifestString,
+    dark: requiredManifestString.optional()
+  }).strict().optional(),
+  experimental_icons: pluginBrandingIconsSchema.optional()
+}).strict().superRefine((branding, context) => {
+  if (branding.icon !== void 0 && isPluginOwnedIconPath(branding.icon) && !branding.icon.toLowerCase().endsWith(".svg")) {
+    context.addIssue({
+      code: "custom",
+      path: ["icon"],
+      message: 'plugin-owned branding.icon paths must point at an .svg file (for example "./assets/icon.svg")'
+    });
+  }
+  if (branding.icon !== void 0 && isNamespacedGlyph(branding.icon)) {
+    context.addIssue({
+      code: "custom",
+      path: ["icon"],
+      message: `"${branding.icon}" is a namespaced glyph ("<pluginId>/<name>"), which names a declared icon from a tool presentation or a provider declaration; branding.icon is the plugin's own mark, so name a host glyph ("Zap") or the SVG file itself ("./icons/logo.svg")`
+    });
+  }
+}).refine(
+  (branding) => branding.icon !== void 0 || branding.logo !== void 0,
+  {
+    message: "must declare at least branding.icon or branding.logo.light"
+  }
+);
+var pluginRiftManifestSchema = external_exports.object({
+  name: requiredManifestString,
+  description: requiredManifestString,
+  branding: pluginBrandingSchema,
+  server: requiredManifestString,
+  app: requiredManifestString.optional(),
+  host: requiredManifestString.optional(),
+  skills: external_exports.array(requiredManifestString).optional(),
+  themes: external_exports.array(
+    external_exports.object({
+      id: external_exports.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/).max(64),
+      name: requiredManifestString,
+      description: requiredManifestString.optional(),
+      css: requiredManifestString,
+      codeTheme: uiCodeThemeDeclarationSchema.optional()
+    }).strict()
+  ).optional()
+}).strict();
+var pluginPackageJsonSchema = external_exports.object({
+  name: requiredManifestString,
+  version: requiredManifestString,
+  engines: external_exports.object({
+    rift: requiredManifestString.optional(),
+    riftPluginSdk: requiredManifestString.optional()
+  }).optional(),
+  rift: pluginRiftManifestSchema
+}).passthrough();
+
+// packages/domain/src/plugin-sdk-version.ts
+var PLUGIN_SDK_VERSION = "0.4.48";
+var PLUGIN_SDK_MAJOR = Number(PLUGIN_SDK_VERSION.split(".", 1)[0]);
+
+// packages/plugin-build/src/generated/plugin-theme.generated.ts
+var PLUGIN_THEME_CSS = `@theme inline reference {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  /* Cadence (thread design refresh): a recede tier between muted and subtle for
+   * settled/closed-turn machinery, and a text-only destructive that clears AA in
+   * dark mode (the --destructive fill is below the 4.5:1 text floor there). */
+  --color-readback-foreground: var(--readback-foreground);
+  --color-version-upgrade: var(--version-upgrade);
+  --color-timeline-accent: var(--timeline-accent);
+  --color-file-accent: var(--file-accent);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-state-hover: var(--state-hover);
+  --color-state-active: var(--state-active);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
+  --color-attention: var(--attention);
+  --color-warning: var(--warning);
+  --color-warning-text: var(--warning-text);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-diff-added: var(--diff-added);
+  /* GitHub's merged-PR purple \u2014 the one chromatic exception in the PR state
+   * dots, matching the universal merged-PR color language. */
+  --color-pr-merged: var(--pr-merged);
+  --color-diff-removed: var(--diff-removed);
+  --color-border: var(--border);
+  --color-border-hairline: var(--border-hairline);
+  --color-border-seam: var(--border-seam);
+  --color-border-seam-vertical: var(--border-seam-vertical);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface-recessed: var(--surface-recessed);
+  --color-surface-recessed-solid: var(--surface-recessed-solid);
+  --color-surface-recessed-soft-solid: var(--surface-recessed-soft-solid);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-raised-solid: var(--surface-raised-solid);
+  --color-surface-scrim: var(--surface-scrim);
+  --color-surface-destructive: var(--surface-destructive);
+  --color-surface-destructive-border: var(--surface-destructive-border);
+  --color-surface-attention: var(--surface-attention);
+  --color-surface-selected: var(--surface-selected);
+  --color-surface-selected-border: var(--surface-selected-border);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --shadow-lift: var(--shadow-lift);
+}
+
+@theme {
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-base--line-height: 1.375rem;
+  /* Cadence chrome size (unread divider, count chips, ids) \u2014 10px. Chrome only;
+   * never paired with a tier below --subtle-foreground or it fails AA at 10px. */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 0.875rem;
+}`;
+var TW_ANIMATE_CSS = `@property --tw-animation-delay{syntax:"*";inherits:false;initial-value:0s}@property --tw-animation-direction{syntax:"*";inherits:false;initial-value:normal}@property --tw-animation-duration{syntax:"*";inherits:false}@property --tw-animation-fill-mode{syntax:"*";inherits:false;initial-value:none}@property --tw-animation-iteration-count{syntax:"*";inherits:false;initial-value:1}@property --tw-enter-blur{syntax:"*";inherits:false;initial-value:0}@property --tw-enter-opacity{syntax:"*";inherits:false;initial-value:1}@property --tw-enter-rotate{syntax:"*";inherits:false;initial-value:0}@property --tw-enter-scale{syntax:"*";inherits:false;initial-value:1}@property --tw-enter-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-enter-translate-y{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-blur{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-opacity{syntax:"*";inherits:false;initial-value:1}@property --tw-exit-rotate{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-scale{syntax:"*";inherits:false;initial-value:1}@property --tw-exit-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-translate-y{syntax:"*";inherits:false;initial-value:0}@theme inline{--animation-delay-0: 0s; --animation-delay-75: 75ms; --animation-delay-100: .1s; --animation-delay-150: .15s; --animation-delay-200: .2s; --animation-delay-300: .3s; --animation-delay-500: .5s; --animation-delay-700: .7s; --animation-delay-1000: 1s; --animation-repeat-0: 0; --animation-repeat-1: 1; --animation-repeat-infinite: infinite; --animation-direction-normal: normal; --animation-direction-reverse: reverse; --animation-direction-alternate: alternate; --animation-direction-alternate-reverse: alternate-reverse; --animation-fill-mode-none: none; --animation-fill-mode-forwards: forwards; --animation-fill-mode-backwards: backwards; --animation-fill-mode-both: both; --percentage-0: 0; --percentage-5: .05; --percentage-10: .1; --percentage-15: .15; --percentage-20: .2; --percentage-25: .25; --percentage-30: .3; --percentage-35: .35; --percentage-40: .4; --percentage-45: .45; --percentage-50: .5; --percentage-55: .55; --percentage-60: .6; --percentage-65: .65; --percentage-70: .7; --percentage-75: .75; --percentage-80: .8; --percentage-85: .85; --percentage-90: .9; --percentage-95: .95; --percentage-100: 1; --percentage-translate-full: 1; --animate-in: enter var(--tw-animation-duration,var(--tw-duration,.15s))var(--tw-ease,ease)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none); --animate-out: exit var(--tw-animation-duration,var(--tw-duration,.15s))var(--tw-ease,ease)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none); @keyframes enter { from { opacity: var(--tw-enter-opacity,1); transform: translate3d(var(--tw-enter-translate-x,0),var(--tw-enter-translate-y,0),0)scale3d(var(--tw-enter-scale,1),var(--tw-enter-scale,1),var(--tw-enter-scale,1))rotate(var(--tw-enter-rotate,0)); filter: blur(var(--tw-enter-blur,0)); }}@keyframes exit { to { opacity: var(--tw-exit-opacity,1); transform: translate3d(var(--tw-exit-translate-x,0),var(--tw-exit-translate-y,0),0)scale3d(var(--tw-exit-scale,1),var(--tw-exit-scale,1),var(--tw-exit-scale,1))rotate(var(--tw-exit-rotate,0)); filter: blur(var(--tw-exit-blur,0)); }}--animate-accordion-down: accordion-down var(--tw-animation-duration,var(--tw-duration,.2s))var(--tw-ease,ease-out)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none); --animate-accordion-up: accordion-up var(--tw-animation-duration,var(--tw-duration,.2s))var(--tw-ease,ease-out)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none); --animate-collapsible-down: collapsible-down var(--tw-animation-duration,var(--tw-duration,.2s))var(--tw-ease,ease-out)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none); --animate-collapsible-up: collapsible-up var(--tw-animation-duration,var(--tw-duration,.2s))var(--tw-ease,ease-out)var(--tw-animation-delay,0s)var(--tw-animation-iteration-count,1)var(--tw-animation-direction,normal)var(--tw-animation-fill-mode,none); @keyframes accordion-down { from { height: 0; }to { height: var(--radix-accordion-content-height,var(--bits-accordion-content-height,var(--reka-accordion-content-height,var(--kb-accordion-content-height,var(--ngp-accordion-content-height,auto))))); }}@keyframes accordion-up { from { height: var(--radix-accordion-content-height,var(--bits-accordion-content-height,var(--reka-accordion-content-height,var(--kb-accordion-content-height,var(--ngp-accordion-content-height,auto))))); }to { height: 0; }}@keyframes collapsible-down { from { height: 0; }to { height: var(--radix-collapsible-content-height,var(--bits-collapsible-content-height,var(--reka-collapsible-content-height,var(--kb-collapsible-content-height,auto)))); }}@keyframes collapsible-up { from { height: var(--radix-collapsible-content-height,var(--bits-collapsible-content-height,var(--reka-collapsible-content-height,var(--kb-collapsible-content-height,auto)))); }to { height: 0; }}--animate-caret-blink: caret-blink 1.25s ease-out infinite; @keyframes caret-blink { 0%,70%,100% { opacity: 1; }20%,50% { opacity: 0; }}}@utility animation-duration-*{--tw-animation-duration: calc(--value(number)*1ms); --tw-animation-duration: --value(--animation-duration-*,[duration],"initial",[*]); animation-duration: calc(--value(number)*1ms); animation-duration: --value(--animation-duration-*,[duration],"initial",[*]);}@utility delay-*{animation-delay: calc(--value(number)*1ms); animation-delay: --value(--animation-delay-*,[duration],"initial",[*]); --tw-animation-delay: calc(--value(number)*1ms); --tw-animation-delay: --value(--animation-delay-*,[duration],"initial",[*]);}@utility repeat-*{animation-iteration-count: --value(--animation-repeat-*,number,"initial",[*]); --tw-animation-iteration-count: --value(--animation-repeat-*,number,"initial",[*]);}@utility direction-*{animation-direction: --value(--animation-direction-*,"initial",[*]); --tw-animation-direction: --value(--animation-direction-*,"initial",[*]);}@utility fill-mode-*{animation-fill-mode: --value(--animation-fill-mode-*,"initial",[*]); --tw-animation-fill-mode: --value(--animation-fill-mode-*,"initial",[*]);}@utility running{animation-play-state: running;}@utility paused{animation-play-state: paused;}@utility play-state-*{animation-play-state: --value("initial",[*]);}@utility blur-in{--tw-enter-blur: 20px;}@utility blur-in-*{--tw-enter-blur: calc(--value(number)*1px); --tw-enter-blur: --value(--blur-*,[*]);}@utility blur-out{--tw-exit-blur: 20px;}@utility blur-out-*{--tw-exit-blur: calc(--value(number)*1px); --tw-exit-blur: --value(--blur-*,[*]);}@utility fade-in{--tw-enter-opacity: 0;}@utility fade-in-*{--tw-enter-opacity: calc(--value(number)/100); --tw-enter-opacity: --value(--percentage-*,[*]);}@utility fade-out{--tw-exit-opacity: 0;}@utility fade-out-*{--tw-exit-opacity: calc(--value(number)/100); --tw-exit-opacity: --value(--percentage-*,[*]);}@utility zoom-in{--tw-enter-scale: 0;}@utility zoom-in-*{--tw-enter-scale: calc(--value(number)*1%); --tw-enter-scale: calc(--value(ratio)); --tw-enter-scale: --value(--percentage-*,[*]);}@utility -zoom-in-*{--tw-enter-scale: calc(--value(number)*-1%); --tw-enter-scale: calc(--value(ratio)*-1); --tw-enter-scale: --value(--percentage-*,[*]);}@utility zoom-out{--tw-exit-scale: 0;}@utility zoom-out-*{--tw-exit-scale: calc(--value(number)*1%); --tw-exit-scale: calc(--value(ratio)); --tw-exit-scale: --value(--percentage-*,[*]);}@utility -zoom-out-*{--tw-exit-scale: calc(--value(number)*-1%); --tw-exit-scale: calc(--value(ratio)*-1); --tw-exit-scale: --value(--percentage-*,[*]);}@utility spin-in{--tw-enter-rotate: 30deg;}@utility spin-in-*{--tw-enter-rotate: calc(--value(number)*1deg); --tw-enter-rotate: calc(--value(ratio)*360deg); --tw-enter-rotate: --value(--rotate-*,[*]);}@utility -spin-in{--tw-enter-rotate: -30deg;}@utility -spin-in-*{--tw-enter-rotate: calc(--value(number)*-1deg); --tw-enter-rotate: calc(--value(ratio)*-360deg); --tw-enter-rotate: --value(--rotate-*,[*]);}@utility spin-out{--tw-exit-rotate: 30deg;}@utility spin-out-*{--tw-exit-rotate: calc(--value(number)*1deg); --tw-exit-rotate: calc(--value(ratio)*360deg); --tw-exit-rotate: --value(--rotate-*,[*]);}@utility -spin-out{--tw-exit-rotate: -30deg;}@utility -spin-out-*{--tw-exit-rotate: calc(--value(number)*-1deg); --tw-exit-rotate: calc(--value(ratio)*-360deg); --tw-exit-rotate: --value(--rotate-*,[*]);}@utility slide-in-from-top{--tw-enter-translate-y: -100%;}@utility slide-in-from-top-*{--tw-enter-translate-y: calc(--value(integer)*var(--spacing)*-1); --tw-enter-translate-y: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-enter-translate-y: calc(--value(ratio)*-100%); --tw-enter-translate-y: calc(--value(--translate-*,[percentage],[length])*-1);}@utility slide-in-from-bottom{--tw-enter-translate-y: 100%;}@utility slide-in-from-bottom-*{--tw-enter-translate-y: calc(--value(integer)*var(--spacing)); --tw-enter-translate-y: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-enter-translate-y: calc(--value(ratio)*100%); --tw-enter-translate-y: --value(--translate-*,[percentage],[length]);}@utility slide-in-from-left{--tw-enter-translate-x: -100%;}@utility slide-in-from-left-*{--tw-enter-translate-x: calc(--value(integer)*var(--spacing)*-1); --tw-enter-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-enter-translate-x: calc(--value(ratio)*-100%); --tw-enter-translate-x: calc(--value(--translate-*,[percentage],[length])*-1);}@utility slide-in-from-right{--tw-enter-translate-x: 100%;}@utility slide-in-from-right-*{--tw-enter-translate-x: calc(--value(integer)*var(--spacing)); --tw-enter-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-enter-translate-x: calc(--value(ratio)*100%); --tw-enter-translate-x: --value(--translate-*,[percentage],[length]);}@utility slide-in-from-start{&:dir(ltr){ --tw-enter-translate-x: -100%; }&:dir(rtl){ --tw-enter-translate-x: 100%; }}@utility slide-in-from-start-*{&:where(:dir(ltr),[dir="ltr"],[dir="ltr"]*){ --tw-enter-translate-x: calc(--value(integer)*var(--spacing)*-1); --tw-enter-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-enter-translate-x: calc(--value(ratio)*-100%); --tw-enter-translate-x: calc(--value(--translate-*,[percentage],[length])*-1); }&:where(:dir(rtl),[dir="rtl"],[dir="rtl"]*){ --tw-enter-translate-x: calc(--value(integer)*var(--spacing)); --tw-enter-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-enter-translate-x: calc(--value(ratio)*100%); --tw-enter-translate-x: --value(--translate-*,[percentage],[length]); }}@utility slide-in-from-end{&:dir(ltr){ --tw-enter-translate-x: 100%; }&:dir(rtl){ --tw-enter-translate-x: -100%; }}@utility slide-in-from-end-*{&:where(:dir(ltr),[dir="ltr"],[dir="ltr"]*){ --tw-enter-translate-x: calc(--value(integer)*var(--spacing)); --tw-enter-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-enter-translate-x: calc(--value(ratio)*100%); --tw-enter-translate-x: --value(--translate-*,[percentage],[length]); }&:where(:dir(rtl),[dir="rtl"],[dir="rtl"]*){ --tw-enter-translate-x: calc(--value(integer)*var(--spacing)*-1); --tw-enter-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-enter-translate-x: calc(--value(ratio)*-100%); --tw-enter-translate-x: calc(--value(--translate-*,[percentage],[length])*-1); }}@utility slide-out-to-top{--tw-exit-translate-y: -100%;}@utility slide-out-to-top-*{--tw-exit-translate-y: calc(--value(integer)*var(--spacing)*-1); --tw-exit-translate-y: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-exit-translate-y: calc(--value(ratio)*-100%); --tw-exit-translate-y: calc(--value(--translate-*,[percentage],[length])*-1);}@utility slide-out-to-bottom{--tw-exit-translate-y: 100%;}@utility slide-out-to-bottom-*{--tw-exit-translate-y: calc(--value(integer)*var(--spacing)); --tw-exit-translate-y: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-exit-translate-y: calc(--value(ratio)*100%); --tw-exit-translate-y: --value(--translate-*,[percentage],[length]);}@utility slide-out-to-left{--tw-exit-translate-x: -100%;}@utility slide-out-to-left-*{--tw-exit-translate-x: calc(--value(integer)*var(--spacing)*-1); --tw-exit-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-exit-translate-x: calc(--value(ratio)*-100%); --tw-exit-translate-x: calc(--value(--translate-*,[percentage],[length])*-1);}@utility slide-out-to-right{--tw-exit-translate-x: 100%;}@utility slide-out-to-right-*{--tw-exit-translate-x: calc(--value(integer)*var(--spacing)); --tw-exit-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-exit-translate-x: calc(--value(ratio)*100%); --tw-exit-translate-x: --value(--translate-*,[percentage],[length]);}@utility slide-out-to-start{&:dir(ltr){ --tw-exit-translate-x: -100%; }&:dir(rtl){ --tw-exit-translate-x: 100%; }}@utility slide-out-to-start-*{&:where(:dir(ltr),[dir="ltr"],[dir="ltr"]*){ --tw-exit-translate-x: calc(--value(integer)*var(--spacing)*-1); --tw-exit-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-exit-translate-x: calc(--value(ratio)*-100%); --tw-exit-translate-x: calc(--value(--translate-*,[percentage],[length])*-1); }&:where(:dir(rtl),[dir="rtl"],[dir="rtl"]*){ --tw-exit-translate-x: calc(--value(integer)*var(--spacing)); --tw-exit-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-exit-translate-x: calc(--value(ratio)*100%); --tw-exit-translate-x: --value(--translate-*,[percentage],[length]); }}@utility slide-out-to-end{&:dir(ltr){ --tw-exit-translate-x: 100%; }&:dir(rtl){ --tw-exit-translate-x: -100%; }}@utility slide-out-to-end-*{&:where(:dir(ltr),[dir="ltr"],[dir="ltr"]*){ --tw-exit-translate-x: calc(--value(integer)*var(--spacing)); --tw-exit-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*100%); --tw-exit-translate-x: calc(--value(ratio)*100%); --tw-exit-translate-x: --value(--translate-*,[percentage],[length]); }&:where(:dir(rtl),[dir="rtl"],[dir="rtl"]*){ --tw-exit-translate-x: calc(--value(integer)*var(--spacing)*-1); --tw-exit-translate-x: calc(--value(--percentage-*,--percentage-translate-*)*-100%); --tw-exit-translate-x: calc(--value(ratio)*-100%); --tw-exit-translate-x: calc(--value(--translate-*,[percentage],[length])*-1); }}`;
+
+// packages/plugin-build/src/generated/runtime-export-manifest.generated.ts
+var RUNTIME_EXPORT_MANIFEST = {
+  "@riftlabs/plugin-sdk/app": [
+    "Markdown",
+    "ThreadChat",
+    "UrlLink",
+    "definePluginApp",
+    "experimental_Diff",
+    "experimental_FileLink",
+    "experimental_NewThreadComposer",
+    "experimental_PermissionModePicker",
+    "experimental_ProviderModelPicker",
+    "experimental_SourceCode",
+    "experimental_useAppPanel",
+    "experimental_useCodeTheme",
+    "experimental_useFixedTabTarget",
+    "experimental_useProviders",
+    "experimental_useSidebarThreadActions",
+    "experimental_useSidebarThreadPullRequest",
+    "experimental_useSidebarThreadSplit",
+    "experimental_useSidebarThreads",
+    "useComposer",
+    "useComposerView",
+    "useRealtime",
+    "useRealtimeConnectionState",
+    "useRiftContext",
+    "useRiftNavigate",
+    "useRpc",
+    "useSettings"
+  ],
+  "react": [
+    "Activity",
+    "Children",
+    "Component",
+    "Fragment",
+    "Profiler",
+    "PureComponent",
+    "StrictMode",
+    "Suspense",
+    "act",
+    "cache",
+    "cacheSignal",
+    "captureOwnerStack",
+    "cloneElement",
+    "createContext",
+    "createElement",
+    "createRef",
+    "forwardRef",
+    "isValidElement",
+    "lazy",
+    "memo",
+    "startTransition",
+    "unstable_useCacheRefresh",
+    "use",
+    "useActionState",
+    "useCallback",
+    "useContext",
+    "useDebugValue",
+    "useDeferredValue",
+    "useEffect",
+    "useEffectEvent",
+    "useId",
+    "useImperativeHandle",
+    "useInsertionEffect",
+    "useLayoutEffect",
+    "useMemo",
+    "useOptimistic",
+    "useReducer",
+    "useRef",
+    "useState",
+    "useSyncExternalStore",
+    "useTransition",
+    "version"
+  ],
+  "react-dom": [
+    "createPortal",
+    "flushSync",
+    "preconnect",
+    "prefetchDNS",
+    "preinit",
+    "preinitModule",
+    "preload",
+    "preloadModule",
+    "requestFormReset",
+    "unstable_batchedUpdates",
+    "useFormState",
+    "useFormStatus",
+    "version"
+  ],
+  "react-dom/client": [
+    "createRoot",
+    "hydrateRoot",
+    "version"
+  ],
+  "react/jsx-runtime": [
+    "Fragment",
+    "jsx",
+    "jsxs"
+  ],
+  "react/jsx-dev-runtime": [
+    "Fragment",
+    "jsxDEV"
+  ],
+  "@pierre/diffs": [
+    "ALTERNATE_FILE_NAMES_GIT",
+    "AttachedLanguages",
+    "AttachedThemes",
+    "COMMIT_METADATA_SPLIT",
+    "CORE_CSS_ATTRIBUTE",
+    "CUSTOM_HEADER_SLOT_ID",
+    "CodeToTokenTransformStream",
+    "CodeView",
+    "DEFAULT_CODE_VIEW_FILE_METRICS",
+    "DEFAULT_CODE_VIEW_LAYOUT",
+    "DEFAULT_COLLAPSED_CONTEXT_THRESHOLD",
+    "DEFAULT_EXPANDED_REGION",
+    "DEFAULT_RENDER_RANGE",
+    "DEFAULT_SMOOTH_SCROLL_SETTINGS",
+    "DEFAULT_THEMES",
+    "DEFAULT_TOKENIZE_MAX_LENGTH",
+    "DEFAULT_VIRTUAL_FILE_METRICS",
+    "DIFFS_DEVELOPMENT_BUILD",
+    "DIFFS_SCROLLBAR_GUTTER_MEASURED_PROPERTY",
+    "DIFFS_SCROLLBAR_MEASURE_ATTRIBUTE",
+    "DIFFS_TAG_NAME",
+    "DiffHunksRenderer",
+    "EMPTY_RENDER_RANGE",
+    "EXTENSION_TO_FILE_FORMAT",
+    "FILENAME_HEADER_REGEX",
+    "FILENAME_HEADER_REGEX_GIT",
+    "FILE_CONTEXT_BLOB",
+    "File",
+    "FileDiff",
+    "FileRenderer",
+    "FileStream",
+    "GIT_DIFF_FILE_BREAK_REGEX",
+    "HEADER_METADATA_SLOT_ID",
+    "HEADER_PREFIX_SLOT_ID",
+    "HUNK_HEADER",
+    "INDEX_LINE_METADATA",
+    "InteractionManager",
+    "MERGE_CONFLICT_BASE_MARKER_REGEX",
+    "MERGE_CONFLICT_END_MARKER_REGEX",
+    "MERGE_CONFLICT_SEPARATOR_MARKER_REGEX",
+    "MERGE_CONFLICT_START_MARKER_REGEX",
+    "RegisteredCustomLanguages",
+    "ResizeManager",
+    "ResolvedLanguages",
+    "ResolvingLanguages",
+    "SPLIT_WITH_NEWLINES",
+    "SVGSpriteSheet",
+    "ScrollSyncManager",
+    "ShikiStreamTokenizer",
+    "THEME_CSS_ATTRIBUTE",
+    "UNIFIED_DIFF_FILE_BREAK_REGEX",
+    "UNSAFE_CSS_ATTRIBUTE",
+    "UnresolvedFile",
+    "VirtualizedFile",
+    "VirtualizedFileDiff",
+    "Virtualizer",
+    "areDiffLineAnnotationsEqual",
+    "areDiffRenderOptionsEqual",
+    "areDiffTargetsEqual",
+    "areFileRenderOptionsEqual",
+    "areFilesEqual",
+    "areHunkDataEqual",
+    "areLanguagesAttached",
+    "areLineAnnotationsEqual",
+    "areObjectsEqual",
+    "areOptionsEqual",
+    "arePrePropertiesEqual",
+    "areRenderRangesEqual",
+    "areSelectionsEqual",
+    "areThemesAttached",
+    "areThemesEqual",
+    "areVirtualWindowSpecsEqual",
+    "areWorkerStatsEqual",
+    "attachResolvedLanguages",
+    "attachResolvedThemes",
+    "cleanLastNewline",
+    "cleanUpResolvedLanguages",
+    "cleanUpResolvedThemes",
+    "codeToHtml",
+    "createAnnotationElement",
+    "createAnnotationWrapperNode",
+    "createCSSVariablesTheme",
+    "createDiffSpanDecoration",
+    "createEmptyRowBuffer",
+    "createFileHeaderElement",
+    "createGutterGap",
+    "createGutterItem",
+    "createGutterUtilityContentNode",
+    "createGutterUtilityElement",
+    "createGutterWrapper",
+    "createHastElement",
+    "createIconElement",
+    "createNoNewlineElement",
+    "createPreElement",
+    "createPreWrapperProperties",
+    "createRowNodes",
+    "createSeparator",
+    "createSpanFromToken",
+    "createStyleElement",
+    "createTextNodeElement",
+    "createThemeStyleElement",
+    "createTransformerWithState",
+    "createUnsafeCSSStyleNode",
+    "createWindowFromScrollPosition",
+    "dequeueRender",
+    "detachString",
+    "diffAcceptRejectHunk",
+    "disposeHighlighter",
+    "findCodeElement",
+    "formatCSSVariablePrefix",
+    "getCustomExtensionsMap",
+    "getCustomExtensionsVersion",
+    "getFiletypeFromFileName",
+    "getHighlighterIfLoaded",
+    "getHighlighterOptions",
+    "getHighlighterThemeStyles",
+    "getHunkSeparatorSlotName",
+    "getIconForType",
+    "getLineAnnotationName",
+    "getLineEndingType",
+    "getLineNodes",
+    "getOrCreateCodeNode",
+    "getResolvedLanguages",
+    "getResolvedOrResolveLanguage",
+    "getResolvedOrResolveTheme",
+    "getResolvedThemes",
+    "getSharedHighlighter",
+    "getSingularPatch",
+    "getThemes",
+    "getTotalLineCountFromHunks",
+    "getUnresolvedDiffHunksRendererOptions",
+    "hasResolvedLanguages",
+    "hasResolvedThemes",
+    "isDefaultRenderRange",
+    "isHighlighterLoaded",
+    "isHighlighterLoading",
+    "isHighlighterNull",
+    "isWorkerContext",
+    "parseDiffFromFile",
+    "parseLineType",
+    "parsePatchFiles",
+    "patchScrollbarGutterSize",
+    "pluckInteractionOptions",
+    "prefersReducedMotion",
+    "preloadHighlighter",
+    "prerenderHTMLIfNecessary",
+    "processFile",
+    "processLine",
+    "processPatch",
+    "pushOrJoinSpan",
+    "queueRender",
+    "registerCustomCSSVariableTheme",
+    "registerCustomLanguage",
+    "registerCustomTheme",
+    "releaseStringDetachBuffer",
+    "renderDiffWithHighlighter",
+    "renderFileWithHighlighter",
+    "replaceCustomExtensions",
+    "resolveConflict",
+    "resolveLanguage",
+    "resolveLanguages",
+    "resolveRegion",
+    "resolveTheme",
+    "resolveThemes",
+    "setCustomExtension",
+    "setLanguageOverride",
+    "setPreNodeProperties",
+    "trimPatchContext",
+    "wrapCoreCSS",
+    "wrapThemeCSS",
+    "wrapUnsafeCSS"
+  ],
+  "@pierre/diffs/react": [
+    "CodeView",
+    "File",
+    "FileDiff",
+    "GutterUtilitySlotStyles",
+    "MergeConflictSlotStyles",
+    "MultiFileDiff",
+    "PatchDiff",
+    "UnresolvedFile",
+    "Virtualizer",
+    "VirtualizerContext",
+    "WorkerPoolContext",
+    "WorkerPoolContextProvider",
+    "noopRender",
+    "renderDiffChildren",
+    "renderFileChildren",
+    "templateRender",
+    "useFileDiffInstance",
+    "useFileInstance",
+    "useStableCallback",
+    "useVirtualizer",
+    "useWorkerPool"
+  ],
+  "@radix-ui/react-alert-dialog": [
+    "Action",
+    "AlertDialog",
+    "AlertDialogAction",
+    "AlertDialogCancel",
+    "AlertDialogContent",
+    "AlertDialogDescription",
+    "AlertDialogOverlay",
+    "AlertDialogPortal",
+    "AlertDialogTitle",
+    "AlertDialogTrigger",
+    "Cancel",
+    "Content",
+    "Description",
+    "Overlay",
+    "Portal",
+    "Root",
+    "Title",
+    "Trigger",
+    "createAlertDialogScope"
+  ],
+  "@radix-ui/react-context-menu": [
+    "Arrow",
+    "CheckboxItem",
+    "Content",
+    "ContextMenu",
+    "ContextMenuArrow",
+    "ContextMenuCheckboxItem",
+    "ContextMenuContent",
+    "ContextMenuGroup",
+    "ContextMenuItem",
+    "ContextMenuItemIndicator",
+    "ContextMenuLabel",
+    "ContextMenuPortal",
+    "ContextMenuRadioGroup",
+    "ContextMenuRadioItem",
+    "ContextMenuSeparator",
+    "ContextMenuSub",
+    "ContextMenuSubContent",
+    "ContextMenuSubTrigger",
+    "ContextMenuTrigger",
+    "Group",
+    "Item",
+    "ItemIndicator",
+    "Label",
+    "Portal",
+    "RadioGroup",
+    "RadioItem",
+    "Root",
+    "Separator",
+    "Sub",
+    "SubContent",
+    "SubTrigger",
+    "Trigger",
+    "createContextMenuScope"
+  ],
+  "@radix-ui/react-dialog": [
+    "Close",
+    "Content",
+    "Description",
+    "Dialog",
+    "DialogClose",
+    "DialogContent",
+    "DialogDescription",
+    "DialogOverlay",
+    "DialogPortal",
+    "DialogTitle",
+    "DialogTrigger",
+    "Overlay",
+    "Portal",
+    "Root",
+    "Title",
+    "Trigger",
+    "WarningProvider",
+    "createDialogScope"
+  ],
+  "@radix-ui/react-dropdown-menu": [
+    "Arrow",
+    "CheckboxItem",
+    "Content",
+    "DropdownMenu",
+    "DropdownMenuArrow",
+    "DropdownMenuCheckboxItem",
+    "DropdownMenuContent",
+    "DropdownMenuGroup",
+    "DropdownMenuItem",
+    "DropdownMenuItemIndicator",
+    "DropdownMenuLabel",
+    "DropdownMenuPortal",
+    "DropdownMenuRadioGroup",
+    "DropdownMenuRadioItem",
+    "DropdownMenuSeparator",
+    "DropdownMenuSub",
+    "DropdownMenuSubContent",
+    "DropdownMenuSubTrigger",
+    "DropdownMenuTrigger",
+    "Group",
+    "Item",
+    "ItemIndicator",
+    "Label",
+    "Portal",
+    "RadioGroup",
+    "RadioItem",
+    "Root",
+    "Separator",
+    "Sub",
+    "SubContent",
+    "SubTrigger",
+    "Trigger",
+    "createDropdownMenuScope"
+  ],
+  "@radix-ui/react-hover-card": [
+    "Arrow",
+    "Content",
+    "HoverCard",
+    "HoverCardArrow",
+    "HoverCardContent",
+    "HoverCardPortal",
+    "HoverCardTrigger",
+    "Portal",
+    "Root",
+    "Trigger",
+    "createHoverCardScope"
+  ],
+  "@radix-ui/react-menubar": [
+    "Arrow",
+    "CheckboxItem",
+    "Content",
+    "Group",
+    "Item",
+    "ItemIndicator",
+    "Label",
+    "Menu",
+    "Menubar",
+    "MenubarArrow",
+    "MenubarCheckboxItem",
+    "MenubarContent",
+    "MenubarGroup",
+    "MenubarItem",
+    "MenubarItemIndicator",
+    "MenubarLabel",
+    "MenubarMenu",
+    "MenubarPortal",
+    "MenubarRadioGroup",
+    "MenubarRadioItem",
+    "MenubarSeparator",
+    "MenubarSub",
+    "MenubarSubContent",
+    "MenubarSubTrigger",
+    "MenubarTrigger",
+    "Portal",
+    "RadioGroup",
+    "RadioItem",
+    "Root",
+    "Separator",
+    "Sub",
+    "SubContent",
+    "SubTrigger",
+    "Trigger",
+    "createMenubarScope"
+  ],
+  "@radix-ui/react-navigation-menu": [
+    "Content",
+    "Indicator",
+    "Item",
+    "Link",
+    "List",
+    "NavigationMenu",
+    "NavigationMenuContent",
+    "NavigationMenuIndicator",
+    "NavigationMenuItem",
+    "NavigationMenuLink",
+    "NavigationMenuList",
+    "NavigationMenuSub",
+    "NavigationMenuTrigger",
+    "NavigationMenuViewport",
+    "Root",
+    "Sub",
+    "Trigger",
+    "Viewport",
+    "createNavigationMenuScope"
+  ],
+  "@radix-ui/react-popover": [
+    "Anchor",
+    "Arrow",
+    "Close",
+    "Content",
+    "Popover",
+    "PopoverAnchor",
+    "PopoverArrow",
+    "PopoverClose",
+    "PopoverContent",
+    "PopoverPortal",
+    "PopoverTrigger",
+    "Portal",
+    "Root",
+    "Trigger",
+    "createPopoverScope"
+  ],
+  "@radix-ui/react-select": [
+    "Arrow",
+    "Content",
+    "Group",
+    "Icon",
+    "Item",
+    "ItemIndicator",
+    "ItemText",
+    "Label",
+    "Portal",
+    "Root",
+    "ScrollDownButton",
+    "ScrollUpButton",
+    "Select",
+    "SelectArrow",
+    "SelectContent",
+    "SelectGroup",
+    "SelectIcon",
+    "SelectItem",
+    "SelectItemIndicator",
+    "SelectItemText",
+    "SelectLabel",
+    "SelectPortal",
+    "SelectScrollDownButton",
+    "SelectScrollUpButton",
+    "SelectSeparator",
+    "SelectTrigger",
+    "SelectValue",
+    "SelectViewport",
+    "Separator",
+    "Trigger",
+    "Value",
+    "Viewport",
+    "createSelectScope",
+    "unstable_BubbleInput",
+    "unstable_Provider",
+    "unstable_SelectBubbleInput",
+    "unstable_SelectProvider"
+  ],
+  "@radix-ui/react-tooltip": [
+    "Arrow",
+    "Content",
+    "Portal",
+    "Provider",
+    "Root",
+    "Tooltip",
+    "TooltipArrow",
+    "TooltipContent",
+    "TooltipPortal",
+    "TooltipProvider",
+    "TooltipTrigger",
+    "Trigger",
+    "createTooltipScope"
+  ],
+  "sonner": [
+    "Toaster",
+    "toast",
+    "useSonner"
+  ],
+  "vaul": [
+    "Content",
+    "Drawer",
+    "Handle",
+    "NestedRoot",
+    "Overlay",
+    "Portal",
+    "Root"
+  ],
+  "clsx": [
+    "clsx"
+  ],
+  "tailwind-merge": [
+    "createTailwindMerge",
+    "extendTailwindMerge",
+    "fromTheme",
+    "getDefaultConfig",
+    "mergeConfigs",
+    "twJoin",
+    "twMerge",
+    "validators"
+  ],
+  "class-variance-authority": [
+    "cva",
+    "cx"
+  ],
+  "@riftlabs/shared-ui/icon": [
+    "ICON_NAMES",
+    "Icon",
+    "preloadExtendedIcons"
+  ]
+};
+
+// packages/plugin-build/src/plugin-artifact-meta.ts
+function createPluginArtifactMeta(args) {
+  return {
+    sdkMajor: PLUGIN_SDK_MAJOR,
+    sdkVersion: PLUGIN_SDK_VERSION,
+    artifactFormatVersion: 1,
+    pluginId: derivePluginId(args.packageName),
+    pluginVersion: args.pluginVersion,
+    builtWith: {
+      riftVersion: args.riftVersion,
+      pluginSdkVersion: PLUGIN_SDK_VERSION
+    }
+  };
+}
+
+// packages/plugin-build/src/plugin-manifest.ts
+import { readFile, realpath, stat } from "node:fs/promises";
+import { isAbsolute, resolve } from "node:path";
+
+// packages/plugin-build/src/svg-asset.ts
+var import_saxes = __toESM(require_saxes(), 1);
+var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+var XML_NAMESPACE = "http://www.w3.org/XML/1998/namespace";
+var SCRIPT_ELEMENTS = /* @__PURE__ */ new Set([
+  "script",
+  "handler",
+  "listener"
+]);
+var FORBIDDEN_ICON_ELEMENTS = /* @__PURE__ */ new Set([
+  ...SCRIPT_ELEMENTS,
+  "foreignobject",
+  "iframe",
+  "image",
+  "video",
+  "audio",
+  "a",
+  "style"
+]);
+function hasExternalUrlFunction(value) {
+  for (const match of value.matchAll(
+    /(?:url|src|image-set|image)\(\s*["']?\s*/giu
+  )) {
+    if (value[match.index + match[0].length] !== "#") {
+      return true;
+    }
+  }
+  return false;
+}
+function isForbiddenAnimatedAttribute(value) {
+  const target = value.trim().toLowerCase();
+  return target.startsWith("on") || target === "href" || target.endsWith(":href");
+}
+function isJavascriptUrl(value) {
+  return value.replace(/[\t\n\r]/gu, "").replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/gu, "").toLowerCase().startsWith("javascript:");
+}
+function scriptVectorProblem(tag) {
+  if (SCRIPT_ELEMENTS.has(tag.local.toLowerCase())) {
+    return `must not contain a <${tag.name}> element`;
+  }
+  for (const attribute of Object.values(tag.attributes)) {
+    const name = attribute.local.toLowerCase();
+    if (name.startsWith("on")) {
+      return `must not contain a <${tag.name} ${attribute.name}> event handler attribute`;
+    }
+    if (name === "href" && isJavascriptUrl(attribute.value)) {
+      return `must not contain a javascript: URL in <${tag.name} ${attribute.name}>`;
+    }
+  }
+  return null;
+}
+function declaredIconProblem(tag) {
+  if (tag.uri !== "" && tag.uri !== SVG_NAMESPACE) {
+    return `contains a <${tag.name}> element outside the SVG namespace`;
+  }
+  if (FORBIDDEN_ICON_ELEMENTS.has(tag.local.toLowerCase())) {
+    return `must not contain a <${tag.local}> element`;
+  }
+  for (const attribute of Object.values(tag.attributes)) {
+    const name = attribute.local.toLowerCase();
+    if (name.startsWith("on")) {
+      return `must not contain a <${tag.local} ${attribute.name}> event handler attribute`;
+    }
+    if (name === "href" && !attribute.value.startsWith("#")) {
+      return `must not reference ${JSON.stringify(attribute.value)} through <${tag.local} ${attribute.name}>; only same-document "#" references are allowed`;
+    }
+    if (attribute.value.includes("\\")) {
+      return `must not contain a CSS escape in <${tag.local} ${attribute.name}>`;
+    }
+    if (hasExternalUrlFunction(attribute.value)) {
+      return `must not reference ${JSON.stringify(attribute.value)} through <${tag.local} ${attribute.name}>; only same-document "url(#\u2026)" references are allowed`;
+    }
+    if (name === "attributename" && isForbiddenAnimatedAttribute(attribute.value)) {
+      return `must not animate ${JSON.stringify(attribute.value)} through <${tag.local} ${attribute.name}>`;
+    }
+    if (name === "base" && attribute.uri === XML_NAMESPACE) {
+      return `must not contain a <${tag.local} ${attribute.name}> attribute`;
+    }
+  }
+  return null;
+}
+var COMPACT_ICON_RULES = { structure: true, elementProblem: null };
+var LOGO_RULES = {
+  structure: false,
+  elementProblem: scriptVectorProblem
+};
+var DECLARED_ICON_RULES = {
+  structure: true,
+  elementProblem: declaredIconProblem
+};
+function assertValidPluginSvg(bytes, subject, rules) {
+  let source;
+  if (rules.structure) {
+    try {
+      source = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    } catch {
+      throw new Error(`${subject} must contain valid UTF-8 SVG bytes`);
+    }
+  } else {
+    source = new TextDecoder("utf-8").decode(bytes);
+  }
+  const roots = [];
+  let parseError = null;
+  let hasDoctype = false;
+  let hasProcessingInstruction = false;
+  let problem = null;
+  const parser = new import_saxes.SaxesParser({ xmlns: true });
+  parser.on("opentag", (tag) => {
+    if (roots.length === 0) roots.push({ local: tag.local, uri: tag.uri });
+    if (rules.elementProblem !== null) {
+      problem ??= rules.elementProblem(tag);
+    }
+  });
+  parser.on("doctype", () => {
+    hasDoctype = true;
+  });
+  parser.on("processinginstruction", () => {
+    hasProcessingInstruction = true;
+  });
+  parser.on("error", (error48) => {
+    parseError ??= error48.message;
+  });
+  parser.write(source).close();
+  if (rules.structure) {
+    if (hasDoctype) {
+      throw new Error(`${subject} must not contain a doctype declaration`);
+    }
+    if (hasProcessingInstruction) {
+      throw new Error(`${subject} must not contain processing instructions`);
+    }
+    if (parseError !== null) {
+      throw new Error(`${subject} is not valid SVG XML: ${parseError}`);
+    }
+    const root = roots[0];
+    if (root === void 0 || root.local !== "svg" || root.uri !== "" && root.uri !== SVG_NAMESPACE) {
+      throw new Error(`${subject} must have an <svg> root element`);
+    }
+  }
+  if (problem !== null) {
+    throw new Error(`${subject} ${problem}`);
+  }
+}
+function assertValidPluginCompactIconSvg(bytes, label = "rift.branding.icon") {
+  assertValidPluginSvg(bytes, `manifest ${label}`, COMPACT_ICON_RULES);
+}
+function assertValidPluginLogoSvg(bytes, subject) {
+  assertValidPluginSvg(bytes, subject, LOGO_RULES);
+}
+function assertValidPluginIconSvg(bytes, label) {
+  if (bytes.byteLength > PLUGIN_ICON_MAX_BYTES) {
+    throw new Error(
+      `manifest ${label} is ${bytes.byteLength} bytes; the limit is ${PLUGIN_ICON_MAX_BYTES}`
+    );
+  }
+  assertValidPluginSvg(bytes, `manifest ${label}`, DECLARED_ICON_RULES);
+}
+
+// packages/plugin-build/src/plugin-manifest.ts
+function isRecord(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+function resolveManifestPath(rootDir, entry, label) {
+  if (isAbsolute(entry)) {
+    throw new Error(`manifest ${label} must be relative, got "${entry}"`);
+  }
+  const resolved = resolve(rootDir, entry);
+  if (resolved !== rootDir && !resolved.startsWith(rootDir + "/")) {
+    throw new Error(
+      `manifest ${label} escapes the plugin directory: "${entry}"`
+    );
+  }
+  return resolved;
+}
+async function validatePluginBuildManifest(value, rootDir, packageJsonPath) {
+  const parsed = pluginPackageJsonSchema.safeParse(value);
+  if (!parsed.success) {
+    const issue2 = parsed.error.issues[0];
+    const path = issue2?.path.join(".") ?? "";
+    throw new Error(
+      `invalid plugin package.json${path ? ` (${path})` : ""} at ${packageJsonPath}: ${issue2?.message ?? "unknown error"}`
+    );
+  }
+  const logo = parsed.data.rift.branding.logo;
+  const compactIcon = parsed.data.rift.branding.icon !== void 0 && isPluginOwnedIconPath(parsed.data.rift.branding.icon) ? parsed.data.rift.branding.icon : void 0;
+  for (const [label, entry] of [
+    ["rift.branding.icon", compactIcon],
+    ["rift.branding.logo.light", logo?.light],
+    ["rift.branding.logo.dark", logo?.dark]
+  ]) {
+    if (entry === void 0) continue;
+    if (!/\.(svg|png|webp)$/i.test(entry)) {
+      throw new Error(
+        `manifest ${label} must point at a .svg, .png, or .webp file, got "${entry}"`
+      );
+    }
+    const assetPath = resolveManifestPath(rootDir, entry, label);
+    let assetStat;
+    try {
+      assetStat = await stat(assetPath);
+    } catch {
+      throw new Error(`manifest ${label} points at a missing file`);
+    }
+    if (!assetStat.isFile()) {
+      throw new Error(`manifest ${label} must point at a file`);
+    }
+    const [realRoot, realAsset] = await Promise.all([
+      realpath(rootDir),
+      realpath(assetPath)
+    ]);
+    if (realAsset !== realRoot && !realAsset.startsWith(realRoot + "/")) {
+      throw new Error(
+        `manifest ${label} escapes the plugin directory through a symlink`
+      );
+    }
+    if (label === "rift.branding.icon") {
+      assertValidPluginCompactIconSvg(await readFile(realAsset), label);
+    } else if (/\.svg$/iu.test(entry)) {
+      assertValidPluginLogoSvg(
+        await readFile(realAsset),
+        `manifest ${label} (${JSON.stringify(entry)})`
+      );
+    }
+  }
+  for (const [name, entry] of Object.entries(
+    parsed.data.rift.branding.experimental_icons ?? {}
+  )) {
+    const label = `rift.branding.experimental_icons["${name}"]`;
+    const assetPath = resolveManifestPath(rootDir, entry, label);
+    let assetStat;
+    try {
+      assetStat = await stat(assetPath);
+    } catch {
+      throw new Error(`manifest ${label} points at a missing file`);
+    }
+    if (!assetStat.isFile()) {
+      throw new Error(`manifest ${label} must point at a file`);
+    }
+    const [realRoot, realAsset] = await Promise.all([
+      realpath(rootDir),
+      realpath(assetPath)
+    ]);
+    if (realAsset !== realRoot && !realAsset.startsWith(realRoot + "/")) {
+      throw new Error(
+        `manifest ${label} escapes the plugin directory through a symlink`
+      );
+    }
+    assertValidPluginIconSvg(await readFile(realAsset), label);
+  }
+  return parsed.data;
+}
+
+// packages/plugin-build/src/runtime-shims.mjs
+var PLUGIN_SDK_APP_SPECIFIER = "@riftlabs/plugin-sdk/app";
+var LEGACY_PLUGIN_SDK_APP_SPECIFIER = "@riftlabs/plugin-sdk/app";
+var SHARED_UI_ICON_SPECIFIER = "@riftlabs/shared-ui/icon";
+var RUNTIME_SLOT_BY_SPECIFIER = Object.freeze({
+  react: "react",
+  "react-dom": "reactDom",
+  "react-dom/client": "reactDomClient",
+  "react/jsx-runtime": "jsxRuntime",
+  "react/jsx-dev-runtime": "jsxDevRuntime",
+  [PLUGIN_SDK_APP_SPECIFIER]: "pluginSdkApp",
+  [LEGACY_PLUGIN_SDK_APP_SPECIFIER]: "pluginSdkApp",
+  "@pierre/diffs": "pierreDiffs",
+  "@pierre/diffs/react": "pierreDiffsReact",
+  "@radix-ui/react-alert-dialog": "radixAlertDialog",
+  "@radix-ui/react-context-menu": "radixContextMenu",
+  "@radix-ui/react-dialog": "radixDialog",
+  "@radix-ui/react-dropdown-menu": "radixDropdownMenu",
+  "@radix-ui/react-hover-card": "radixHoverCard",
+  "@radix-ui/react-menubar": "radixMenubar",
+  "@radix-ui/react-navigation-menu": "radixNavigationMenu",
+  "@radix-ui/react-popover": "radixPopover",
+  "@radix-ui/react-select": "radixSelect",
+  "@radix-ui/react-tooltip": "radixTooltip",
+  sonner: "sonner",
+  vaul: "vaul",
+  clsx: "clsx",
+  "tailwind-merge": "tailwindMerge",
+  "class-variance-authority": "classVarianceAuthority",
+  [SHARED_UI_ICON_SPECIFIER]: "sharedUiIcon"
+});
+function packageNameOf(specifier) {
+  const segments = specifier.split("/");
+  return specifier.startsWith("@") ? segments.slice(0, 2).join("/") : segments[0];
+}
+var NON_NPM_SHIM_PACKAGES = /* @__PURE__ */ new Set([
+  packageNameOf(PLUGIN_SDK_APP_SPECIFIER),
+  packageNameOf(LEGACY_PLUGIN_SDK_APP_SPECIFIER),
+  packageNameOf(SHARED_UI_ICON_SPECIFIER)
+]);
+var RUNTIME_SHIM_NPM_SPECIFIERS = Object.freeze(
+  Object.keys(RUNTIME_SLOT_BY_SPECIFIER).filter(
+    (specifier) => !NON_NPM_SHIM_PACKAGES.has(packageNameOf(specifier))
+  )
+);
+var SHIMMED_TYPE_PACKAGES = Object.freeze(
+  [
+    ...new Set(
+      RUNTIME_SHIM_NPM_SPECIFIERS.map(packageNameOf).filter(
+        (name) => name !== "react" && name !== "react-dom"
+      )
+    )
+  ].sort()
+);
+
+// packages/plugin-build/src/scope-plugin-utilities.ts
+var NESTED_STYLE_RULE_AT_RULES = /* @__PURE__ */ new Set([
+  "media",
+  "supports",
+  "container",
+  "layer",
+  "scope",
+  "starting-style"
+]);
+function pluginScopeRoots(pluginId) {
+  return `[data-rift-plugin="${pluginId}"], [data-rift-plugin-root]:not([data-rift-plugin])`;
+}
+function scopePluginUtilities(css, scopeRoots) {
+  const scope = `:where(${scopeRoots})`;
+  return splitStatements(css).map((statement) => {
+    if (statement.body === null) return statement.prelude;
+    if (isUtilitiesLayer(statement.prelude)) {
+      return `${statement.prelude}{${scopeStatements(statement.body, scope)}}`;
+    }
+    assertNoUnscopedClassRule(statement);
+    return `${statement.prelude}{${statement.body}}`;
+  }).join("");
+}
+function assertNoUnscopedClassRule(statement) {
+  if (statement.body === null) return;
+  const prelude = statement.prelude.trim();
+  if (!prelude.startsWith("@")) {
+    if (!prelude.includes(".")) return;
+    throw new Error(
+      `Compiled plugin CSS has a class rule outside the utilities layer (${prelude.slice(0, 80)}). Its utilities would leak into the host page; check the Tailwind version against buildTailwindCss()'s input.`
+    );
+  }
+  const name = /^@([\w-]+)/.exec(prelude)?.[1]?.toLowerCase() ?? "";
+  if (!NESTED_STYLE_RULE_AT_RULES.has(name)) return;
+  for (const nested of splitStatements(statement.body)) {
+    assertNoUnscopedClassRule(nested);
+  }
+}
+function isUtilitiesLayer(prelude) {
+  return /^@layer\s+utilities$/.test(prelude.trim());
+}
+function scopeStatements(css, scope) {
+  return splitStatements(css).map((statement) => {
+    if (statement.body === null) return statement.prelude;
+    const prelude = statement.prelude.trim();
+    if (prelude.startsWith("@")) {
+      const name = /^@([\w-]+)/.exec(prelude)?.[1]?.toLowerCase() ?? "";
+      const body = NESTED_STYLE_RULE_AT_RULES.has(name) ? scopeStatements(statement.body, scope) : statement.body;
+      return `${statement.prelude}{${body}}`;
+    }
+    const nestedSibling = hasNestedSiblingRule(statement.body);
+    const selectors = splitSelectorList(prelude).flatMap(
+      (selector) => nestedSibling || hasSiblingCombinator(selector) ? [`${scope} ${selector}`] : [`${scope} ${selector}`, `${scope}${selector}`]
+    ).join(",");
+    return `${selectors}{${statement.body}}`;
+  }).join("");
+}
+function splitStatements(css) {
+  const statements = [];
+  let preludeStart = 0;
+  let parenDepth = 0;
+  for (let index = 0; index < css.length; index += 1) {
+    const char = css[index];
+    if (char === "\\") {
+      index += 1;
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      index = findStringEnd(css, index);
+      continue;
+    }
+    if (char === "(") parenDepth += 1;
+    else if (char === ")") parenDepth -= 1;
+    else if (parenDepth === 0 && char === ";") {
+      statements.push({
+        prelude: css.slice(preludeStart, index + 1),
+        body: null
+      });
+      preludeStart = index + 1;
+    } else if (parenDepth === 0 && char === "{") {
+      const blockEnd = findBlockEnd(css, index);
+      statements.push({
+        prelude: css.slice(preludeStart, index),
+        body: css.slice(index + 1, blockEnd)
+      });
+      index = blockEnd;
+      preludeStart = index + 1;
+    }
+  }
+  const tail = css.slice(preludeStart);
+  if (tail.trim().length > 0) statements.push({ prelude: tail, body: null });
+  return statements;
+}
+function splitSelectorList(selectors) {
+  const parts = [];
+  let start = 0;
+  let parenDepth = 0;
+  for (let index = 0; index < selectors.length; index += 1) {
+    const char = selectors[index];
+    if (char === "\\") {
+      index += 1;
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      index = findStringEnd(selectors, index);
+      continue;
+    }
+    if (char === "(") parenDepth += 1;
+    else if (char === ")") parenDepth -= 1;
+    else if (char === "," && parenDepth === 0) {
+      parts.push(selectors.slice(start, index));
+      start = index + 1;
+    }
+  }
+  parts.push(selectors.slice(start));
+  return parts.map((part) => part.trim()).filter((part) => part.length > 0);
+}
+function hasNestedSiblingRule(body) {
+  return splitStatements(body).some((statement) => {
+    if (statement.body === null) return false;
+    const prelude = statement.prelude.trim();
+    if (prelude.startsWith("@")) {
+      const name = /^@([\w-]+)/.exec(prelude)?.[1]?.toLowerCase() ?? "";
+      return NESTED_STYLE_RULE_AT_RULES.has(name) && hasNestedSiblingRule(statement.body);
+    }
+    return splitSelectorList(prelude).some(hasSiblingCombinator) || hasNestedSiblingRule(statement.body);
+  });
+}
+function hasSiblingCombinator(selector) {
+  let depth = 0;
+  let found = false;
+  for (let index = 0; index < selector.length; index += 1) {
+    const char = selector[index];
+    if (char === "\\") {
+      index += 1;
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      index = findStringEnd(selector, index);
+      continue;
+    }
+    if (char === "(" || char === "[") depth += 1;
+    else if (char === ")" || char === "]") depth -= 1;
+    else if (depth === 0 && char === "&") found = false;
+    else if (depth === 0 && (char === "+" || char === "~")) found = true;
+  }
+  return found;
+}
+function findBlockEnd(css, openIndex) {
+  let depth = 0;
+  for (let index = openIndex; index < css.length; index += 1) {
+    const char = css[index];
+    if (char === "\\") {
+      index += 1;
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      index = findStringEnd(css, index);
+      continue;
+    }
+    if (char === "{") depth += 1;
+    else if (char === "}") {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+  throw new Error("Unbalanced braces in compiled plugin CSS.");
+}
+function findStringEnd(css, openIndex) {
+  const quote = css[openIndex];
+  for (let index = openIndex + 1; index < css.length; index += 1) {
+    const char = css[index];
+    if (char === "\\") {
+      index += 1;
+      continue;
+    }
+    if (char === quote) return index;
+  }
+  throw new Error("Unterminated string in compiled plugin CSS.");
+}
+
+// packages/plugin-build/src/build-plugin-app.ts
+var SHARED_UI_ICON_MODULE_SUFFIX = "/shared-ui/src/components/ui/icon";
+var SHARED_UI_SOURCE_IMPORTER = /[\\/]shared-ui[\\/]src[\\/]/;
+function isSharedUiIconRelativeImport(importPath, importer) {
+  if (!SHARED_UI_SOURCE_IMPORTER.test(importer)) return false;
+  const resolved = resolve2(dirname(importer), importPath).replace(/\\/g, "/").replace(/\.(?:tsx?|jsx?)$/, "");
+  return resolved.endsWith(SHARED_UI_ICON_MODULE_SUFFIX);
+}
+var freshFacadeImportSequence = 0;
+async function freshModuleExports(moduleUrl) {
+  const freshUrl = new URL(moduleUrl);
+  freshUrl.searchParams.set(
+    "rift-plugin-build",
+    String(++freshFacadeImportSequence)
+  );
+  const moduleNamespace = await import(freshUrl.href);
+  return Object.keys(moduleNamespace).sort();
+}
+async function shimExportsOf(requestedSpecifier, pluginSdkAppModuleUrl) {
+  const specifier = requestedSpecifier === LEGACY_PLUGIN_SDK_APP_SPECIFIER ? PLUGIN_SDK_APP_SPECIFIER : requestedSpecifier;
+  if (specifier === PLUGIN_SDK_APP_SPECIFIER) {
+    if (pluginSdkAppModuleUrl !== void 0) {
+      return freshModuleExports(pluginSdkAppModuleUrl);
+    }
+    let resolvedModuleUrl;
+    try {
+      resolvedModuleUrl = import.meta.resolve(PLUGIN_SDK_APP_SPECIFIER);
+    } catch {
+      const names2 = RUNTIME_EXPORT_MANIFEST[specifier];
+      if (!names2) {
+        throw new Error(`no runtime export manifest entry for "${specifier}"`);
+      }
+      return names2;
+    }
+    return freshModuleExports(resolvedModuleUrl);
+  }
+  const names = RUNTIME_EXPORT_MANIFEST[specifier];
+  if (!names) {
+    throw new Error(`no runtime export manifest entry for "${specifier}"`);
+  }
+  return names;
+}
+async function shimModuleSource(specifier, slot, pluginSdkAppModuleUrl) {
+  const names = await shimExportsOf(specifier, pluginSdkAppModuleUrl);
+  return [
+    `const runtime = globalThis.__riftPluginRuntime;`,
+    `if (runtime == null || runtime.${slot} == null) {`,
+    `  throw new Error(${JSON.stringify(
+      `Cannot load "${specifier}": this bundle must be loaded by the RIFT app, which provides the shared plugin runtime (globalThis.__riftPluginRuntime).`
+    )});`,
+    `}`,
+    `const mod = runtime.${slot};`,
+    `export default ("default" in mod ? mod.default : mod);`,
+    `export const {`,
+    ...names.map((name) => `  ${name},`),
+    `} = mod;`,
+    ``
+  ].join("\n");
+}
+var SHIM_NAMESPACE = "rift-plugin-runtime-shim";
+var SHIM_FILTER = new RegExp(
+  `^(${Object.keys(RUNTIME_SLOT_BY_SPECIFIER).map((specifier) => specifier.replace(/[/@.-]/g, "\\$&")).join("|")})$`
+);
+function runtimeShimPlugin(pluginSdkAppModuleUrl) {
+  return {
+    name: "rift-plugin-runtime-shims",
+    setup(build) {
+      build.onResolve({ filter: SHIM_FILTER }, (args) => ({
+        path: args.path,
+        namespace: SHIM_NAMESPACE
+      }));
+      build.onResolve({ filter: /(^|\/)icon(\.[jt]sx?)?$/ }, (args) => {
+        if (args.namespace !== "file" || !args.path.startsWith(".") || !isSharedUiIconRelativeImport(args.path, args.importer)) {
+          return void 0;
+        }
+        return { path: SHARED_UI_ICON_SPECIFIER, namespace: SHIM_NAMESPACE };
+      });
+      build.onLoad(
+        { filter: /.*/, namespace: SHIM_NAMESPACE },
+        async (args) => ({
+          contents: await shimModuleSource(
+            args.path,
+            RUNTIME_SLOT_BY_SPECIFIER[args.path] ?? args.path,
+            pluginSdkAppModuleUrl
+          ),
+          loader: "js"
+        })
+      );
+    }
+  };
+}
+function readDependencyNames(pkg) {
+  const names = /* @__PURE__ */ new Set();
+  for (const field of ["dependencies", "devDependencies"]) {
+    const dependencies = pkg[field];
+    if (!isRecord(dependencies)) continue;
+    for (const name of Object.keys(dependencies)) {
+      names.add(name);
+    }
+  }
+  return [...names].sort();
+}
+async function readPackageJson(filePath) {
+  let raw;
   try {
-    encodeURIComponent(path);
+    raw = await readFile2(filePath, "utf8");
+  } catch {
+    throw new Error(`no readable package.json at ${filePath}`);
+  }
+  let json2;
+  try {
+    json2 = JSON.parse(raw);
+  } catch {
+    throw new Error(`package.json is not valid JSON at ${filePath}`);
+  }
+  if (!isRecord(json2)) {
+    throw new Error(`package.json must contain an object at ${filePath}`);
+  }
+  return json2;
+}
+function readTailwindContentPatterns(pkg, packageJsonPath) {
+  const rift = pkg.rift;
+  if (!isRecord(rift) || rift.pluginTailwindContent === void 0) {
+    return [];
+  }
+  const patterns = rift.pluginTailwindContent;
+  if (!Array.isArray(patterns) || !patterns.every((pattern) => typeof pattern === "string")) {
+    throw new Error(
+      `rift.pluginTailwindContent must be an array of strings in ${packageJsonPath}`
+    );
+  }
+  return patterns;
+}
+async function packageJsonPathForDirectDependency(rootDir, packageName) {
+  const packageJsonPath = join(
+    rootDir,
+    "node_modules",
+    packageName,
+    "package.json"
+  );
+  try {
+    await stat2(packageJsonPath);
+    return packageJsonPath;
+  } catch {
+    return null;
+  }
+}
+async function readDependencyTailwindSources(rootDir) {
+  const rootPackageJsonPath = join(rootDir, "package.json");
+  const rootPackageJson = await readPackageJson(rootPackageJsonPath);
+  const sources = [];
+  for (const packageName of readDependencyNames(rootPackageJson)) {
+    const packageJsonPath = await packageJsonPathForDirectDependency(
+      rootDir,
+      packageName
+    );
+    if (packageJsonPath === null) continue;
+    const packageJson = await readPackageJson(packageJsonPath);
+    const patterns = readTailwindContentPatterns(packageJson, packageJsonPath);
+    if (patterns.length === 0) continue;
+    const base = await realpath2(dirname(packageJsonPath));
+    for (const rawPattern of patterns) {
+      const negated = rawPattern.startsWith("!");
+      const pattern = negated ? rawPattern.slice(1) : rawPattern;
+      sources.push({ base, pattern, negated });
+    }
+  }
+  return sources;
+}
+async function readPluginAppConfig(rootDir) {
+  const packageJsonPath = join(rootDir, "package.json");
+  const pkg = await readPackageJson(packageJsonPath);
+  const manifest = await validatePluginBuildManifest(
+    pkg,
+    rootDir,
+    packageJsonPath
+  );
+  const app = manifest.rift.app;
+  if (app === void 0) {
+    throw new Error(
+      `no frontend entry: ${packageJsonPath} has no "rift": { "app": "./app.tsx" } field (only plugins with an app entry can be built)`
+    );
+  }
+  if (isAbsolute2(app)) {
+    throw new Error(`manifest rift.app must be relative, got "${app}"`);
+  }
+  const appEntry = resolve2(rootDir, app);
+  if (appEntry !== rootDir && !appEntry.startsWith(rootDir + "/")) {
+    throw new Error(`manifest rift.app escapes the plugin directory: "${app}"`);
+  }
+  try {
+    await stat2(appEntry);
+  } catch {
+    throw new Error(`manifest rift.app points at a missing file: ${app}`);
+  }
+  return {
+    appEntry,
+    packageName: manifest.name,
+    pluginVersion: manifest.version
+  };
+}
+async function buildTailwindCss(rootDir, pluginId, toolchain, dependencySources, bundledInputs) {
+  const [{ compile }, { Scanner }] = await Promise.all([
+    import(toolchain.tailwindNode),
+    import(toolchain.tailwindOxide)
+  ]);
+  const input = [
+    `@layer theme, utilities;`,
+    `@import "tailwindcss/theme.css" layer(theme);`,
+    TW_ANIMATE_CSS,
+    PLUGIN_THEME_CSS,
+    `@layer utilities {`,
+    `  @tailwind utilities;`,
+    `}`,
+    ``
+  ].join("\n");
+  const compiler = await compile(input, {
+    base: rootDir,
+    onDependency: () => {
+    },
+    customCssResolver: async (id) => {
+      if (id !== "tailwindcss" && !id.startsWith("tailwindcss/")) {
+        return void 0;
+      }
+      const subpath = id === "tailwindcss" ? "index.css" : id.slice("tailwindcss/".length);
+      const candidate = join(toolchain.tailwindCssDir, subpath);
+      return existsSync(candidate) ? candidate : void 0;
+    }
+  });
+  const ownScanner = new Scanner({
+    sources: [
+      { base: rootDir, pattern: "**/*", negated: false },
+      { base: join(rootDir, "dist"), pattern: "**/*", negated: true },
+      { base: join(rootDir, "node_modules"), pattern: "**/*", negated: true }
+    ]
+  });
+  const candidates = new Set(ownScanner.scan());
+  if (dependencySources.length > 0) {
+    const dependencyFileIdentities = await Promise.all(
+      new Scanner({ sources: dependencySources }).files.map(
+        (file2) => realpath2(file2)
+      )
+    );
+    const bundledDependencyFiles = [
+      ...new Set(
+        dependencyFileIdentities.filter((file2) => bundledInputs.has(file2))
+      )
+    ];
+    const contents = await Promise.all(
+      bundledDependencyFiles.map(async (file2) => ({
+        content: await readFile2(file2, "utf8"),
+        extension: extname(file2).slice(1)
+      }))
+    );
+    for (const candidate of new Scanner({ sources: [] }).scanFiles(contents)) {
+      candidates.add(candidate);
+    }
+  }
+  return scopePluginUtilities(
+    compiler.build([...candidates]),
+    pluginScopeRoots(pluginId)
+  );
+}
+async function bundledInputPaths(metafile, absWorkingDir) {
+  const paths = /* @__PURE__ */ new Set();
+  await Promise.all(
+    Object.keys(metafile.inputs).map(async (input) => {
+      if (input.startsWith(`${SHIM_NAMESPACE}:`) || input.startsWith("(")) {
+        return;
+      }
+      paths.add(await realpath2(resolve2(absWorkingDir, input)));
+    })
+  );
+  return paths;
+}
+async function buildPluginApp(rootDir, riftVersion, toolchain, options = { minify: true }) {
+  const { appEntry, packageName, pluginVersion } = await readPluginAppConfig(rootDir);
+  const pluginId = derivePluginId(packageName);
+  const dependencySources = await readDependencyTailwindSources(rootDir);
+  const distDir = join(rootDir, "dist");
+  await mkdir(distDir, { recursive: true });
+  const jsPath = join(distDir, "app.js");
+  const cssPath = join(distDir, "app.css");
+  const metaPath = join(distDir, "app.meta.json");
+  const stageDir = await mkdtemp(join(distDir, ".stage-"));
+  try {
+    const stagedJsPath = join(stageDir, "app.js");
+    const stagedCssPath = join(stageDir, "app.css");
+    const stagedMetaPath = join(stageDir, "app.meta.json");
+    const esbuild = await import(toolchain.esbuild);
+    const bundle = await esbuild.build({
+      entryPoints: [appEntry],
+      outfile: stagedJsPath,
+      absWorkingDir: rootDir,
+      bundle: true,
+      metafile: dependencySources.length > 0,
+      format: "esm",
+      platform: "browser",
+      target: "es2022",
+      minify: options.minify,
+      legalComments: "none",
+      jsx: "automatic",
+      jsxDev: false,
+      define: {
+        "process.env.NODE_ENV": '"production"',
+        __RIFT_PLUGIN_ID__: JSON.stringify(pluginId)
+      },
+      logLevel: "error",
+      plugins: [runtimeShimPlugin()]
+    });
+    let authoredCss = "";
+    try {
+      authoredCss = await readFile2(stagedCssPath, "utf8");
+    } catch (error48) {
+      if (!isRecord(error48) || error48.code !== "ENOENT") throw error48;
+    }
+    let bundledInputs = /* @__PURE__ */ new Set();
+    if (dependencySources.length > 0) {
+      if (bundle.metafile === void 0) {
+        throw new Error(
+          "esbuild did not return the metafile required for dependency Tailwind scanning"
+        );
+      }
+      bundledInputs = await bundledInputPaths(bundle.metafile, rootDir);
+    }
+    const tailwindCss = (await buildTailwindCss(
+      rootDir,
+      pluginId,
+      toolchain,
+      dependencySources,
+      bundledInputs
+    )).trimEnd();
+    const { optimize } = await import(toolchain.tailwindNode);
+    const css = optimize(`${tailwindCss}
+${authoredCss}`, {
+      minify: options.minify
+    }).code;
+    await writeFile(stagedCssPath, css);
+    await writeFile(
+      stagedMetaPath,
+      JSON.stringify(
+        createPluginArtifactMeta({ packageName, pluginVersion, riftVersion }),
+        null,
+        2
+      ) + "\n"
+    );
+    await rename(stagedJsPath, jsPath);
+    await rename(stagedCssPath, cssPath);
+    await rename(stagedMetaPath, metaPath);
+  } finally {
+    await rm(stageDir, { recursive: true, force: true });
+  }
+  return { jsPath, cssPath, metaPath };
+}
+
+// packages/plugin-build/src/build-plugin-server.ts
+import {
+  mkdir as mkdir3,
+  mkdtemp as mkdtemp2,
+  readFile as readFile5,
+  rename as rename3,
+  rm as rm3,
+  stat as stat4,
+  writeFile as writeFile3
+} from "node:fs/promises";
+import { isAbsolute as isAbsolute3, join as join4, resolve as resolve3 } from "node:path";
+
+// packages/plugin-build/src/plugin-sdk-install.ts
+import { readFile as readFile3, stat as stat3 } from "node:fs/promises";
+import { dirname as dirname2, join as join2 } from "node:path";
+var PLUGIN_SDK_PACKAGE_NAME = "@riftlabs/plugin-sdk";
+async function pathExists(path) {
+  try {
+    await stat3(path);
+    return true;
   } catch {
     return false;
   }
-  return path.startsWith("/") && !/[\\%?#\x00-\x1f\x7f]/.test(path) && path.slice(1).split("/").every((part) => part !== "" && part !== "." && part !== "..");
 }
-var fileContextSchema = external_exports.object({
-  hostId: id,
-  environmentId: id,
-  workspacePath: external_exports.string().refine(safeAbsolutePath).nullable(),
-  threadId: id,
-  storageRootPath: external_exports.string().refine(safeAbsolutePath)
-}).strict();
-var rpcContract = defineRpcContract({
-  messageFileContext: {
-    input: messageMutationInputSchema,
-    output: fileContextSchema.nullable()
-  },
-  operatorMessages: {
-    input: operatorMessagesInputSchema,
-    output: external_exports.object({ messages: external_exports.array(operatorMessageSchema) }).strict()
-  },
-  unreadOperatorMessageCount: {
-    input: external_exports.object({ projectIds }).strict(),
-    output: external_exports.object({ count: external_exports.number().int().nonnegative() }).strict()
-  },
-  markOperatorMessageRead: { input: messageMutationInputSchema, output: operatorMessageSchema },
-  archiveOperatorMessage: { input: messageMutationInputSchema, output: operatorMessageSchema },
-  replyToOperatorMessage: { input: replyInputSchema, output: operatorMessageSchema }
-});
+async function installedPluginSdkDirectory(fromDir) {
+  let directory = fromDir;
+  while (true) {
+    const candidate = join2(directory, "node_modules", PLUGIN_SDK_PACKAGE_NAME);
+    if (await pathExists(join2(candidate, "package.json"))) return candidate;
+    const parent = dirname2(directory);
+    if (parent === directory) return null;
+    directory = parent;
+  }
+}
+async function installedPluginSdkExportTarget(packageDir2, subpath) {
+  let json2;
+  try {
+    json2 = JSON.parse(await readFile3(join2(packageDir2, "package.json"), "utf8"));
+  } catch {
+    return null;
+  }
+  if (!isRecord(json2) || !isRecord(json2.exports)) return null;
+  let target = json2.exports[subpath];
+  while (isRecord(target)) {
+    target = target.import ?? target.node ?? target.default ?? target.require;
+  }
+  return typeof target === "string" ? target : null;
+}
 
-// server.ts
-var messageBodyGuidance = "Text must be concise, decision-first Markdown. Separate multi-part requests with blank lines and bullets or numbered items.";
-var messageToolInput = external_exports.object({
-  severity: external_exports.enum(["routine", "needs-decision", "urgent"]),
-  text: external_exports.string().trim().min(1).max(16e3).describe(messageBodyGuidance)
-}).strict();
-function toMessage(row) {
-  return {
-    messageId: row.id,
-    projectId: row.project_id,
-    senderThreadId: row.sender_thread_id,
-    senderTitle: row.sender_title,
-    severity: row.severity,
-    text: row.body,
-    createdAtMs: row.created_at_ms,
-    readAtMs: row.read_at_ms,
-    archivedAtMs: row.archived_at_ms,
-    replyText: row.reply_text,
-    replyAcceptedAtMs: row.reply_accepted_at_ms,
-    replyDelivery: row.reply_delivery
-  };
+// packages/plugin-build/src/toolchain.ts
+import { execFile } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { existsSync as existsSync2, readFileSync } from "node:fs";
+import { mkdir as mkdir2, readFile as readFile4, rename as rename2, rm as rm2, writeFile as writeFile2 } from "node:fs/promises";
+import { createRequire } from "node:module";
+import { dirname as dirname3, join as join3 } from "node:path";
+import { pathToFileURL } from "node:url";
+import { promisify } from "node:util";
+
+// packages/process-utils/src/index.ts
+var import_cross_spawn = __toESM(require_cross_spawn(), 1);
+var NPM_SCRIPT_POLICY_ENV_KEYS = /* @__PURE__ */ new Set([
+  "npm_config_allow_scripts",
+  "npm_config_ignore_scripts",
+  "npm_config_foreground_scripts"
+]);
+function omitNpmScriptPolicyEnv(env) {
+  const childEnv = {};
+  for (const [key, value] of Object.entries(env)) {
+    if (value === void 0) continue;
+    if (NPM_SCRIPT_POLICY_ENV_KEYS.has(key.toLowerCase())) continue;
+    childEnv[key] = value;
+  }
+  return childEnv;
 }
-function getMessage(db, projectId, messageId2) {
-  const row = db.prepare("SELECT * FROM messages WHERE project_id = ? AND id = ?").get(projectId, messageId2);
-  if (!row) throw new Error("Operator Inbox message not found in this project");
-  return toMessage(row);
+
+// packages/plugin-build/src/toolchain.ts
+var run = promisify(execFile);
+var NODE_ESM_REQUIRE_BANNER = [
+  'import { createRequire as __createRequire } from "node:module";',
+  'import { dirname as __pathDirname } from "node:path";',
+  'import { fileURLToPath as __fileURLToPath } from "node:url";',
+  "const require = __createRequire(import.meta.url);",
+  "var __filename = __fileURLToPath(import.meta.url);",
+  "var __dirname = __pathDirname(__filename);"
+].join("\n");
+var PLUGIN_TOOLCHAIN_PINS = {
+  esbuild: "0.28.1",
+  "@tailwindcss/node": "4.3.0",
+  "@tailwindcss/oxide": "4.3.0",
+  tailwindcss: "4.3.0"
+};
+function pinKey() {
+  return Object.entries(PLUGIN_TOOLCHAIN_PINS).map(([name, version2]) => `${name}@${version2}`).sort().join(",");
 }
-function plugin(bb) {
-  const db = bb.storage.database();
-  bb.storage.migrate(db, [
-    `CREATE TABLE messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      project_id TEXT NOT NULL,
-      sender_thread_id TEXT NOT NULL,
-      sender_title TEXT,
-      severity TEXT NOT NULL CHECK (severity IN ('routine', 'needs-decision', 'urgent')),
-      body TEXT NOT NULL,
-      created_at_ms INTEGER NOT NULL,
-      read_at_ms INTEGER,
-      archived_at_ms INTEGER,
-      reply_text TEXT,
-      reply_accepted_at_ms INTEGER,
-      reply_delivery TEXT CHECK (reply_delivery IN ('sent', 'queued', 'deferred'))
-    );
-    CREATE INDEX messages_project_created ON messages(project_id, created_at_ms DESC);
-    CREATE INDEX messages_project_unread ON messages(project_id, read_at_ms, archived_at_ms);`
-  ]);
-  const publishChange = (projectId) => bb.realtime.publish(INBOX_CHANGED_CHANNEL, { projectId });
-  const updateTimestamp = (column, projectId, messageId2) => {
-    db.prepare(`UPDATE messages SET ${column} = COALESCE(${column}, ?) WHERE project_id = ? AND id = ?`).run(Date.now(), projectId, messageId2);
-    const message = getMessage(db, projectId, messageId2);
-    publishChange(projectId);
-    return message;
-  };
-  const replies = /* @__PURE__ */ new Map();
-  bb.agents.registerTool({
-    name: "send_operator_inbox_message",
-    description: "Store a message for the human operator in this thread's project-scoped Operator Inbox.",
-    instructions: `Use this only when the human operator should see a durable message. Choose routine, urgent, or needs-decision severity. ${messageBodyGuidance}`,
-    presentation: { label: { pending: "Sending Operator Inbox message", completed: "Sent Operator Inbox message" } },
-    parameters: messageToolInput,
-    async execute({ severity, text: text2 }, { projectId, threadId }) {
-      let senderTitle = null;
+function toolchainCacheDir(baseDir) {
+  const key = Object.values(PLUGIN_TOOLCHAIN_PINS).join("-");
+  return join3(baseDir, `toolchain-${key}`);
+}
+function packageDir(require2, name) {
+  let dir;
+  try {
+    dir = dirname3(require2.resolve(name));
+  } catch {
+    return null;
+  }
+  for (let depth = 0; depth < 10; depth += 1) {
+    const manifest = join3(dir, "package.json");
+    if (existsSync2(manifest)) {
       try {
-        const thread = await bb.sdk.threads.get({ threadId });
-        senderTitle = typeof thread.title === "string" && thread.title.trim() ? thread.title : null;
-      } catch {
-      }
-      const result = db.prepare(`INSERT INTO messages
-        (project_id, sender_thread_id, sender_title, severity, body, created_at_ms)
-        VALUES (?, ?, ?, ?, ?, ?)`).run(projectId, threadId, senderTitle, severity, text2, Date.now());
-      publishChange(projectId);
-      return `Stored Operator Inbox message #${Number(result.lastInsertRowid)} for project ${projectId}.`;
-    }
-  });
-  bb.rpc.register(rpcContract, {
-    async messageFileContext({ projectId, messageId: messageId2 }) {
-      const message = getMessage(db, projectId, messageId2);
-      try {
-        const thread = await bb.sdk.threads.get({ threadId: message.senderThreadId, include: "environment" });
-        const environment = "environment" in thread ? thread.environment : null;
-        if (thread.id !== message.senderThreadId || thread.projectId !== projectId || thread.deletedAt !== null || !environment || environment.id !== thread.environmentId || environment.projectId !== projectId || environment.status !== "ready") return null;
-        const storage = await bb.sdk.threads.storageLocation({ threadId: thread.id });
-        if (storage.hostId !== environment.hostId) return null;
-        const context = fileContextSchema.safeParse({
-          hostId: environment.hostId,
-          environmentId: environment.id,
-          workspacePath: environment.path,
-          threadId: thread.id,
-          storageRootPath: storage.storageRootPath
-        });
-        return context.success ? context.data : null;
+        const parsed = JSON.parse(readFileSync(manifest, "utf8"));
+        if (typeof parsed === "object" && parsed !== null && parsed.name === name) {
+          return dir;
+        }
       } catch {
         return null;
       }
-    },
-    operatorMessages(input) {
-      const placeholders = input.projectIds.map(() => "?").join(", ");
-      const rows = db.prepare(`SELECT * FROM messages
-        WHERE project_id IN (${placeholders}) ${input.includeArchived ? "" : "AND archived_at_ms IS NULL"}
-        ORDER BY created_at_ms DESC, id DESC
-        LIMIT 256`).all(...input.projectIds);
-      return { messages: rows.map(toMessage) };
-    },
-    unreadOperatorMessageCount({ projectIds: projectIds2 }) {
-      const placeholders = projectIds2.map(() => "?").join(", ");
-      const row = db.prepare(`SELECT COUNT(*) AS count FROM messages
-        WHERE project_id IN (${placeholders}) AND read_at_ms IS NULL AND archived_at_ms IS NULL`).get(...projectIds2);
-      return { count: row.count };
-    },
-    markOperatorMessageRead({ projectId, messageId: messageId2 }) {
-      return updateTimestamp("read_at_ms", projectId, messageId2);
-    },
-    archiveOperatorMessage({ projectId, messageId: messageId2 }) {
-      return updateTimestamp("archived_at_ms", projectId, messageId2);
-    },
-    replyToOperatorMessage(input) {
-      const key = `${input.projectId}:${input.messageId}`;
-      const existing = replies.get(key);
-      if (existing) return existing;
-      const operation = (async () => {
-        const message = getMessage(db, input.projectId, input.messageId);
-        if (message.replyAcceptedAtMs !== null) return message;
-        const accepted = await bb.sdk.threads.send({
-          threadId: message.senderThreadId,
-          mode: "auto",
-          input: [{ type: "text", text: `Operator reply to Inbox message #${message.messageId}:
-
-${input.text}`, mentions: [] }]
-        });
-        const acceptedAt = Date.now();
-        db.prepare(`UPDATE messages SET reply_text = ?, reply_accepted_at_ms = ?, reply_delivery = ?,
-          read_at_ms = COALESCE(read_at_ms, ?) WHERE project_id = ? AND id = ? AND reply_accepted_at_ms IS NULL`).run(input.text, acceptedAt, accepted.delivery, acceptedAt, input.projectId, input.messageId);
-        const updated = getMessage(db, input.projectId, input.messageId);
-        publishChange(input.projectId);
-        return updated;
-      })().finally(() => replies.delete(key));
-      replies.set(key, operation);
-      return operation;
     }
-  });
+    const parent = dirname3(dir);
+    if (parent === dir) return null;
+    dir = parent;
+  }
+  return null;
+}
+function readVersion(require2, name) {
+  const dir = packageDir(require2, name);
+  if (dir === null) return null;
+  try {
+    const parsed = JSON.parse(
+      readFileSync(join3(dir, "package.json"), "utf8")
+    );
+    const version2 = typeof parsed === "object" && parsed !== null ? parsed.version : void 0;
+    return typeof version2 === "string" ? version2 : null;
+  } catch {
+    return null;
+  }
+}
+function toolchainFrom(require2) {
+  for (const [name, pinned] of Object.entries(PLUGIN_TOOLCHAIN_PINS)) {
+    if (readVersion(require2, name) !== pinned) return null;
+  }
+  try {
+    const tailwindCssDir = packageDir(require2, "tailwindcss");
+    if (tailwindCssDir === null) return null;
+    return {
+      esbuild: pathToFileURL(require2.resolve("esbuild")).href,
+      tailwindNode: pathToFileURL(require2.resolve("@tailwindcss/node")).href,
+      tailwindOxide: pathToFileURL(require2.resolve("@tailwindcss/oxide")).href,
+      tailwindCssDir
+    };
+  } catch {
+    return null;
+  }
+}
+function resolveLocalToolchain() {
+  return toolchainFrom(createRequire(import.meta.url));
+}
+async function isInstalled(dir) {
+  try {
+    const raw = await readFile4(join3(dir, ".rift-app-toolchain.json"), "utf8");
+    const parsed = JSON.parse(raw);
+    if (typeof parsed !== "object" || parsed === null || parsed.pins !== pinKey()) {
+      return false;
+    }
+  } catch {
+    return false;
+  }
+  return toolchainFrom(createRequire(join3(dir, "noop.js"))) !== null;
+}
+async function resolvePluginBuildToolchain(baseDir, options) {
+  if (options?.ignoreLocal !== true) {
+    const local = resolveLocalToolchain();
+    if (local !== null) return local;
+  }
+  const dir = toolchainCacheDir(baseDir);
+  if (await isInstalled(dir)) {
+    const cached2 = toolchainFrom(createRequire(join3(dir, "noop.js")));
+    if (cached2 !== null) return cached2;
+  }
+  options?.onFetchStart?.();
+  const startedAt = Date.now();
+  const staging = `${dir}.staging-${randomUUID()}`;
+  try {
+    await mkdir2(staging, { recursive: true });
+    await writeFile2(
+      join3(staging, "package.json"),
+      `${JSON.stringify({ name: "rift-plugin-toolchain", private: true, version: "0.0.0" }, null, 2)}
+`
+    );
+    await run(
+      "npm",
+      [
+        "install",
+        "--prefix",
+        staging,
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund",
+        "--no-package-lock",
+        ...Object.entries(PLUGIN_TOOLCHAIN_PINS).map(
+          ([name, version2]) => `${name}@${version2}`
+        )
+      ],
+      {
+        maxBuffer: 1024 * 1024 * 16,
+        env: omitNpmScriptPolicyEnv(process.env)
+      }
+    );
+    const staged = toolchainFrom(createRequire(join3(staging, "noop.js")));
+    if (staged === null) {
+      throw new Error(
+        "the downloaded plugin build toolchain is incomplete or misversioned"
+      );
+    }
+    await writeFile2(
+      join3(staging, ".rift-app-toolchain.json"),
+      `${JSON.stringify({ pins: pinKey() }, null, 2)}
+`
+    );
+    await mkdir2(dirname3(dir), { recursive: true });
+    try {
+      await rename2(staging, dir);
+    } catch {
+      if (!await isInstalled(dir)) throw new Error(errorPromoting(dir));
+    }
+  } finally {
+    await rm2(staging, { recursive: true, force: true });
+  }
+  const promoted = toolchainFrom(createRequire(join3(dir, "noop.js")));
+  if (promoted === null) throw new Error(errorPromoting(dir));
+  options?.onFetchDone?.(Date.now() - startedAt);
+  return promoted;
+}
+function errorPromoting(dir) {
+  return `could not install the plugin build toolchain into ${dir}`;
+}
+
+// packages/plugin-build/src/build-plugin-server.ts
+var PLUGIN_SDK_SPECIFIER = "@riftlabs/plugin-sdk";
+var PLUGIN_SERVER_EXTERNALS = [
+  PLUGIN_SDK_SPECIFIER,
+  "better-sqlite3"
+];
+var PLUGIN_SDK_ROOT_FILTER = /^@riftlabs\/plugin-sdk$/;
+var PLUGIN_SDK_SUBPATH_FILTER = /^@riftlabs\/plugin-sdk\//;
+var PLUGIN_SDK_SUBPATH_RESOLVE_MARK = "rift-server-sdk-subpath";
+async function unresolvedSdkSubpathError(args) {
+  const need = `a server entry's "${args.specifier}" import is bundled from the plugin's own SDK install (rift serves only the bare "${PLUGIN_SDK_SPECIFIER}" at load time), so the plugin needs`;
+  const packageDir2 = await installedPluginSdkDirectory(args.resolveDir);
+  if (packageDir2 === null) {
+    return `"${args.specifier}" is not installed for this plugin (no node_modules/${PLUGIN_SDK_PACKAGE_NAME}); ${need} the SDK as a dependency`;
+  }
+  const subpath = `.${args.specifier.slice(PLUGIN_SDK_PACKAGE_NAME.length)}`;
+  const target = await installedPluginSdkExportTarget(packageDir2, subpath);
+  if (target === null) {
+    return `"${args.specifier}" is not exported by the ${PLUGIN_SDK_PACKAGE_NAME} installed at ${packageDir2}; ${need} an SDK version that ships it`;
+  }
+  const targetPath = resolve3(packageDir2, target);
+  if (!await pathExists(targetPath)) {
+    return `"${args.specifier}" is installed for this plugin but its dist is not built: run the SDK build (${targetPath} is missing); ${need} the built SDK`;
+  }
+  return `"${args.specifier}" could not be resolved from ${packageDir2}: ${args.esbuildErrors.map((error48) => error48.text).join("; ")}`;
+}
+async function readPluginServerConfig(rootDir) {
+  const packageJsonPath = join4(rootDir, "package.json");
+  let raw;
+  try {
+    raw = await readFile5(packageJsonPath, "utf8");
+  } catch {
+    throw new Error(`no readable package.json at ${packageJsonPath}`);
+  }
+  let json2;
+  try {
+    json2 = JSON.parse(raw);
+  } catch {
+    throw new Error(`package.json is not valid JSON at ${packageJsonPath}`);
+  }
+  if (!isRecord(json2) || !isRecord(json2.rift) || json2.rift.server === void 0) {
+    throw new Error(
+      `no server entry: ${packageJsonPath} has no "rift": { "server": "./server.ts" } field`
+    );
+  }
+  const manifest = await validatePluginBuildManifest(
+    json2,
+    rootDir,
+    packageJsonPath
+  );
+  const server = manifest.rift.server;
+  if (isAbsolute3(server)) {
+    throw new Error(`manifest rift.server must be relative, got "${server}"`);
+  }
+  const serverEntry = resolve3(rootDir, server);
+  if (serverEntry !== rootDir && !serverEntry.startsWith(rootDir + "/")) {
+    throw new Error(
+      `manifest rift.server escapes the plugin directory: "${server}"`
+    );
+  }
+  try {
+    await stat4(serverEntry);
+  } catch {
+    throw new Error(`manifest rift.server points at a missing file: ${server}`);
+  }
+  return {
+    serverEntry,
+    packageName: manifest.name,
+    pluginVersion: manifest.version
+  };
+}
+async function buildPluginServer(rootDir, riftVersion, toolchain) {
+  const { serverEntry, packageName, pluginVersion } = await readPluginServerConfig(rootDir);
+  const distDir = join4(rootDir, "dist");
+  await mkdir3(distDir, { recursive: true });
+  const jsPath = join4(distDir, "server.js");
+  const mapPath = join4(distDir, "server.js.map");
+  const metaPath = join4(distDir, "server.meta.json");
+  const stageDir = await mkdtemp2(join4(distDir, ".stage-"));
+  try {
+    const stagedJsPath = join4(stageDir, "server.js");
+    const stagedMetaPath = join4(stageDir, "server.meta.json");
+    const esbuild = await import(toolchain.esbuild);
+    await esbuild.build({
+      entryPoints: [serverEntry],
+      outfile: stagedJsPath,
+      bundle: true,
+      format: "esm",
+      platform: "node",
+      target: "node22",
+      sourcemap: true,
+      banner: { js: NODE_ESM_REQUIRE_BANNER },
+      external: PLUGIN_SERVER_EXTERNALS.filter(
+        (specifier) => !PLUGIN_SDK_ROOT_FILTER.test(specifier)
+      ),
+      plugins: [
+        {
+          name: "rift-plugin-sdk-resolution",
+          setup(build) {
+            build.onResolve({ filter: PLUGIN_SDK_ROOT_FILTER }, (args) => ({
+              path: args.path,
+              external: true
+            }));
+            build.onResolve(
+              { filter: PLUGIN_SDK_SUBPATH_FILTER },
+              async (args) => {
+                if (args.pluginData === PLUGIN_SDK_SUBPATH_RESOLVE_MARK) {
+                  return void 0;
+                }
+                const installed = await build.resolve(args.path, {
+                  resolveDir: args.resolveDir,
+                  kind: args.kind,
+                  importer: args.importer,
+                  pluginData: PLUGIN_SDK_SUBPATH_RESOLVE_MARK
+                });
+                if (installed.errors.length === 0 && installed.path !== "") {
+                  return { path: installed.path };
+                }
+                return {
+                  errors: [
+                    {
+                      text: await unresolvedSdkSubpathError({
+                        specifier: args.path,
+                        resolveDir: args.resolveDir,
+                        esbuildErrors: installed.errors
+                      })
+                    }
+                  ]
+                };
+              }
+            );
+          }
+        }
+      ],
+      logLevel: "error"
+    });
+    await writeFile3(
+      stagedMetaPath,
+      JSON.stringify(
+        createPluginArtifactMeta({ packageName, pluginVersion, riftVersion }),
+        null,
+        2
+      ) + "\n"
+    );
+    await rename3(stagedJsPath, jsPath);
+    await rename3(join4(stageDir, "server.js.map"), mapPath);
+    await rename3(stagedMetaPath, metaPath);
+  } finally {
+    await rm3(stageDir, { recursive: true, force: true });
+  }
+  return { jsPath, mapPath, metaPath };
+}
+
+// packages/plugin-build/src/build-plugin-host.ts
+import { createHash } from "node:crypto";
+import {
+  mkdir as mkdir4,
+  mkdtemp as mkdtemp3,
+  readFile as readFile6,
+  readdir,
+  rename as rename4,
+  rm as rm4,
+  stat as stat5,
+  writeFile as writeFile4
+} from "node:fs/promises";
+import { dirname as dirname4, isAbsolute as isAbsolute4, join as join5, resolve as resolve4 } from "node:path";
+var PLUGIN_SDK_HOST_RUNTIME_NAMESPACE = "rift-host-sdk-runtime";
+var HOST_STAGE_DIRECTORY_PREFIX = ".host-stage-";
+var HOST_STAGE_STALE_AFTER_MS = 60 * 60 * 1e3;
+var PLUGIN_SDK_DEFINE_HOST_ENTRY_RUNTIME = `
+export function experimental_defineHostEntry(args) {
+  return {
+    experimental_apiVersion: 1,
+    contract: args.contract,
+    handlers: args.handlers,
+    ...(args.experimental_signals === undefined ? {} : { experimental_signals: args.experimental_signals }),
+    ...(args.dispose === undefined ? {} : { dispose: args.dispose }),
+  };
+}
+`;
+var PLUGIN_SDK_ROOT_RUNTIME = `
+export const PLUGIN_CLI_OUTPUT_MAX_BYTES = 1024 * 1024;
+export function defineRpcContract(contract) { return contract; }
+${PLUGIN_SDK_DEFINE_HOST_ENTRY_RUNTIME}`;
+var PLUGIN_SDK_HOST_SUBPATH = "./host";
+var PLUGIN_SDK_HOST_FALLBACK_SPECIFIER = "@riftlabs/plugin-sdk/host";
+var PLUGIN_SDK_HOST_FALLBACK_EXPORTS = /* @__PURE__ */ new Set([
+  "experimental_defineHostEntry"
+]);
+var PLUGIN_SDK_HOST_FALLBACK_RUNTIME = PLUGIN_SDK_DEFINE_HOST_ENTRY_RUNTIME;
+var PLUGIN_SDK_HOST_FALLBACK_NAMESPACE = "rift-host-sdk-fallback";
+function escapeRegex2(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+function sourceTokens(source) {
+  const tokens = [];
+  let index = 0;
+  while (index < source.length) {
+    const character = source[index] ?? "";
+    if (/\s/u.test(character)) {
+      index += 1;
+      continue;
+    }
+    if (character === "/" && source[index + 1] === "/") {
+      index = source.indexOf("\n", index + 2);
+      if (index === -1) break;
+      continue;
+    }
+    if (character === "/" && source[index + 1] === "*") {
+      const end = source.indexOf("*/", index + 2);
+      index = end === -1 ? source.length : end + 2;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      const quote = character;
+      let value = "";
+      index += 1;
+      while (index < source.length) {
+        const next = source[index] ?? "";
+        if (next === "\\") {
+          value += source[index + 1] ?? "";
+          index += 2;
+          continue;
+        }
+        if (next === quote) {
+          index += 1;
+          break;
+        }
+        value += next;
+        index += 1;
+      }
+      tokens.push({ kind: "string", value });
+      continue;
+    }
+    if (character === "`") {
+      index += 1;
+      while (index < source.length) {
+        const next = source[index] ?? "";
+        if (next === "\\") index += 2;
+        else if (next === "`") {
+          index += 1;
+          break;
+        } else index += 1;
+      }
+      continue;
+    }
+    if (/[A-Za-z0-9_$]/u.test(character)) {
+      const start = index;
+      index += 1;
+      while (/[A-Za-z0-9_$]/u.test(source[index] ?? "")) index += 1;
+      tokens.push({
+        kind: "identifier",
+        value: source.slice(start, index)
+      });
+      continue;
+    }
+    tokens.push({ kind: "punctuation", value: character });
+    index += 1;
+  }
+  return tokens;
+}
+function sourceImportSpecifiers(source) {
+  const tokens = sourceTokens(source);
+  const specifiers = [];
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (token?.kind !== "string") continue;
+    const previous = tokens[index - 1]?.value;
+    const callee = previous === "(" ? tokens[index - 2]?.value : void 0;
+    if (previous === "from" || previous === "import" || callee === "import" || callee === "require") {
+      specifiers.push(token.value);
+    }
+  }
+  return specifiers;
+}
+function importedRuntimeNames(source, specifier) {
+  const tokens = sourceTokens(source);
+  const names = [];
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (token?.kind !== "string" || token.value !== specifier) continue;
+    if (tokens[index - 1]?.value !== "from") continue;
+    let start = index - 2;
+    while (start >= 0) {
+      const candidate = tokens[start];
+      if (candidate?.kind === "identifier" && (candidate.value === "import" || candidate.value === "export")) {
+        break;
+      }
+      start -= 1;
+    }
+    if (start < 0) continue;
+    const clause = tokens.slice(start + 1, index - 1);
+    if (clause[0]?.kind === "identifier" && clause[0].value === "type") {
+      continue;
+    }
+    let braceDepth = 0;
+    let entry = [];
+    let previousTopLevel;
+    const flushEntry = () => {
+      const first = entry[0];
+      if (first !== void 0) {
+        const typeOnly = first.kind === "identifier" && first.value === "type" && entry.length > 1 && entry[1]?.value !== "as";
+        if (!typeOnly) names.push(first.value);
+      }
+      entry = [];
+    };
+    for (const item of clause) {
+      if (item.kind === "punctuation" && item.value === "{") {
+        braceDepth += 1;
+        continue;
+      }
+      if (item.kind === "punctuation" && item.value === "}") {
+        flushEntry();
+        braceDepth -= 1;
+        continue;
+      }
+      if (item.kind === "punctuation" && item.value === ",") {
+        if (braceDepth > 0) flushEntry();
+        continue;
+      }
+      if (braceDepth > 0) {
+        entry.push(item);
+        continue;
+      }
+      if (item.kind === "punctuation" && item.value === "*") {
+        names.push("*");
+      } else if (item.kind === "identifier" && item.value !== "as" && previousTopLevel?.value !== "as") {
+        names.push("default");
+      }
+      previousTopLevel = item;
+    }
+  }
+  return names;
+}
+function describeImportedNames(names) {
+  return [...new Set(names)].map(
+    (name) => name === "*" ? "the whole module" : name === "default" ? "the default export" : name
+  ).join(", ");
+}
+async function unresolvedHostSdkError(args) {
+  const need = `a host entry that imports ${describeImportedNames(args.names)} needs`;
+  const packageDir2 = await installedPluginSdkDirectory(args.resolveDir);
+  if (packageDir2 === null) {
+    return `"${PLUGIN_SDK_HOST_FALLBACK_SPECIFIER}" is not installed for this plugin (no node_modules/${PLUGIN_SDK_PACKAGE_NAME}); ${need} the SDK as a dependency`;
+  }
+  const target = await installedPluginSdkExportTarget(
+    packageDir2,
+    PLUGIN_SDK_HOST_SUBPATH
+  );
+  if (target === null) {
+    return `"${PLUGIN_SDK_HOST_FALLBACK_SPECIFIER}" is not exported by the ${PLUGIN_SDK_PACKAGE_NAME} installed at ${packageDir2}; ${need} an SDK version that ships it`;
+  }
+  const targetPath = resolve4(packageDir2, target);
+  if (!await pathExists(targetPath)) {
+    return `"${PLUGIN_SDK_HOST_FALLBACK_SPECIFIER}" is installed for this plugin but its dist is not built: run the SDK build (${targetPath} is missing); ${need} the built SDK`;
+  }
+  return `"${PLUGIN_SDK_HOST_FALLBACK_SPECIFIER}" could not be resolved from ${packageDir2}: ${args.esbuildErrors.map((error48) => error48.text).join("; ")}`;
+}
+function privateRiftImportError(specifier) {
+  return `host entries cannot import private RIFT workspace package "${specifier}"; use @riftlabs/plugin-sdk, Node APIs, or a regular plugin dependency`;
+}
+async function owningPackageName(filePath, cache) {
+  let directory = dirname4(filePath);
+  const visited = [];
+  while (true) {
+    const cached2 = cache.get(directory);
+    if (cached2 !== void 0 || cache.has(directory)) {
+      for (const entry of visited) cache.set(entry, cached2 ?? null);
+      return cached2 ?? null;
+    }
+    visited.push(directory);
+    try {
+      const parsed = JSON.parse(
+        await readFile6(join5(directory, "package.json"), "utf8")
+      );
+      const name = isRecord(parsed) && typeof parsed.name === "string" ? parsed.name : null;
+      for (const entry of visited) cache.set(entry, name);
+      return name;
+    } catch {
+      const parent = dirname4(directory);
+      if (parent === directory) {
+        for (const entry of visited) cache.set(entry, null);
+        return null;
+      }
+      directory = parent;
+    }
+  }
+}
+async function readPluginHostConfig(rootDir) {
+  const packageJsonPath = join5(rootDir, "package.json");
+  let json2;
+  try {
+    json2 = JSON.parse(await readFile6(packageJsonPath, "utf8"));
+  } catch {
+    throw new Error(`no readable valid package.json at ${packageJsonPath}`);
+  }
+  if (!isRecord(json2) || !isRecord(json2.rift) || json2.rift.host === void 0) {
+    throw new Error(
+      `no host entry: ${packageJsonPath} has no "rift": { "host": "./host.ts" } field`
+    );
+  }
+  const manifest = await validatePluginBuildManifest(
+    json2,
+    rootDir,
+    packageJsonPath
+  );
+  const host = manifest.rift.host;
+  if (host === void 0) {
+    throw new Error(`no host entry in ${packageJsonPath}`);
+  }
+  if (isAbsolute4(host)) {
+    throw new Error(`manifest rift.host must be relative, got "${host}"`);
+  }
+  const hostEntry = resolve4(rootDir, host);
+  if (hostEntry !== rootDir && !hostEntry.startsWith(rootDir + "/")) {
+    throw new Error(
+      `manifest rift.host escapes the plugin directory: "${host}"`
+    );
+  }
+  try {
+    await stat5(hostEntry);
+  } catch {
+    throw new Error(`manifest rift.host points at a missing file: ${host}`);
+  }
+  return {
+    hostEntry,
+    packageName: manifest.name,
+    pluginVersion: manifest.version
+  };
+}
+async function removeStaleHostStageDirectories(distDir) {
+  const entries = await readdir(distDir, { withFileTypes: true });
+  const staleBefore = Date.now() - HOST_STAGE_STALE_AFTER_MS;
+  await Promise.all(
+    entries.filter(
+      (entry) => entry.isDirectory() && entry.name.startsWith(HOST_STAGE_DIRECTORY_PREFIX)
+    ).map(async (entry) => {
+      const stageDir = join5(distDir, entry.name);
+      const stageStats = await stat5(stageDir).catch(() => null);
+      if (stageStats !== null && stageStats.mtimeMs <= staleBefore) {
+        await rm4(stageDir, { recursive: true, force: true });
+      }
+    })
+  );
+}
+function isPrivateWorkspacePackage(specifier) {
+  return (specifier === "@riftlabs" || specifier.startsWith("@riftlabs/")) && specifier !== PLUGIN_SDK_PACKAGE_NAME && !specifier.startsWith(`${PLUGIN_SDK_PACKAGE_NAME}/`);
+}
+async function buildPluginHost(rootDir, riftVersion, toolchain) {
+  const { hostEntry, packageName, pluginVersion } = await readPluginHostConfig(rootDir);
+  const distDir = join5(rootDir, "dist");
+  await mkdir4(distDir, { recursive: true });
+  const jsPath = join5(distDir, "host.js");
+  const mapPath = join5(distDir, "host.js.map");
+  const metaPath = join5(distDir, "host.meta.json");
+  await removeStaleHostStageDirectories(distDir);
+  const stageDir = await mkdtemp3(join5(distDir, HOST_STAGE_DIRECTORY_PREFIX));
+  try {
+    const stagedJsPath = join5(stageDir, "host.js");
+    const stagedMetaPath = join5(stageDir, "host.meta.json");
+    const esbuild = await import(toolchain.esbuild);
+    const packageNameByDirectory = /* @__PURE__ */ new Map();
+    await esbuild.build({
+      entryPoints: [hostEntry],
+      outfile: stagedJsPath,
+      bundle: true,
+      format: "esm",
+      platform: "node",
+      plugins: [
+        {
+          name: "provide-public-host-sdk-runtime",
+          setup(build) {
+            const rootFilter = new RegExp(
+              `^${escapeRegex2(PLUGIN_SDK_PACKAGE_NAME)}$`
+            );
+            build.onResolve({ filter: rootFilter }, (args) => ({
+              path: args.path,
+              namespace: PLUGIN_SDK_HOST_RUNTIME_NAMESPACE
+            }));
+            build.onLoad(
+              { filter: /.*/, namespace: PLUGIN_SDK_HOST_RUNTIME_NAMESPACE },
+              () => ({ contents: PLUGIN_SDK_ROOT_RUNTIME, loader: "js" })
+            );
+            const hostFilter = new RegExp(
+              `^${escapeRegex2(PLUGIN_SDK_HOST_FALLBACK_SPECIFIER)}$`
+            );
+            build.onResolve({ filter: hostFilter }, async (args) => {
+              if (args.pluginData === PLUGIN_SDK_HOST_FALLBACK_NAMESPACE) {
+                return void 0;
+              }
+              const installed = await build.resolve(args.path, {
+                resolveDir: args.resolveDir,
+                kind: args.kind,
+                importer: args.importer,
+                pluginData: PLUGIN_SDK_HOST_FALLBACK_NAMESPACE
+              });
+              if (installed.errors.length === 0 && installed.path !== "") {
+                return { path: installed.path };
+              }
+              const importerSource = /\.[cm]?[jt]sx?$/u.test(args.importer) ? await readFile6(args.importer, "utf8").catch(() => null) : null;
+              const beyondStub = importerSource === null ? [] : importedRuntimeNames(importerSource, args.path).filter(
+                (name) => !PLUGIN_SDK_HOST_FALLBACK_EXPORTS.has(name)
+              );
+              if (beyondStub.length > 0) {
+                return {
+                  errors: [
+                    {
+                      text: await unresolvedHostSdkError({
+                        resolveDir: args.resolveDir,
+                        names: beyondStub,
+                        esbuildErrors: installed.errors
+                      })
+                    }
+                  ]
+                };
+              }
+              return {
+                path: args.path,
+                namespace: PLUGIN_SDK_HOST_FALLBACK_NAMESPACE
+              };
+            });
+            build.onLoad(
+              { filter: /.*/, namespace: PLUGIN_SDK_HOST_FALLBACK_NAMESPACE },
+              () => ({
+                contents: PLUGIN_SDK_HOST_FALLBACK_RUNTIME,
+                loader: "js"
+              })
+            );
+          }
+        },
+        {
+          name: "reject-private-rift-host-imports",
+          setup(build) {
+            build.onResolve(
+              { filter: /^@riftlabs(?:\/|$)/ },
+              (args) => isPrivateWorkspacePackage(args.path) ? { errors: [{ text: privateRiftImportError(args.path) }] } : void 0
+            );
+            build.onLoad({ filter: /\.[cm]?[jt]sx?$/ }, async (args) => {
+              const owner = await owningPackageName(
+                args.path,
+                packageNameByDirectory
+              );
+              if (owner !== null && isPrivateWorkspacePackage(owner)) {
+                return {
+                  errors: [{ text: privateRiftImportError(owner) }]
+                };
+              }
+              const source = await readFile6(args.path, "utf8");
+              for (const specifier of sourceImportSpecifiers(source)) {
+                if (isPrivateWorkspacePackage(specifier)) {
+                  return {
+                    errors: [{ text: privateRiftImportError(specifier) }]
+                  };
+                }
+                if (!specifier.startsWith(".") && !isAbsolute4(specifier)) {
+                  continue;
+                }
+                const resolvedImport = await build.resolve(specifier, {
+                  importer: args.path,
+                  kind: "import-statement",
+                  resolveDir: dirname4(args.path)
+                });
+                if (resolvedImport.errors.length > 0 || !resolvedImport.path) {
+                  continue;
+                }
+                const importedOwner = await owningPackageName(
+                  resolvedImport.path,
+                  packageNameByDirectory
+                );
+                if (importedOwner !== null && isPrivateWorkspacePackage(importedOwner)) {
+                  return {
+                    errors: [{ text: privateRiftImportError(importedOwner) }]
+                  };
+                }
+              }
+              return void 0;
+            });
+          }
+        }
+      ],
+      target: "node22",
+      sourcemap: true,
+      banner: { js: NODE_ESM_REQUIRE_BANNER },
+      logLevel: "error"
+    });
+    const artifactDigest = createHash("sha256").update(await readFile6(stagedJsPath)).digest("hex");
+    await writeFile4(
+      stagedMetaPath,
+      JSON.stringify(
+        {
+          ...createPluginArtifactMeta({
+            packageName,
+            pluginVersion,
+            riftVersion
+          }),
+          artifactDigest
+        },
+        null,
+        2
+      ) + "\n"
+    );
+    await rename4(stagedJsPath, jsPath);
+    await rename4(join5(stageDir, "host.js.map"), mapPath);
+    await rename4(stagedMetaPath, metaPath);
+    return { jsPath, mapPath, metaPath, artifactDigest };
+  } finally {
+    await rm4(stageDir, { recursive: true, force: true });
+  }
+}
+
+// packages/plugin-build/src/plugin-dev-loop.ts
+var DEFAULT_DEBOUNCE_MS = 300;
+var IGNORED_SEGMENTS = /* @__PURE__ */ new Set(["dist", "node_modules", ".git"]);
+function isIgnoredPluginDevPath(relativePath) {
+  return relativePath.split(/[\\/]/).some((segment) => IGNORED_SEGMENTS.has(segment));
+}
+function errorMessage(error48) {
+  return error48 instanceof Error ? error48.message : String(error48);
+}
+function createPluginDevLoop(deps) {
+  const debounceMs = deps.debounceMs ?? DEFAULT_DEBOUNCE_MS;
+  const now = deps.now ?? (() => Date.now());
+  const pending = /* @__PURE__ */ new Set();
+  let timer = null;
+  let disposed = false;
+  let queueTail = Promise.resolve();
+  async function runCycle(files) {
+    if (disposed) return;
+    const parts = [
+      `${files.length} file${files.length === 1 ? "" : "s"} changed`
+    ];
+    let targets;
+    try {
+      targets = await deps.targets();
+    } catch (error48) {
+      parts.push(`manifest read failed: ${errorMessage(error48)}`);
+      deps.log(`${parts.join(" \xB7 ")} \u2014 fix and save to retry`);
+      return;
+    }
+    if (targets.hasApp) {
+      const startedAt = now();
+      try {
+        await deps.buildApp();
+        parts.push(
+          `rebuilt app in ${Math.max(0, Math.round(now() - startedAt))}ms`
+        );
+      } catch (error48) {
+        parts.push(`build failed: ${errorMessage(error48)}`);
+        deps.log(`${parts.join(" \xB7 ")} \u2014 fix and save to retry`);
+        return;
+      }
+    }
+    if (targets.hasHost) {
+      const startedAt = now();
+      try {
+        await deps.buildHost();
+        parts.push(
+          `rebuilt host in ${Math.max(0, Math.round(now() - startedAt))}ms`
+        );
+      } catch (error48) {
+        parts.push(`host build failed: ${errorMessage(error48)}`);
+        deps.log(`${parts.join(" \xB7 ")} \u2014 fix and save to retry`);
+        return;
+      }
+    }
+    try {
+      await deps.reloadPlugin();
+      parts.push(`reloaded ${deps.pluginId}`);
+    } catch (error48) {
+      parts.push(`reload failed: ${errorMessage(error48)}`);
+    }
+    deps.log(parts.join(" \xB7 "));
+  }
+  function flush() {
+    timer = null;
+    if (pending.size === 0) return;
+    const files = [...pending];
+    pending.clear();
+    queueTail = queueTail.then(() => runCycle(files));
+  }
+  return {
+    handleChange(relativePath) {
+      if (disposed || isIgnoredPluginDevPath(relativePath)) return;
+      pending.add(relativePath);
+      if (timer !== null) clearTimeout(timer);
+      timer = setTimeout(flush, debounceMs);
+    },
+    settled: () => queueTail,
+    dispose() {
+      disposed = true;
+      if (timer !== null) clearTimeout(timer);
+      timer = null;
+      pending.clear();
+    }
+  };
 }
 export {
-  plugin as default
+  PLUGIN_SERVER_EXTERNALS,
+  PLUGIN_TOOLCHAIN_PINS,
+  RUNTIME_SLOT_BY_SPECIFIER,
+  SHIMMED_TYPE_PACKAGES,
+  assertValidPluginCompactIconSvg,
+  assertValidPluginIconSvg,
+  assertValidPluginLogoSvg,
+  buildPluginApp,
+  buildPluginHost,
+  buildPluginServer,
+  createPluginDevLoop,
+  isIgnoredPluginDevPath,
+  resolveManifestPath,
+  resolvePluginBuildToolchain
 };
-//# sourceMappingURL=server.js.map

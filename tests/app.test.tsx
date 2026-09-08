@@ -28,7 +28,7 @@ afterEach(() => {
 });
 
 async function loadApp() {
-  const { loadPluginApp } = await import("@get-bb/plugin-sdk/testing/app");
+  const { loadPluginApp } = await import("@riftlabs/plugin-sdk/testing/app");
   return loadPluginApp(() => import("../app"));
 }
 
@@ -46,7 +46,7 @@ function handlers(overrides: Record<string, unknown> = {}) {
 
 describe("Operator Inbox panel", () => {
   it("renders safe Markdown and navigates to the recorded sender thread", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+    const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
     const app = await loadApp();
     const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
       sidebarThreads: { status: "ready", projects: [project], threads: [] },
@@ -60,7 +60,7 @@ describe("Operator Inbox panel", () => {
   });
 
   it("keeps sender navigation when the stored title is unavailable", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+    const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
     const app = await loadApp();
     const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
       sidebarThreads: { status: "ready", projects: [project], threads: [] },
@@ -73,7 +73,7 @@ describe("Operator Inbox panel", () => {
   });
 
   it("records reply acceptance without claiming provider delivery or consumption", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+    const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
     const app = await loadApp();
     const rpc = handlers();
     const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
@@ -90,7 +90,7 @@ describe("Operator Inbox panel", () => {
   });
 
   it("marks read, archives, and fails closed on a foreign-project row", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+    const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
     const app = await loadApp();
     const rpc = handlers();
     const rendered = renderSlot(app.navPanels[0]!, { subPath: "" }, {
@@ -112,7 +112,7 @@ describe("Operator Inbox panel", () => {
   });
 
   it("updates the unread accessory from realtime without polling", async () => {
-    const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+    const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
     const app = await loadApp();
     let count = 1;
     const unread = vi.fn(async () => ({ count }));
@@ -132,13 +132,13 @@ describe("Operator Inbox panel", () => {
 const fileContext = {
   hostId: "host-sender", environmentId: "env-sender", threadId: "thread-sender",
   workspacePath: "/Users/pixexid/Projects/nuvyr-landscaping-concept-2026-09-05",
-  storageRootPath: "/Users/pixexid/.bb/thread-storage/thread-sender",
+  storageRootPath: "/Users/pixexid/.rift/thread-storage/thread-sender",
 };
 const png = `${fileContext.workspacePath}/showcase/demos/002-landscaping-hardscaping/evidence/qa-final/home-1440-900-true.png`;
-const report = "/Users/pixexid/.bb/thread-storage/thr_tikuhzrqy8/REPORT.md";
+const report = "/Users/pixexid/.rift/thread-storage/thr_tikuhzrqy8/REPORT.md";
 
 async function renderBody(text: string, context: unknown = fileContext, openUrl = () => true) {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
   return renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
     sidebarThreads: { status: "ready", projects: [project], threads: [] },
     openUrl, openFilePreview: () => true,
@@ -197,7 +197,7 @@ it("blocks image/reference/HTML media and unsafe or malformed destinations with 
 });
 
 it("does not lend late sender context to another message or a reply", async () => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
   let finish: (value: typeof fileContext) => void = () => {};
   const late = new Promise<typeof fileContext>((resolve) => { finish = resolve; });
   const second = { ...message, messageId: 2, senderThreadId: "thread-other", text: `[Second](${png})`, replyText: `[Reply](${png})`, replyAcceptedAtMs: 2 };
@@ -230,7 +230,7 @@ it("retains only a safe new-tab fallback when native URL opening declines", asyn
 });
 
 it("expands one card at a time, preserves drafts, and keeps all cards collapsed across refresh", async () => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
   const second = { ...message, messageId: 2, text: "Second message body" };
   const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
     sidebarThreads: { status: "ready", projects: [project], threads: [] },
@@ -266,7 +266,7 @@ it("keeps the message expanded when opening a native file panel", async () => {
 });
 
 it("clears unread feedback only after saving and keeps order and selection through realtime refresh", async () => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
   let rows: Array<Omit<typeof message, "readAtMs"> & { readAtMs: number | null }> = [{ ...message }, { ...message, messageId: 2, text: "Second" }];
   let finish: () => void = () => {};
   const pending = new Promise<void>((resolve) => { finish = resolve; });
@@ -303,7 +303,7 @@ it("clears unread feedback only after saving and keeps order and selection throu
 });
 
 it("keeps a failed read unread and allows a manual retry without an automatic retry loop", async () => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
   const read = vi.fn().mockRejectedValueOnce(new Error("Offline")).mockResolvedValue({ ...message, readAtMs: 9 });
   const rendered = renderSlot((await loadApp()).navPanels[0]!, { subPath: "" }, {
     sidebarThreads: { status: "ready", projects: [project], threads: [] },
@@ -319,7 +319,7 @@ it("keeps a failed read unread and allows a manual retry without an automatic re
 });
 
 it("archives from the header without expanding or reading the collapsed card", async () => {
-  const { renderSlot } = await import("@get-bb/plugin-sdk/testing/app");
+  const { renderSlot } = await import("@riftlabs/plugin-sdk/testing/app");
   const second = { ...message, messageId: 2, text: "Collapsed message" };
   const archive = vi.fn(async () => ({ ...second, archivedAtMs: 3 }));
   const rpc = handlers({ operatorMessages: async () => ({ messages: [message, second] }), archiveOperatorMessage: archive });

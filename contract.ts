@@ -1,4 +1,4 @@
-import { defineRpcContract } from "@get-bb/plugin-sdk";
+import { defineRpcContract } from "@riftlabs/plugin-sdk";
 import { z } from "zod";
 
 const id = z.string().trim().min(1).max(256);

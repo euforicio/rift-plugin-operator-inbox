@@ -2,8 +2,8 @@ import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArchiveIcon, ArrowClockwiseIcon, CaretDownIcon, FileIcon, FileTextIcon, FilePdfIcon, ImageIcon, GlobeIcon, GithubLogoIcon, EnvelopeOpenIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
-import { definePluginApp, UrlLink, experimental_useSidebarThreads, useBbNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@get-bb/plugin-sdk/app";
-import type { ExperimentalLiveFileTarget, PluginNavPanelProps, PluginRpcResult } from "@get-bb/plugin-sdk/app";
+import { definePluginApp, UrlLink, experimental_useSidebarThreads, useRiftNavigate, useRealtime, useRealtimeConnectionState, useRpc } from "@riftlabs/plugin-sdk/app";
+import type { ExperimentalLiveFileTarget, PluginNavPanelProps, PluginRpcResult } from "@riftlabs/plugin-sdk/app";
 import { fileContextSchema, safeAbsolutePath, type rpcContract } from "./contract";
 
 const INBOX_CHANGED_CHANNEL = "messages-changed";
@@ -25,7 +25,7 @@ function localTarget(href: string, context: FileContext): ExperimentalLiveFileTa
 
 function MessageBody({ text, message }: { text: string; message?: OperatorMessage }) {
   const rpc = useRpc<typeof rpcContract>();
-  const navigate = useBbNavigate();
+  const navigate = useRiftNavigate();
   const [openError, setOpenError] = useState(false);
   const [context, setContext] = useState<FileContext>(null);
   const projectId = message?.projectId;
@@ -111,7 +111,7 @@ function stateLabel(message: OperatorMessage): string {
 
 function InboxPanel(_props: PluginNavPanelProps) {
   const sidebar = experimental_useSidebarThreads();
-  const navigate = useBbNavigate();
+  const navigate = useRiftNavigate();
   const rpc = useRpc<typeof rpcContract>();
   const [filters, setFilters] = useState<InboxFilters>(readInboxFilters);
   const projectId = filters.projectId && sidebar.projects.some((project) => project.id === filters.projectId) ? filters.projectId : "";
